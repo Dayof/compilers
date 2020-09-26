@@ -1,0 +1,3 @@
+def test(x, y):
+    var = 1
+    var += 1
