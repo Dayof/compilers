@@ -203,7 +203,7 @@ void switcher(int token) {
 		default:
 			printf("\nUndefined error.\n");
   	}
-	column += 1;
+	column += strlen(yytext);
 }
 
 int main (int argc, char *argv[]) {
