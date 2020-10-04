@@ -1,4 +1,4 @@
-# CCPython - Lexer
+# CPPython - Lexer
 
 ## Requirements
 
@@ -10,36 +10,36 @@
 ```bash
 $ chmod +x build.sh
 $ ./build.sh
-$ ./ccpython tests/valid_1.ppy  # for valid test
-$ ./ccpython tests/incorrect_1.ppy  # for invalid test
+$ ./cppython tests/valid_1.ppy  # for valid test
+$ ./cppython tests/incorrect_1.ppy  # for invalid test
 ```
 
 ## Output examples
 
 - Valid input 1:
-  - Commands: ./build.sh && ./ccpython tests/valid_1.ppy
+  - Commands: ./build.sh && ./cppython tests/valid_1.ppy
   - Output: 
 
     ```bash
-    Python interpreter:
+    CPPython interpreter:
 
-    line 1.  <func, 'def test(x, y):'>
-    line 2.  <id, 1> <delimiter, '='> <integer, '1'>
-    line 3.  <id, 2> <operator, '+'> <delimiter, '='> <integer, '1'>
+    line 1.  <keyword, 'def'> <id, 1> <delimiter, '('> <id, 2> <delimiter, ','> <id, 3> <delimiter, ')'> <delimiter, ':'>
+    line 2.  <id, 4> <delimiter, '='> <integer, '1'>
+    line 3.  <id, 5> <operator, '+'> <delimiter, '='> <integer, '1'>
     ```
 
 - Invalid input 2:
-  - Commands: ./build.sh && ./ccpython tests/invalid_1.ppy
+  - Commands: ./build.sh && ./cppython tests/invalid_1.ppy
   - Output: 
 
     ```bash
-    Python interpreter:
+    CPPython interpreter:
 
-    line 1.  <func, 'def test():'>
-    line 2.  <id, 1> <delimiter, '='> <integer, '1'>
-    line 3.  <id, 2> <operator, '+'> <delimiter, '='> <integer, '1'>
-    line 4.  <id, 3> <delimiter, '='>
-    LexerError: line 4, column 6, token '@' is not recognized
+    line 1.  <keyword, 'def'> <id, 1> <delimiter, '('> <delimiter, ')'> <delimiter, ':'>
+    line 2.  <id, 2> <delimiter, '='> <integer, '1'>
+    line 3.  <id, 3> <operator, '+'> <delimiter, '='> <integer, '1'>
+    line 4.  <id, 4> <delimiter, '='>
+    LexerError: line 4, column 13, token '@' is not recognized
     ```
 
 ## Author
