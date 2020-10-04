@@ -6,25 +6,18 @@
 
 	enum TOKENS{
 		ERROR=1,
-		RETURN_EXPR,
 		NEWLINE,
 		WHITESPACE,
 		ID,
+		KEYWORD,
 		INTEGER,
 		FLOAT,
-		STRING,
+		OPERATOR,
 		DELIMITER,
 		BOOLEAN,
-		BOOLEAN_EXP,
 		BOOLEAN_OP,
-		FLOW,
-		CONDITIONAL,
-		FUNC,
-		STRUCTURE,
-		OPERATOR,
-		INPUT,
-		PRINT,
-		LIST
+		STRING,
+		COMMENT
 	};
 
 	int line, column;
@@ -74,58 +67,50 @@
 	/* regex and token definition */
 
 DIGIT			[0-9]
+NDIGIT			[1-9]
 LETTER			[a-zA-Z]
 OPERATOR		("-"|"+"|"*"|"/")
-DELIMITER		("="|"("|")"|";")
+BOOLEAN_OP		("=="|"<="|">="|"!="|"<"|">"|"~"|"|"|"&"|"and"|"or"|"not")
+DELIMITER		("="|"("|")"|"["|"]"|";"|","|"."|":")
+BOOLEAN			("True"|"False")
+NULL			("None")
+NEWLINE			(\n)
+WHITESPACE		([ \t]+)
 VAR				({LETTER}|"_")({LETTER}|{DIGIT}|"_")*
 STRING			(\".*\"|\'.*\')
-INTEGER			({DIGIT}+)
-FLOAT			({DIGIT}+"."{DIGIT}*|"."{DIGIT}+)
-NUMBER			(INTEGER|FLOAT)
-ARGS			({TYPES}[","{TYPES}]*)
-LIST			\[.*{ARGS}*.*\]
-TYPES			[STRING|NUMBER|LIST]
+INTEGER			({NDIGIT}{DIGIT}*|"0")
+FLOAT			([{DIGIT}+]"."{DIGIT}+|{DIGIT}+".")
+NUMBER			({INTEGER}|{FLOAT})
 
 %%
 
-	/* read and write */
+	/* reserved keywords */
 
-"input(".*{STRING}.*")"				return INPUT;
-"print(".*{STRING}.*")"				return PRINT;
-
-	/* functions */
-
-"return".*{TYPES}					return RETURN_EXPR;
-def.*{LETTER}*.*(.*).*:				return FUNC;
+("input"|"print"|"if"|"elif"|"else"|"return"|"def"|"for"|"while")	return KEYWORD;
 
 	/* arithmetics expressions */
 
-{INTEGER}							return INTEGER;
-{FLOAT}								return FLOAT;
-{OPERATOR}							return OPERATOR;
-{DELIMITER}							return DELIMITER;
+{INTEGER}															return INTEGER;
+{FLOAT}																return FLOAT;
+{OPERATOR}															return OPERATOR;
+{DELIMITER}															return DELIMITER;
 
 	/* conditional and booleans expressions */
 
-"if"|"elif"|"else"					return CONDITIONAL;
-"True"|"False"						return BOOLEAN;
-"and"|"or"|"not"					return BOOLEAN_EXP;
-"=="|"<="|">="|"!="|"<"|">"			return BOOLEAN_OP;
-
-	/* repetition */
-
-"for"|"while"						return FLOW;
+{BOOLEAN}															return BOOLEAN;
+{BOOLEAN_OP}														return BOOLEAN_OP;
 
 	/* structure helpers */
 
-{STRING}							return STRING;
-{LIST}								return LIST;
+#.*{NEWLINE}														return COMMENT;
+{STRING}															return STRING;
 
 	/* general */
-[\n]								return NEWLINE;
-[ \t]+	     						return WHITESPACE;
-{VAR}								return ID;
-.									return ERROR;  /* any character but newline */
+
+{NEWLINE}															return NEWLINE;
+{WHITESPACE}   														return WHITESPACE;
+{VAR}																return ID;
+.																	return ERROR;  /* any character but newline */
 
 %%
 
@@ -137,13 +122,23 @@ def.*{LETTER}*.*(.*).*:				return FUNC;
 
 void switcher(int token) {
 	switch (token) {
+		case ERROR:
+			printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n", line, column, yytext);
+			break;
 		case NEWLINE:
 			line += 1;
 			column = 0;  // reset column index 
 			printf("\nline %d. ", line);
 			break;
-		case RETURN_EXPR:
-			printf(" <return, '%s'>", yytext);
+		case WHITESPACE:
+			break;  // ignore
+		case ID: ;
+			int cur_key = HASH_COUNT(symbol_table) + 1;
+			add_word(cur_key, yytext);
+			printf(" <id, %d>", cur_key);
+			break;
+		case KEYWORD:
+			printf(" <keyword, '%s'>", yytext);
 			break;
 		case STRING:
 			printf(" <string, '%s'>", yytext);
@@ -157,32 +152,8 @@ void switcher(int token) {
 		case BOOLEAN:
 			printf(" <boolean, '%s'>", yytext);
 			break;
-		case BOOLEAN_EXP:
-			printf(" <boolean_exp, '%s'>", yytext);
-			break;
 		case BOOLEAN_OP:
 			printf(" <boolean_op, '%s'>", yytext);
-			break;
-		case FLOW:
-			printf(" <boolean_op, '%s'>", yytext);
-			break;
-		case CONDITIONAL:
-			printf(" <conditional, '%s'>", yytext);
-			break;
-		case FUNC:
-			printf(" <func, '%s'>", yytext);
-			break;
-		case STRUCTURE:
-			printf(" <structure, '%s'>", yytext);
-			break;
-		case INPUT:
-			printf(" <input, '%s'>", yytext);
-			break;
-		case PRINT:
-			printf(" <print, '%s'>", yytext);
-			break;
-		case LIST:
-			printf(" <list, '%s'>", yytext);
 			break;
 		case INTEGER:
 			printf(" <integer, '%s'>", yytext);
@@ -190,16 +161,14 @@ void switcher(int token) {
 		case FLOAT:
 			printf(" <float, '%s'>", yytext);
 			break;
-		case ID: ;
-			int cur_key = HASH_COUNT(symbol_table) + 1;
-			add_word(cur_key, yytext);
-			printf(" <id, %d>", cur_key);
+		case COMMENT: ;
+			char *comment = yytext;
+			comment[strlen(comment) - 1] = 0;
+			printf(" <comment, '%s'>", comment);
+			line += 1;
+			column = 0;  // reset column index 
+			printf("\nline %d. ", line);
 			break;
-		case ERROR:
-			printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n", line, column, yytext);
-			break;
-		case WHITESPACE:
-			break;  // ignore
 		default:
 			printf("\nUndefined error.\n");
   	}
@@ -208,7 +177,7 @@ void switcher(int token) {
 
 int main (int argc, char *argv[]) {
 	line = column = 1;
-	printf("Python interpreter:\n");
+	printf("CPPython interpreter:\n");
 	yyin = fopen(argv[1], "r");
 	int token;
 	printf("\nline %d. ", line);
