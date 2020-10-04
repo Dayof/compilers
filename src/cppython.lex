@@ -117,7 +117,7 @@ NUMBER			({INTEGER}|{FLOAT})
 /*
 	Output example:
 	- Command: sum_numbers = 1 + 1.0
-	- Output: <id, 1> <delimiter, "="> <integer, "1"> <operator, "+"> <float, "1.0"> 
+	- Output: <id, 1> <delimiter, '='> <integer, '1'> <operator, '+'> <float, '1.0'> 
 */
 
 void switcher(int token) {
