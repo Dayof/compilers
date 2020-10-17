@@ -1,4 +1,4 @@
-# CPPython - Lexer
+# CPPython - Lexer/Parser
 
 ## Requirements
 
