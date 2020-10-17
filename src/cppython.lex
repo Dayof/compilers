@@ -2,74 +2,44 @@
 
 %{
 	#include <stdio.h>
-	#include "uthash.h"
+	#include "sym_tab.h"
+	#include "ast.h"
+	#include "parser.h"
 
 	enum TOKENS{
-		ERROR=1,
-		NEWLINE,
-		WHITESPACE,
-		ID,
-		KEYWORD,
-		INTEGER,
-		FLOAT,
-		OPERATOR,
-		DELIMITER,
-		BOOLEAN,
-		BOOLEAN_OP,
-		STRING,
-		COMMENT
+		ERROR_TOK=1,
+		NEWLINE_TOK,
+		WHITESPACE_TOK,
+		ID_TOK,
+		KEYWORD_TOK,
+		FLOAT_TOK,
+		DELIMITER_TOK,
+		BOOLEAN_TOK,
+		BOOLEAN_OP_TOK,
+		STRING_TOK,
+		COMMENT_TOK,
+		INTEGER_TOK,
+		ADD_TOK,
+		SUB_TOK,
+		MULT_TOK,
+		DIV_TOK
 	};
-
-	int line, column;
-
-	struct word {
-		int key;
-		char name[50];
-		UT_hash_handle hh; /* makes this structure hashable */
-	};
-
-	struct word *symbol_table = NULL;
-
-	void add_word(int key, char *name) {
-		struct word *s;
-		HASH_FIND_INT(symbol_table, &key, s);
-		if (s == NULL) {
-			s = (struct word *) malloc(sizeof *s);
-			s->key = key;
-			HASH_ADD_INT(symbol_table, key, s);
-		}
-		strcpy(s->name, name);
-	}
-
-	struct word *find_word(int word_key) {
-		struct word *s;
-
-		HASH_FIND_INT(symbol_table, &word_key, s);
-		return s;
-	}
-
-	void delete_word(struct word *s) {
-		HASH_DEL(symbol_table, s);
-		free(s);
-	}
-
-	void delete_all() {
-		struct word *cur_word, *tmp;
-
-		HASH_ITER(hh, symbol_table, cur_word, tmp) {
-			HASH_DEL(symbol_table, cur_word);
-			free(cur_word);
-		}
-	}
-
 %}
+
+%option outfile="lexer.c" header-file="lexer.h"
+%option nounput
+%option noinput
 
 	/* regex and token definition */
 
 DIGIT			[0-9]
 NDIGIT			[1-9]
 LETTER			[a-zA-Z]
-OPERATOR		("-"|"+"|"*"|"/")
+SUB				("-")
+ADD				("+")
+MULT			("*")
+DIV				("/")
+OPERATOR		(ADD|SUB|MULT|DIV)
 BOOLEAN_OP		("=="|"<="|">="|"!="|"<"|">"|"~"|"|"|"&"|"and"|"or"|"not")
 DELIMITER		("="|"("|")"|"["|"]"|";"|","|"."|":")
 BOOLEAN			("True"|"False")
@@ -86,31 +56,34 @@ NUMBER			({INTEGER}|{FLOAT})
 
 	/* reserved keywords */
 
-("input"|"print"|"if"|"elif"|"else"|"return"|"def"|"for"|"while")	return KEYWORD;
+("input"|"print"|"if"|"elif"|"else"|"return"|"def"|"for"|"while")	;
 
-	/* arithmetics expressions */
+	/* arithmetic expressions */
 
-{INTEGER}															return INTEGER;
-{FLOAT}																return FLOAT;
-{OPERATOR}															return OPERATOR;
-{DELIMITER}															return DELIMITER;
+{INTEGER}		{ handle_token(INTEGER_TOK); return INTEGER; };
+{FLOAT}																;
+{SUB}			{ handle_token(SUB_TOK); return SUB; };
+{ADD}			{ handle_token(ADD_TOK); return ADD; };
+{MULT}			{ handle_token(MULT_TOK); return MULT; };
+{DIV}			{ handle_token(DIV_TOK); return DIV; };
+{DELIMITER}															;
 
 	/* conditional and booleans expressions */
 
-{BOOLEAN}															return BOOLEAN;
-{BOOLEAN_OP}														return BOOLEAN_OP;
+{BOOLEAN}															;
+{BOOLEAN_OP}														;
 
 	/* structure helpers */
 
-#.*{NEWLINE}														return COMMENT;
-{STRING}															return STRING;
+#.*{NEWLINE}														;
+{STRING}															;
 
 	/* general */
 
-{NEWLINE}															return NEWLINE;
-{WHITESPACE}   														return WHITESPACE;
-{VAR}																return ID;
-.																	return ERROR;  /* any character but newline */
+{NEWLINE}		{ handle_token(NEWLINE_TOK); };
+{WHITESPACE}   														;
+{VAR}																;
+.				{ handle_token(ERROR_TOK); };  /* any character but newline */
 
 %%
 
@@ -120,69 +93,39 @@ NUMBER			({INTEGER}|{FLOAT})
 	- Output: <id, 1> <delimiter, '='> <integer, '1'> <operator, '+'> <float, '1.0'> 
 */
 
-void switcher(int token) {
+void handle_token(int token) {
 	switch (token) {
-		case ERROR:
-			printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n", line, column, yytext);
+		case INTEGER_TOK:
+			printf("Token: <integer, '%s'>", yytext);
+			yylval.value = atoi(yytext); 
 			break;
-		case NEWLINE:
+		case SUB_TOK:
+			printf("Token: <sub, '%s'>", yytext);
+			yylval.op = yytext;
+			break;
+		case ADD_TOK:
+			printf("Token: <add, '%s'>", yytext);
+			yylval.op = yytext;
+			break;
+		case MULT_TOK:
+			printf("Token: <mult, '%s'>", yytext);
+			yylval.op = yytext;
+			break;
+		case DIV_TOK:
+			printf("Token: <div, '%s'>", yytext);
+			yylval.op = yytext;
+			break;
+		case NEWLINE_TOK:
 			line += 1;
 			column = 0;  // reset column index 
 			printf("\nline %d. ", line);
 			break;
-		case WHITESPACE:
-			break;  // ignore
-		case ID: ;
-			int cur_key = HASH_COUNT(symbol_table) + 1;
-			add_word(cur_key, yytext);
-			printf(" <id, %d>", cur_key);
-			break;
-		case KEYWORD:
-			printf(" <keyword, '%s'>", yytext);
-			break;
-		case STRING:
-			printf(" <string, '%s'>", yytext);
-			break;
-		case DELIMITER:
-			printf(" <delimiter, '%s'>", yytext);
-			break;
-		case OPERATOR:
-			printf(" <operator, '%s'>", yytext);
-			break;
-		case BOOLEAN:
-			printf(" <boolean, '%s'>", yytext);
-			break;
-		case BOOLEAN_OP:
-			printf(" <boolean_op, '%s'>", yytext);
-			break;
-		case INTEGER:
-			printf(" <integer, '%s'>", yytext);
-			break;
-		case FLOAT:
-			printf(" <float, '%s'>", yytext);
-			break;
-		case COMMENT: ;
-			char *comment = yytext;
-			comment[strlen(comment) - 1] = 0;
-			printf(" <comment, '%s'>", comment);
-			line += 1;
-			column = 0;  // reset column index 
-			printf("\nline %d. ", line);
-			break;
+		case ERROR_TOK:
+			printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
+				   line, column, yytext);
+			exit(1);
 		default:
-			printf("\nUndefined error.\n");
-  	}
+			break;  // ignore
+	}
 	column += strlen(yytext);
-}
-
-int main (int argc, char *argv[]) {
-	line = column = 1;
-	printf("CPPython interpreter:\n");
-	yyin = fopen(argv[1], "r");
-	int token;
-	printf("\nline %d. ", line);
-	while ((token = yylex()) != 0) switcher(token);
-  	fclose(yyin);
-	printf("\n");
-	return 0;
 }

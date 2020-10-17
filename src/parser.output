@@ -1,0 +1,177 @@
+Grammar
+
+    0 $accept: input $end
+
+    1 input: %empty
+    2      | expr
+
+    3 expr: term ADD term
+    4     | term SUB term
+    5     | term
+
+    6 term: factor MULT factor
+    7     | factor DIV factor
+    8     | factor
+
+    9 factor: INTEGER
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    ADD <op> (258) 3
+    SUB <op> (259) 4
+    MULT <op> (260) 6
+    DIV <op> (261) 7
+    INTEGER <value> (262) 9
+
+
+Nonterminals, with rules where they appear
+
+    $accept (8)
+        on left: 0
+    input (9)
+        on left: 1 2
+        on right: 0
+    expr <expression> (10)
+        on left: 3 4 5
+        on right: 2
+    term <expression> (11)
+        on left: 6 7 8
+        on right: 3 4 5
+    factor <expression> (12)
+        on left: 9
+        on right: 6 7 8
+
+
+State 0
+
+    0 $accept: . input $end
+
+    INTEGER  shift, and go to state 1
+
+    $default  reduce using rule 1 (input)
+
+    input   go to state 2
+    expr    go to state 3
+    term    go to state 4
+    factor  go to state 5
+
+
+State 1
+
+    9 factor: INTEGER .
+
+    $default  reduce using rule 9 (factor)
+
+
+State 2
+
+    0 $accept: input . $end
+
+    $end  shift, and go to state 6
+
+
+State 3
+
+    2 input: expr .
+
+    $default  reduce using rule 2 (input)
+
+
+State 4
+
+    3 expr: term . ADD term
+    4     | term . SUB term
+    5     | term .
+
+    ADD  shift, and go to state 7
+    SUB  shift, and go to state 8
+
+    $default  reduce using rule 5 (expr)
+
+
+State 5
+
+    6 term: factor . MULT factor
+    7     | factor . DIV factor
+    8     | factor .
+
+    MULT  shift, and go to state 9
+    DIV   shift, and go to state 10
+
+    $default  reduce using rule 8 (term)
+
+
+State 6
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+State 7
+
+    3 expr: term ADD . term
+
+    INTEGER  shift, and go to state 1
+
+    term    go to state 11
+    factor  go to state 5
+
+
+State 8
+
+    4 expr: term SUB . term
+
+    INTEGER  shift, and go to state 1
+
+    term    go to state 12
+    factor  go to state 5
+
+
+State 9
+
+    6 term: factor MULT . factor
+
+    INTEGER  shift, and go to state 1
+
+    factor  go to state 13
+
+
+State 10
+
+    7 term: factor DIV . factor
+
+    INTEGER  shift, and go to state 1
+
+    factor  go to state 14
+
+
+State 11
+
+    3 expr: term ADD term .
+
+    $default  reduce using rule 3 (expr)
+
+
+State 12
+
+    4 expr: term SUB term .
+
+    $default  reduce using rule 4 (expr)
+
+
+State 13
+
+    6 term: factor MULT factor .
+
+    $default  reduce using rule 6 (term)
+
+
+State 14
+
+    7 term: factor DIV factor .
+
+    $default  reduce using rule 7 (term)
