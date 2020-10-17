@@ -5,6 +5,7 @@
 - Flex 2.6.4
 - Bison 3.5.1
 - GCC 9.3.0
+- Make 4.2.1
 
 ## Usage
 
