@@ -3,43 +3,60 @@
 ## Requirements
 
 - Flex 2.6.4
+- Bison 3.5.1
 - GCC 9.3.0
 
 ## Usage
 
 ```bash
-$ chmod +x build.sh
-$ ./build.sh
-$ ./cppython tests/valid_1.ppy  # for valid test
-$ ./cppython tests/incorrect_1.ppy  # for invalid test
+$ make
+$ ./cppython tests/parser/valid_1.ppy  # for valid test
+$ ./cppython tests/parser/invalid_1.ppy  # for invalid test
 ```
 
 ## Output examples
 
 - Valid input 1:
-  - Commands: ./build.sh && ./cppython tests/valid_1.ppy
+  - Commands: ./cppython tests/parser/valid_1.ppy
   - Output: 
 
     ```bash
-    CPPython interpreter:
+		Welcome to CPPython interpreter:
+		Lexer/parser:
 
-    line 1.  <keyword, 'def'> <id, 1> <delimiter, '('> <id, 2> <delimiter, ','> <id, 3> <delimiter, ')'> <delimiter, ':'>
-    line 2.  <id, 4> <delimiter, '='> <integer, '1'>
-    line 3.  <id, 5> <operator, '+'> <delimiter, '='> <integer, '1'>
+		line 1. Token: <integer, '1'>
+
+		Creating integer expression node: 1
+		Token: <add, '+'>
+		Assign expression.
+		Token: <integer, '1'>
+
+		Creating integer expression node: 1
+
+		line 2. 
+		Assign expression.
+
+		Creating binary expression node: 1 + 1
+		1
+
+		AST created.
+
+		Lexer and parser finished.
     ```
 
 - Invalid input 2:
-  - Commands: ./build.sh && ./cppython tests/invalid_1.ppy
+  - Commands: ./cppython tests/parser/invalid_1.ppy
   - Output: 
 
     ```bash
-    CPPython interpreter:
+		Welcome to CPPython interpreter:
+		Lexer/parser:
 
-    line 1.  <keyword, 'def'> <id, 1> <delimiter, '('> <delimiter, ')'> <delimiter, ':'>
-    line 2.  <id, 2> <delimiter, '='> <integer, '1'>
-    line 3.  <id, 3> <operator, '+'> <delimiter, '='> <integer, '1'>
-    line 4.  <id, 4> <delimiter, '='>
-    LexerError: line 4, column 13, token '@' is not recognized
+		line 1. Token: <integer, '1'>
+
+		Creating integer expression node: 1
+
+		LexerError: line 1, column 2, token '^' is not recognized
     ```
 
 ## Author

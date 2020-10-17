@@ -1,1 +1,3 @@
 cppython
+*.tab.*
+*.yy.*
