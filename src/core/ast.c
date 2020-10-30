@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "ast.h"
 
-ast_node* create_bin_expr(char *operator, ast_node* left, ast_node* right) {
+ast_node* create_bin_expr(char* operator, ast_node* left, ast_node* right) {
     if (PARSER_VERBOSE) printf("\nCreating binary expression node: .%d. .%s. .%d.\n",
                                left->op.integer_expr, operator, right->op.integer_expr);
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));

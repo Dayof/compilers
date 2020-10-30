@@ -14,9 +14,9 @@ typedef struct exp {
     int tag;
     union { 
         int integer_expr;
-        char *variable_expr;
+        char* variable_expr;
         struct { 
-            char *operator;
+            char* operator;
             struct exp* left;
             struct exp* right;
         } binary_expr;
@@ -31,7 +31,7 @@ ast_node* print_exp(ast_node* node);
 void create_empy_ast();
 void create_ast(ast_node* expression);
 ast_node* create_int_expr(int value);
-ast_node* create_bin_expr(char *operator, ast_node* left, ast_node* right);
+ast_node* create_bin_expr(char* operator, ast_node* left, ast_node* right);
 
 void handle_token(int token);
 

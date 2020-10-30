@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include "sym_tab.h"
 #include "ast.h"
 #include "lexer.h"
 #include "parser.h"
 
-int main (int argc, char *argv[]) {
+int main (int argc, char* argv[]) {
 	printf("Welcome to CPPython interpreter:\n");
     MAIN_VERBOSE = LEX_VERBOSE = PARSER_VERBOSE = AST_LVL = 0;
     root = NULL;
@@ -21,6 +22,9 @@ int main (int argc, char *argv[]) {
 
     printf("Abstract Syntax Tree:\n");
     print_ast(root);
+
+    printf("\nSymbol Table:\n");
+    print_st();
 	
     return 0;
 }
