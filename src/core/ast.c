@@ -165,7 +165,9 @@ void print_ast(ast_node* node, int lvl) {
         return;
     // terminal leaf
     } else if (node->tag == BOOL_TYPE) {
-        printf("BOOL: %d\n", node->op.integer_expr);
+        printf("BOOL: ");
+        if (node->op.integer_expr) printf("True\n");
+        else if (!node->op.integer_expr) printf("False\n");
         return;
     // terminal leaf
     } else if (node->tag == FLOAT_TYPE) {
