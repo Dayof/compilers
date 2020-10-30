@@ -6,8 +6,8 @@
     void yyerror(char *s);
 %}
 
-%output  "parser.c"
-%defines "parser.h"
+%output  "parser/parser.c"
+%defines "parser/parser.h"
 %define lr.type ielr
 
 %start input
@@ -28,18 +28,18 @@
 
 %%
 
-input   : /* empty */
+input   : /* empty */                  { create_empy_ast(); }
         | expr                         { create_ast($1); }
         ;
 
-expr    : term[L] ADD[C] term[R]       { $$ = create_bin_expr($C, $L, $R); }
-        | term[L] SUB[C] term[R]       { $$ = create_bin_expr($C, $L, $R); }
-        | term[U]                      { $$ = show($U); }
+expr    : term[L] ADD[C] term[R]       { $$ = create_bin_expr("+", $L, $R); }
+        | term[L] SUB[C] term[R]       { $$ = create_bin_expr("-", $L, $R); }
+        | term[U]                      { $$ = print_exp($U); }
 		;
 
 term    : factor[L] MULT[C] factor[R]  { $$ = create_bin_expr($C, $L, $R); }
         | factor[L] DIV[C] factor[R]   { $$ = create_bin_expr($C, $L, $R); }
-        | factor[U]                    { $$ = show($U); }
+        | factor[U]                    { $$ = print_exp($U); }
         ;
 
 factor  : INTEGER[U]                   { $$ = create_int_expr($U); }

@@ -1,18 +1,18 @@
-# CPPython
+# CPPython - Lexer/Parser
 
 ## Requirements
 
 - Flex 2.6.4
+- Bison 3.5.1
 - GCC 9.3.0
+- Make 4.2.1
 
 ## Usage
 
 ```bash
-$ cd src
-$ chmod +x build.sh
-$ ./build.sh
-$ ./cppython tests/valid_1.ppy  # for valid test
-$ ./cppython tests/incorrect_1.ppy  # for invalid test
+$ make
+$ ./cppython tests/parser/valid_1.ppy  # for valid test
+$ ./cppython tests/parser/invalid_1.ppy  # for invalid test
 ```
 
 ## Author

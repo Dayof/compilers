@@ -6,7 +6,7 @@
 	#include "ast.h"
 	#include "parser.h"
 
-	enum TOKENS{
+	enum TOKENS {
 		ERROR_TOK=1,
 		NEWLINE_TOK,
 		WHITESPACE_TOK,
@@ -26,7 +26,7 @@
 	};
 %}
 
-%option outfile="lexer.c" header-file="lexer.h"
+%option outfile="lexer/lexer.c" header-file="lexer/lexer.h"
 %option nounput
 %option noinput
 
@@ -96,33 +96,33 @@ NUMBER			({INTEGER}|{FLOAT})
 void handle_token(int token) {
 	switch (token) {
 		case INTEGER_TOK:
-			printf("Token: <integer, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
 			yylval.value = atoi(yytext); 
 			break;
 		case SUB_TOK:
-			printf("Token: <sub, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <sub, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case ADD_TOK:
-			printf("Token: <add, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <add, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case MULT_TOK:
-			printf("Token: <mult, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <mult, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case DIV_TOK:
-			printf("Token: <div, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <div, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:
 			line += 1;
 			column = 0;  // reset column index 
-			printf("\nline %d. ", line);
+			if (LEX_VERBOSE) printf("\nline %d. ", line);
 			break;
 		case ERROR_TOK:
-			printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
-				   line, column, yytext);
+			if (LEX_VERBOSE) printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
+				   				line, column, yytext);
 			exit(1);
 		default:
 			break;  // ignore

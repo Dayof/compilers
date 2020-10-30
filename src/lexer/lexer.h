@@ -2,9 +2,9 @@
 #define yyHEADER_H 1
 #define yyIN_HEADER 1
 
-#line 6 "lexer.h"
+#line 6 "lexer/lexer.h"
 
-#line 8 "lexer.h"
+#line 8 "lexer/lexer.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -466,9 +466,9 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 89 "cppython.lex"
+#line 89 "lexer/cppython.lex"
 
 
-#line 473 "lexer.h"
+#line 473 "lexer/lexer.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */
