@@ -11,5 +11,8 @@ lexer/lexer.c:	lexer/cppython.lex
 parser/parser.c:	parser/cppython.y
 					bison -d -v parser/cppython.y
 
+valgrind: 
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="logfile.out" ./cppython
+
 clean:
-	rm -f *.o *~ lexer/lexer.c lexer/lexer.h parser/parser.c parser/parser.h parser/parser.output cppython
+	rm -f *.o *~ lexer/lexer.c lexer/lexer.h parser/parser.c parser/parser.h parser/parser.output logfile.out cppython

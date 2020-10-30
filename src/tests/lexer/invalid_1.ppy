@@ -1,4 +1,0 @@
-def test():
-    var = 1
-    var += 1
-    var_2 = @

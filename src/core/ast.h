@@ -6,7 +6,7 @@ int lex_line, lex_column, parser_line, parser_column;
 
 enum TAG {
     INTEGER_TYPE=0, 
-    FLOAT_TYPE, 
+    FLOAT_TYPE,
     BOOL_TYPE, 
     VAR_TYPE,
     BINARY_TYPE

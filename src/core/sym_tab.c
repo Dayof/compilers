@@ -3,8 +3,7 @@
 
 
 int add_word(int key, char* name) {
-    word* s;
-    HASH_FIND_INT(symbol_table, &key, s);
+    word* s = find_word(key);
     if (s == NULL) {
         s = (word*) malloc(sizeof(word));
         s->key = key;
@@ -25,7 +24,7 @@ void delete_word(word* s) {
     free(s);
 }
 
-void delete_all() {
+void delete_all_st() {
     word* cur_word, *tmp;
     HASH_ITER(hh, symbol_table, cur_word, tmp) {
         HASH_DEL(symbol_table, cur_word);
@@ -48,12 +47,12 @@ void print_st() {
     printf("Size: %u\n\n", num_symbols);
 
     word* cur_word, *tmp;
+    cur_word = tmp = NULL;
     HASH_ITER(hh, symbol_table, cur_word, tmp) {
         printf("KEY: %d, NAME: %s, TYPE: ", cur_word->key, cur_word->name);
-        if (cur_word->type == ST_INT) printf("INT\n");
-        if (cur_word->type == ST_FLOAT) printf("FLOAT\n");
-        if (cur_word->type == ST_BOOL) printf("BOOL\n");
-        HASH_DEL(symbol_table, cur_word);
-        free(cur_word);
+        if (cur_word->type == ST_INT) printf("INT");
+        else if (cur_word->type == ST_FLOAT) printf("FLOAT");
+        else if (cur_word->type == ST_BOOL) printf("BOOL");
+        printf("\n");
     }
 }

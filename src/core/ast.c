@@ -73,31 +73,28 @@ void create_empy_ast() {
 }
 
 int find_bool(ast_node* expr) {
-    if (expr->tag == BOOL_TYPE) {
-        return 1;
-    } else if (expr->tag == BINARY_TYPE) {
-        find_bool(expr->op.binary_expr.left);
-        find_bool(expr->op.binary_expr.right);
+    if (expr->tag == BOOL_TYPE) return 1;
+    else if (expr->tag == BINARY_TYPE) {
+        if (find_bool(expr->op.binary_expr.left)) return 1;
+        if (find_bool(expr->op.binary_expr.right)) return 1;
     }
     return 0;
 }
 
 int find_float(ast_node* expr) {
-    if (expr->tag == FLOAT_TYPE) {
-        return 1;
-    } else if (expr->tag == BINARY_TYPE) {
-        find_float(expr->op.binary_expr.left);
-        find_float(expr->op.binary_expr.right);
-    }
+    if (expr->tag == FLOAT_TYPE) return 1;
+    else if (expr->tag == BINARY_TYPE) {
+        if (find_float(expr->op.binary_expr.left)) return 1;
+        if (find_float(expr->op.binary_expr.right)) return 1;
+    } 
     return 0;
 }
 
 int find_int(ast_node* expr) {
-    if (expr->tag == INTEGER_TYPE) {
-        return 1;
-    } else if (expr->tag == BINARY_TYPE) {
-        find_int(expr->op.binary_expr.left);
-        find_int(expr->op.binary_expr.right);
+    if (expr->tag == INTEGER_TYPE) return 1;
+    else if (expr->tag == BINARY_TYPE) {
+        if (find_int(expr->op.binary_expr.left)) return 1;
+        if (find_int(expr->op.binary_expr.right)) return 1;
     }
     return 0;
 }

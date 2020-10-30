@@ -83,13 +83,14 @@ FLOAT			({DIGIT}+\.{DIGIT}+)
 	/* general */
 
 {NEWLINE}		{ handle_token(NEWLINE_TOK); return NEWLINE; };
-{WHITESPACE}   														;
+{WHITESPACE}   	{ lex_column += strlen(yytext); }													;
 {VAR}			{ handle_token(ID_TOK); return ID; };
 .				{ handle_token(ERROR_TOK); };  /* any character but newline */
 
 %%
 
 void handle_token(int token) {
+	lex_column += strlen(yytext);
 	parser_column = lex_column;
 	switch (token) {
 		case BOOLEAN_TOK:
@@ -131,9 +132,9 @@ void handle_token(int token) {
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:
-			parser_line = lex_line;
 			parser_column = lex_column; 
 			lex_line += 1;
+			parser_line = lex_line;
 			lex_column = 0;  // reset column index 
 			if (LEX_VERBOSE) printf("\nline %d. ", lex_line);
 			break;
@@ -143,5 +144,4 @@ void handle_token(int token) {
 		default:
 			break;  // ignore
 	}
-	lex_column += strlen(yytext);
 }

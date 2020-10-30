@@ -8,6 +8,7 @@ int main (int argc, char* argv[]) {
 	printf("Welcome to CPPython interpreter:\n");
     MAIN_VERBOSE = LEX_VERBOSE = 0;
     PARSER_VERBOSE = 0;
+    symbol_table = NULL;
     ast_root = NULL;
 
     // init lexer and parser
@@ -26,6 +27,9 @@ int main (int argc, char* argv[]) {
 
     printf("\n## Symbol Table ##\n");
     print_st();
+
+    // clean memory
+    delete_all_st();
 	
     return 0;
 }

@@ -15,8 +15,7 @@
 %start input
 
 %union {
-    int int_value;
-    int st_ref;
+    int int_value, st_ref;
     float float_value;
     char* op;
     ast_node* expression;
