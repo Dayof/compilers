@@ -1,13 +1,15 @@
 %{
+    #include <stdlib.h>
     #include <stdio.h>
     #include "ast.h"
 
     int yylex();
-    void yyerror(char *s);
+    void yyerror(const char *s);
 %}
 
 %output  "parser/parser.c"
 %defines "parser/parser.h"
+%define parse.error verbose
 %define lr.type ielr
 
 %start input
@@ -20,6 +22,7 @@
 
 %token <op>         ADD SUB MULT DIV
 %token <value>      INTEGER
+%token              NEWLINE
 
 %left               ADD SUB
 %left               MULT DIV
@@ -28,8 +31,13 @@
 
 %%
 
-input   : /* empty */                  { create_empy_ast(); }
-        | expr                         { create_ast($1); }
+input   : /* empty */               { create_empy_ast(); }
+        | input line                { create_empy_ast(); }
+       
+
+line    : NEWLINE                   { create_empy_ast(); }
+        | expr NEWLINE              { create_ast($1); }
+        | error NEWLINE             { yyerrok; }
         ;
 
 expr    : term[L] ADD term[R]       { $$ = create_bin_expr("+", $L, $R); }
@@ -47,6 +55,7 @@ factor  : INTEGER[U]                { $$ = create_int_expr($U); }
 
 %%
 
-void yyerror(char *s) {
-    printf("%s\n", s);
+void yyerror(const char *s) {
+    printf("\nSyntaxError: %s in line %d, column %d.\n",
+           s, parser_line, parser_column);
 }

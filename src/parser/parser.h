@@ -53,7 +53,8 @@ extern int yydebug;
     SUB = 259,
     MULT = 260,
     DIV = 261,
-    INTEGER = 262
+    INTEGER = 262,
+    NEWLINE = 263
   };
 #endif
 
@@ -61,13 +62,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "parser/cppython.y"
+#line 17 "parser/cppython.y"
 
     int value;
     char* op;
     ast_node* expression;
 
-#line 71 "parser/parser.h"
+#line 72 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

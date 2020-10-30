@@ -29,6 +29,7 @@
 %option outfile="lexer/lexer.c" header-file="lexer/lexer.h"
 %option nounput
 %option noinput
+%option yylineno
 
 	/* regex and token definition */
 
@@ -80,7 +81,7 @@ NUMBER			({INTEGER}|{FLOAT})
 
 	/* general */
 
-{NEWLINE}		{ handle_token(NEWLINE_TOK); };
+{NEWLINE}		{ handle_token(NEWLINE_TOK); return NEWLINE; };
 {WHITESPACE}   														;
 {VAR}																;
 .				{ handle_token(ERROR_TOK); };  /* any character but newline */
@@ -94,6 +95,7 @@ NUMBER			({INTEGER}|{FLOAT})
 */
 
 void handle_token(int token) {
+	parser_column = lex_column;
 	switch (token) {
 		case INTEGER_TOK:
 			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
@@ -116,16 +118,17 @@ void handle_token(int token) {
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:
-			line += 1;
-			column = 0;  // reset column index 
-			if (LEX_VERBOSE) printf("\nline %d. ", line);
+			parser_line = lex_line;
+			parser_column = lex_column; 
+			lex_line += 1;
+			lex_column = 0;  // reset column index 
+			if (LEX_VERBOSE) printf("\nline %d. ", lex_line);
 			break;
 		case ERROR_TOK:
-			if (LEX_VERBOSE) printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
-				   				line, column, yytext);
-			exit(1);
+			printf("\nLexError: token '%s' is not recognized in line %d, column %d.\n",
+			       yytext, lex_line, lex_column);
 		default:
 			break;  // ignore
 	}
-	column += strlen(yytext);
+	lex_column += strlen(yytext);
 }

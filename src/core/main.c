@@ -11,9 +11,9 @@ int main (int argc, char* argv[]) {
 
     // init lexer and parser
     printf("Lexer/parser:\n");
-    line = column = 1;
+    lex_line = lex_column = parser_line = parser_column = 1;
     yyin = fopen(argv[1], "r");
-    if (MAIN_VERBOSE) printf("\nline %d. ", line);
+    if (MAIN_VERBOSE) printf("\nline %d. ", lex_line);
     do {
         yyparse();
     } while (!feof(yyin));

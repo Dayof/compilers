@@ -163,8 +163,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -486,6 +505,11 @@ static const flex_int16_t yy_chk[180] =
        79,   79,   79,   79,   79,   79,   79,   79,   79
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[18] =
+    {   0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -526,11 +550,11 @@ char *yytext;
 		MULT_TOK,
 		DIV_TOK
 	};
-#line 530 "lexer/lexer.c"
+#line 554 "lexer/lexer.c"
 #define YY_NO_INPUT 1
-#line 34 "lexer/cppython.lex"
+#line 35 "lexer/cppython.lex"
 	/* regex and token definition */
-#line 534 "lexer/lexer.c"
+#line 558 "lexer/lexer.c"
 
 #define INITIAL 0
 
@@ -745,12 +769,12 @@ YY_DECL
 		}
 
 	{
-#line 56 "lexer/cppython.lex"
+#line 57 "lexer/cppython.lex"
 
 
 	/* reserved keywords */
 
-#line 754 "lexer/lexer.c"
+#line 778 "lexer/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -796,6 +820,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -809,96 +843,96 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 60 "lexer/cppython.lex"
+#line 61 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* arithmetic expressions */
 case 2:
 YY_RULE_SETUP
-#line 64 "lexer/cppython.lex"
+#line 65 "lexer/cppython.lex"
 { handle_token(INTEGER_TOK); return INTEGER; };
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 65 "lexer/cppython.lex"
+#line 66 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 66 "lexer/cppython.lex"
+#line 67 "lexer/cppython.lex"
 { handle_token(SUB_TOK); return SUB; };
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 67 "lexer/cppython.lex"
+#line 68 "lexer/cppython.lex"
 { handle_token(ADD_TOK); return ADD; };
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 68 "lexer/cppython.lex"
+#line 69 "lexer/cppython.lex"
 { handle_token(MULT_TOK); return MULT; };
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 69 "lexer/cppython.lex"
+#line 70 "lexer/cppython.lex"
 { handle_token(DIV_TOK); return DIV; };
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 70 "lexer/cppython.lex"
+#line 71 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* conditional and booleans expressions */
 case 9:
 YY_RULE_SETUP
-#line 74 "lexer/cppython.lex"
+#line 75 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 75 "lexer/cppython.lex"
+#line 76 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* structure helpers */
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 79 "lexer/cppython.lex"
+#line 80 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 80 "lexer/cppython.lex"
+#line 81 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* general */
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 84 "lexer/cppython.lex"
-{ handle_token(NEWLINE_TOK); };
+#line 85 "lexer/cppython.lex"
+{ handle_token(NEWLINE_TOK); return NEWLINE; };
 	YY_BREAK
 case 14:
-YY_RULE_SETUP
-#line 85 "lexer/cppython.lex"
-;
-	YY_BREAK
-case 15:
 YY_RULE_SETUP
 #line 86 "lexer/cppython.lex"
 ;
 	YY_BREAK
-case 16:
+case 15:
 YY_RULE_SETUP
 #line 87 "lexer/cppython.lex"
+;
+	YY_BREAK
+case 16:
+YY_RULE_SETUP
+#line 88 "lexer/cppython.lex"
 { handle_token(ERROR_TOK); };  /* any character but newline */
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 89 "lexer/cppython.lex"
+#line 90 "lexer/cppython.lex"
 ECHO;
 	YY_BREAK
-#line 902 "lexer/lexer.c"
+#line 936 "lexer/lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1305,6 +1339,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1772,6 +1811,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -1866,7 +1908,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 89 "lexer/cppython.lex"
+#line 90 "lexer/cppython.lex"
 
 
 /*
@@ -1876,6 +1918,7 @@ void yyfree (void * ptr )
 */
 
 void handle_token(int token) {
+	parser_column = lex_column;
 	switch (token) {
 		case INTEGER_TOK:
 			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
@@ -1898,16 +1941,17 @@ void handle_token(int token) {
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:
-			line += 1;
-			column = 0;  // reset column index 
-			if (LEX_VERBOSE) printf("\nline %d. ", line);
+			parser_line = lex_line;
+			parser_column = lex_column; 
+			lex_line += 1;
+			lex_column = 0;  // reset column index 
+			if (LEX_VERBOSE) printf("\nline %d. ", lex_line);
 			break;
 		case ERROR_TOK:
-			if (LEX_VERBOSE) printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
-				   				line, column, yytext);
-			exit(1);
+			printf("\nLexError: token '%s' is not recognized in line %d, column %d.\n",
+			       yytext, lex_line, lex_column);
 		default:
 			break;  // ignore
 	}
-	column += strlen(yytext);
+	lex_column += strlen(yytext);
 }

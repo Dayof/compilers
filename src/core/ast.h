@@ -2,7 +2,7 @@
 #define __AST_H__
 
 int LEX_VERBOSE, PARSER_VERBOSE, MAIN_VERBOSE, AST_LVL;
-int line, column;
+int lex_line, lex_column, parser_line, parser_column;
 
 enum TAG {
     INTEGER_TYPE=0, 
