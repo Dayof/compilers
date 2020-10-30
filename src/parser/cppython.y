@@ -27,30 +27,34 @@
 %left               ADD SUB
 %left               MULT DIV
 
-%type  <expression> expr term factor
+%type  <expression> stmt simple_stmt arith_expr term factor
 
 %%
 
-input   : /* empty */               { create_empy_ast(); }
-        | input line
+input   : /* empty */                   { create_empy_ast(); }
+        | line
        
 
-line    : NEWLINE                   { create_empy_ast(); }
-        | expr NEWLINE              { create_ast($1); }
-        | error NEWLINE             { yyerrok; }
+line    : NEWLINE                       { create_empy_ast(); }
+        | stmt[U] NEWLINE               { create_ast($U); }
+        | error NEWLINE                 { yyerrok; }
         ;
 
-expr    : term[L] ADD term[R]       { $$ = create_bin_expr("+", $L, $R); }
-        | term[L] SUB term[R]       { $$ = create_bin_expr("-", $L, $R); }
-        | term[U]                   { $$ = print_exp($U); }
-		;
+stmt    : simple_stmt[U]                { $$ = print_exp($U); }
 
-term    : factor[L] MULT factor[R]  { $$ = create_bin_expr("*", $L, $R); }
-        | factor[L] DIV factor[R]   { $$ = create_bin_expr("/", $L, $R); }
-        | factor[U]                 { $$ = print_exp($U); }
+simple_stmt : arith_expr[U]             { $$ = print_exp($U); }
+
+arith_expr  : term[L] ADD term[R]       { $$ = create_bin_expr("+", $L, $R); }
+            | term[L] SUB term[R]       { $$ = create_bin_expr("-", $L, $R); }
+            | term[U]                   { $$ = print_exp($U); }
+            ;
+
+term    : factor[L] MULT factor[R]      { $$ = create_bin_expr("*", $L, $R); }
+        | factor[L] DIV factor[R]       { $$ = create_bin_expr("/", $L, $R); }
+        | factor[U]                     { $$ = print_exp($U); }
         ;
 
-factor  : INTEGER[U]                { $$ = create_int_expr($U); }
+factor  : INTEGER[U]                    { $$ = create_int_expr($U); }
         ;
 
 %%
