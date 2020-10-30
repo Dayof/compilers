@@ -1,6 +1,6 @@
-#line 2 "lexer.c"
+#line 2 "lexer/lexer.c"
 
-#line 4 "lexer.c"
+#line 4 "lexer/lexer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -500,15 +500,15 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "cppython.lex"
+#line 1 "lexer/cppython.lex"
 /* tokens mapping */
-#line 4 "cppython.lex"
+#line 4 "lexer/cppython.lex"
 	#include <stdio.h>
 	#include "sym_tab.h"
 	#include "ast.h"
 	#include "parser.h"
 
-	enum TOKENS{
+	enum TOKENS {
 		ERROR_TOK=1,
 		NEWLINE_TOK,
 		WHITESPACE_TOK,
@@ -526,11 +526,11 @@ char *yytext;
 		MULT_TOK,
 		DIV_TOK
 	};
-#line 530 "lexer.c"
+#line 530 "lexer/lexer.c"
 #define YY_NO_INPUT 1
-#line 34 "cppython.lex"
+#line 34 "lexer/cppython.lex"
 	/* regex and token definition */
-#line 534 "lexer.c"
+#line 534 "lexer/lexer.c"
 
 #define INITIAL 0
 
@@ -745,12 +745,12 @@ YY_DECL
 		}
 
 	{
-#line 56 "cppython.lex"
+#line 56 "lexer/cppython.lex"
 
 
 	/* reserved keywords */
 
-#line 754 "lexer.c"
+#line 754 "lexer/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -809,96 +809,96 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 60 "cppython.lex"
+#line 60 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* arithmetic expressions */
 case 2:
 YY_RULE_SETUP
-#line 64 "cppython.lex"
+#line 64 "lexer/cppython.lex"
 { handle_token(INTEGER_TOK); return INTEGER; };
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 65 "cppython.lex"
+#line 65 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 66 "cppython.lex"
+#line 66 "lexer/cppython.lex"
 { handle_token(SUB_TOK); return SUB; };
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 67 "cppython.lex"
+#line 67 "lexer/cppython.lex"
 { handle_token(ADD_TOK); return ADD; };
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 68 "cppython.lex"
+#line 68 "lexer/cppython.lex"
 { handle_token(MULT_TOK); return MULT; };
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 69 "cppython.lex"
+#line 69 "lexer/cppython.lex"
 { handle_token(DIV_TOK); return DIV; };
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 70 "cppython.lex"
+#line 70 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* conditional and booleans expressions */
 case 9:
 YY_RULE_SETUP
-#line 74 "cppython.lex"
+#line 74 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 75 "cppython.lex"
+#line 75 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* structure helpers */
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 79 "cppython.lex"
+#line 79 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 80 "cppython.lex"
+#line 80 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* general */
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 84 "cppython.lex"
+#line 84 "lexer/cppython.lex"
 { handle_token(NEWLINE_TOK); };
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 85 "cppython.lex"
+#line 85 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 86 "cppython.lex"
+#line 86 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 87 "cppython.lex"
+#line 87 "lexer/cppython.lex"
 { handle_token(ERROR_TOK); };  /* any character but newline */
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 89 "cppython.lex"
+#line 89 "lexer/cppython.lex"
 ECHO;
 	YY_BREAK
-#line 902 "lexer.c"
+#line 902 "lexer/lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1866,7 +1866,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 89 "cppython.lex"
+#line 89 "lexer/cppython.lex"
 
 
 /*
@@ -1878,33 +1878,33 @@ void yyfree (void * ptr )
 void handle_token(int token) {
 	switch (token) {
 		case INTEGER_TOK:
-			printf("Token: <integer, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
 			yylval.value = atoi(yytext); 
 			break;
 		case SUB_TOK:
-			printf("Token: <sub, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <sub, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case ADD_TOK:
-			printf("Token: <add, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <add, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case MULT_TOK:
-			printf("Token: <mult, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <mult, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case DIV_TOK:
-			printf("Token: <div, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("Token: <div, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:
 			line += 1;
 			column = 0;  // reset column index 
-			printf("\nline %d. ", line);
+			if (LEX_VERBOSE) printf("\nline %d. ", line);
 			break;
 		case ERROR_TOK:
-			printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
-				   line, column, yytext);
+			if (LEX_VERBOSE) printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
+				   				line, column, yytext);
 			exit(1);
 		default:
 			break;  // ignore

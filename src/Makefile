@@ -1,15 +1,15 @@
-FILES	= parser.c lexer.c ast.c sym_tab.c main.c 
+FILES	= parser/parser.c lexer/lexer.c core/ast.c core/sym_tab.c core/main.c 
 CFLAGS	= -g -Wall -pedantic -x c
 CC		= gcc
 
-cppython:	$(FILES) ast.h sym_tab.h
-			$(CC) $(CFLAGS) $(FILES) -o cppython -lfl
+cppython:	$(FILES) core/ast.h core/sym_tab.h
+			$(CC) $(CFLAGS) $(FILES) -I core -I lexer -I parser -o cppython -lfl
 
-lexer.c:	cppython.lex
-			flex cppython.lex
+lexer/lexer.c:	lexer/cppython.lex
+				flex lexer/cppython.lex
 
-parser.c:	cppython.y
-			bison -d -v cppython.y
+parser/parser.c:	parser/cppython.y
+					bison -d -v parser/cppython.y
 
 clean:
-	rm -f *.o *~ lexer.c lexer.h parser.c parser.h parser.output cppython
+	rm -f *.o *~ lexer/lexer.c lexer/lexer.h parser/parser.c parser/parser.h parser/parser.output cppython

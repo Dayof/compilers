@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_PARSER_H_INCLUDED
-# define YY_YY_PARSER_H_INCLUDED
+#ifndef YY_YY_PARSER_PARSER_H_INCLUDED
+# define YY_YY_PARSER_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -61,13 +61,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "cppython.y"
+#line 15 "parser/cppython.y"
 
     int value;
     char* op;
     ast_node* expression;
 
-#line 71 "parser.h"
+#line 71 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -80,4 +80,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_PARSER_H_INCLUDED  */
