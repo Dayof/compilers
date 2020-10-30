@@ -90,8 +90,6 @@ FLOAT			({DIGIT}+\.{DIGIT}+)
 %%
 
 void handle_token(int token) {
-	lex_column += strlen(yytext);
-	parser_column = lex_column;
 	switch (token) {
 		case BOOLEAN_TOK:
 			if (LEX_VERBOSE) printf("Token: <boolean, '%s'>", yytext);
@@ -144,4 +142,6 @@ void handle_token(int token) {
 		default:
 			break;  // ignore
 	}
+	lex_column += strlen(yytext);
+	parser_column = lex_column;
 }

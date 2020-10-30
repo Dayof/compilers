@@ -6,13 +6,24 @@
 - Bison 3.5.1
 - GCC 9.3.0
 - Make 4.2.1
+- [Optional] Valgrind 3.15.0
 
 ## Usage
 
+The first command clean the environment, compile the system again and generates all the binaries, outputs.
+
 ```bash
-$ make
-$ ./cppython tests/parser/valid_1.ppy  # for valid test
-$ ./cppython tests/parser/invalid_1.ppy  # for invalid test
+$ make clean; make
+$ ./cppython tests/parser/valid_arithmetic_int_float.ppy
+$ ./cppython tests/parser/invalid_assigns.ppy
+```
+
+### Check for memory leaks
+
+Run valgrind to check for memory leaks:
+
+```bash
+$ make clean; make; make valgrind < tests/semantic/test_var_types.ppy
 ```
 
 ## Author

@@ -30,6 +30,7 @@ int main (int argc, char* argv[]) {
 
     // clean memory
     delete_all_st();
+    yylex_destroy();
 	
     return 0;
 }
