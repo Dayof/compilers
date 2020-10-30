@@ -1322,13 +1322,13 @@ yyreduce:
 
   case 4:
 #line 35 "parser/cppython.y"
-                                       { (yyval.expression) = create_bin_expr("+", (yyvsp[-2].expression), (yyvsp[0].expression)); }
+                                    { (yyval.expression) = create_bin_expr("+", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1327 "parser/parser.c"
     break;
 
   case 5:
 #line 36 "parser/cppython.y"
-                                       { (yyval.expression) = create_bin_expr("-", (yyvsp[-2].expression), (yyvsp[0].expression)); }
+                                    { (yyval.expression) = create_bin_expr("-", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1333 "parser/parser.c"
     break;
 
@@ -1340,13 +1340,13 @@ yyreduce:
 
   case 7:
 #line 40 "parser/cppython.y"
-                                       { (yyval.expression) = create_bin_expr((yyvsp[-1].op), (yyvsp[-2].expression), (yyvsp[0].expression)); }
+                                    { (yyval.expression) = create_bin_expr("*", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1345 "parser/parser.c"
     break;
 
   case 8:
 #line 41 "parser/cppython.y"
-                                       { (yyval.expression) = create_bin_expr((yyvsp[-1].op), (yyvsp[-2].expression), (yyvsp[0].expression)); }
+                                    { (yyval.expression) = create_bin_expr("/", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1351 "parser/parser.c"
     break;
 
