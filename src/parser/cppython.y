@@ -35,8 +35,8 @@
 %%
 
 input   : /* empty */                       { create_empy_ast(); }
-        | input line
-       
+        | input line                        { ; }
+        ;
 
 line    : NEWLINE                           { create_empy_ast(); }
         | stmt[U] NEWLINE                   { add_ast($U); }
@@ -44,18 +44,21 @@ line    : NEWLINE                           { create_empy_ast(); }
         ;
 
 stmt    : simple_stmt[U]                    { $$ = print_exp($U); }
+        ;
 
 simple_stmt : var[L] ASSIGN arith_expr[R]   { $$ = create_bin_expr("=", $L, $R); }
+            ;
 
-var     : ID[U]                            { $$ = create_var_expr($U); }
+var     : ID[U]                             { $$ = create_var_expr($U); }
+        ;
 
-arith_expr  : term[L] ADD term[R]           { $$ = create_bin_expr("+", $L, $R); }
-            | term[L] SUB term[R]           { $$ = create_bin_expr("-", $L, $R); }
+arith_expr  : arith_expr[L] ADD term[R]     { $$ = create_bin_expr("+", $L, $R); }
+            | arith_expr[L] SUB term[R]     { $$ = create_bin_expr("-", $L, $R); }
             | term[U]                       { $$ = print_exp($U); }
             ;
 
-term    : factor[L] MULT factor[R]          { $$ = create_bin_expr("*", $L, $R); }
-        | factor[L] DIV factor[R]           { $$ = create_bin_expr("/", $L, $R); }
+term    : term[L] MULT factor[R]            { $$ = create_bin_expr("*", $L, $R); }
+        | term[L] DIV factor[R]             { $$ = create_bin_expr("/", $L, $R); }
         | factor[U]                         { $$ = print_exp($U); }
         ;
 

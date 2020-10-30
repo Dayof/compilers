@@ -64,7 +64,7 @@ ast_node* print_exp(ast_node* node) {
 
 void print_asts(ast_list* root) {
     if (root == NULL) {
-        printf("Empty AST.\n");
+        printf("\nEmpty AST.\n");
         return;
     }
 

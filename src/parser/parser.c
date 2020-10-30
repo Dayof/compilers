@@ -521,8 +521,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    37,    37,    38,    41,    42,    43,    46,    48,    50,
-      52,    53,    54,    57,    58,    59,    62
+       0,    37,    37,    38,    41,    42,    43,    46,    49,    52,
+      55,    56,    57,    60,    61,    62,    65
 };
 #endif
 
@@ -562,8 +562,8 @@ static const yytype_int16 yytoknum[] =
 static const yytype_int8 yypact[] =
 {
      -14,     0,   -14,    -2,   -14,   -14,   -14,     3,   -14,     7,
-     -14,   -14,     8,   -14,   -14,    -1,     1,     8,     8,     8,
-       8,   -14,   -14,   -14,   -14
+     -14,   -14,     8,   -14,    -1,     1,   -14,     8,     8,     8,
+       8,     1,     1,   -14,   -14
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -1324,86 +1324,92 @@ yyreduce:
 #line 1325 "parser/parser.c"
     break;
 
+  case 3:
+#line 38 "parser/cppython.y"
+                                            { ; }
+#line 1331 "parser/parser.c"
+    break;
+
   case 4:
 #line 41 "parser/cppython.y"
                                             { create_empy_ast(); }
-#line 1331 "parser/parser.c"
+#line 1337 "parser/parser.c"
     break;
 
   case 5:
 #line 42 "parser/cppython.y"
                                             { add_ast((yyvsp[-1].expression)); }
-#line 1337 "parser/parser.c"
+#line 1343 "parser/parser.c"
     break;
 
   case 6:
 #line 43 "parser/cppython.y"
                                             { yyerrok; }
-#line 1343 "parser/parser.c"
+#line 1349 "parser/parser.c"
     break;
 
   case 7:
 #line 46 "parser/cppython.y"
                                             { (yyval.expression) = print_exp((yyvsp[0].expression)); }
-#line 1349 "parser/parser.c"
-    break;
-
-  case 8:
-#line 48 "parser/cppython.y"
-                                            { (yyval.expression) = create_bin_expr("=", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1355 "parser/parser.c"
     break;
 
-  case 9:
-#line 50 "parser/cppython.y"
-                                           { (yyval.expression) = create_var_expr((yyvsp[0].var)); }
+  case 8:
+#line 49 "parser/cppython.y"
+                                            { (yyval.expression) = create_bin_expr("=", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1361 "parser/parser.c"
     break;
 
-  case 10:
+  case 9:
 #line 52 "parser/cppython.y"
-                                            { (yyval.expression) = create_bin_expr("+", (yyvsp[-2].expression), (yyvsp[0].expression)); }
+                                            { (yyval.expression) = create_var_expr((yyvsp[0].var)); }
 #line 1367 "parser/parser.c"
     break;
 
-  case 11:
-#line 53 "parser/cppython.y"
-                                            { (yyval.expression) = create_bin_expr("-", (yyvsp[-2].expression), (yyvsp[0].expression)); }
+  case 10:
+#line 55 "parser/cppython.y"
+                                            { (yyval.expression) = create_bin_expr("+", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1373 "parser/parser.c"
     break;
 
-  case 12:
-#line 54 "parser/cppython.y"
-                                            { (yyval.expression) = print_exp((yyvsp[0].expression)); }
+  case 11:
+#line 56 "parser/cppython.y"
+                                            { (yyval.expression) = create_bin_expr("-", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1379 "parser/parser.c"
     break;
 
-  case 13:
+  case 12:
 #line 57 "parser/cppython.y"
-                                            { (yyval.expression) = create_bin_expr("*", (yyvsp[-2].expression), (yyvsp[0].expression)); }
+                                            { (yyval.expression) = print_exp((yyvsp[0].expression)); }
 #line 1385 "parser/parser.c"
     break;
 
-  case 14:
-#line 58 "parser/cppython.y"
-                                            { (yyval.expression) = create_bin_expr("/", (yyvsp[-2].expression), (yyvsp[0].expression)); }
+  case 13:
+#line 60 "parser/cppython.y"
+                                            { (yyval.expression) = create_bin_expr("*", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1391 "parser/parser.c"
     break;
 
-  case 15:
-#line 59 "parser/cppython.y"
-                                            { (yyval.expression) = print_exp((yyvsp[0].expression)); }
+  case 14:
+#line 61 "parser/cppython.y"
+                                            { (yyval.expression) = create_bin_expr("/", (yyvsp[-2].expression), (yyvsp[0].expression)); }
 #line 1397 "parser/parser.c"
     break;
 
-  case 16:
+  case 15:
 #line 62 "parser/cppython.y"
-                                            { (yyval.expression) = create_int_expr((yyvsp[0].int_value)); }
+                                            { (yyval.expression) = print_exp((yyvsp[0].expression)); }
 #line 1403 "parser/parser.c"
     break;
 
+  case 16:
+#line 65 "parser/cppython.y"
+                                            { (yyval.expression) = create_int_expr((yyvsp[0].int_value)); }
+#line 1409 "parser/parser.c"
+    break;
 
-#line 1407 "parser/parser.c"
+
+#line 1413 "parser/parser.c"
 
       default: break;
     }
@@ -1635,7 +1641,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 65 "parser/cppython.y"
+#line 68 "parser/cppython.y"
 
 
 void yyerror(const char *s) {
