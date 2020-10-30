@@ -6,7 +6,8 @@
 
 int main (int argc, char* argv[]) {
 	printf("Welcome to CPPython interpreter:\n");
-    MAIN_VERBOSE = LEX_VERBOSE = PARSER_VERBOSE = AST_LVL = 0;
+    MAIN_VERBOSE = LEX_VERBOSE = PARSER_VERBOSE = 0;
+    AST_LVL = 0;
     root = NULL;
 
     // init lexer and parser

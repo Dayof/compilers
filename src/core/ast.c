@@ -35,11 +35,8 @@ void create_empy_ast() {
 
 ast_node* print_exp(ast_node* node) {
     if (PARSER_VERBOSE) {
-        if (node == NULL) {
-            printf("Empty expression.\n");
-        } else {
-            printf("TAG: %d\n", node->tag);
-        }
+        if (node == NULL) printf("Empty expression.\n");
+        else printf("TAG: %d\n", node->tag);
     }
     return node;
 }

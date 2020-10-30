@@ -32,7 +32,7 @@
 %%
 
 input   : /* empty */               { create_empy_ast(); }
-        | input line                { create_empy_ast(); }
+        | input line
        
 
 line    : NEWLINE                   { create_empy_ast(); }
