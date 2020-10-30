@@ -1950,6 +1950,7 @@ void handle_token(int token) {
 			break;
 		case ID_TOK:
 			if (LEX_VERBOSE) printf("Token: <id, '%s'>", yytext);
+			add_word(len_st(), yytext);
 			strcpy(yylval.var, yytext);
 			break;
 		case ASSIGN_TOK:

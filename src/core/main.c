@@ -20,10 +20,10 @@ int main (int argc, char* argv[]) {
     fclose(yyin);
     printf("\nLexer and parser finished.\n\n");
 
-    printf("Abstract Syntax Trees:");
+    printf("## Abstract Syntax Trees ##");
     print_asts(ast_root);
 
-    printf("\nSymbol Table:\n");
+    printf("\n## Symbol Table ##\n");
     print_st();
 	
     return 0;

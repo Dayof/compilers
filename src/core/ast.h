@@ -30,6 +30,7 @@ typedef struct exps {
 
 ast_list* ast_root;
 
+int len_st();
 void print_asts(ast_list* root);
 void print_ast(ast_node* node, int lvl);
 ast_node* print_exp(ast_node* node);

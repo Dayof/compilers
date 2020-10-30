@@ -32,19 +32,23 @@ void delete_all() {
     }
 }
 
+int len_st() {
+    return HASH_COUNT(symbol_table);
+}
+
 void print_st() {
-    unsigned int num_symbols = HASH_COUNT(symbol_table);
+    int num_symbols = HASH_COUNT(symbol_table);
 
     if (num_symbols == 0) {
         printf("Empty symbol table.\n");
         return;
     }
 
-    printf("Size: %u\n", num_symbols);
+    printf("Size: %u\n\n", num_symbols);
 
     word* cur_word, *tmp;
     HASH_ITER(hh, symbol_table, cur_word, tmp) {
-        printf("KEY: %d, NAME: %s", cur_word->key, cur_word->name);
+        printf("KEY: %d, NAME: %s\n", cur_word->key, cur_word->name);
         HASH_DEL(symbol_table, cur_word);
         free(cur_word);
     }
