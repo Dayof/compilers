@@ -466,7 +466,7 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 90 "lexer/cppython.lex"
+#line 95 "lexer/cppython.lex"
 
 
 #line 473 "lexer/lexer.h"

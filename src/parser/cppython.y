@@ -15,46 +15,51 @@
 %start input
 
 %union {
-    int value;
+    int int_value;
+    char var[79];
     char* op;
     ast_node* expression;
 }
 
-%token <op>         ADD SUB MULT DIV
-%token <value>      INTEGER
+%token <op>         ADD SUB MULT DIV ASSIGN
+%token <int_value>  INTEGER
+%token <var>        ID
 %token              NEWLINE
 
+%left               ASSIGN
 %left               ADD SUB
 %left               MULT DIV
 
-%type  <expression> stmt simple_stmt arith_expr term factor
+%type  <expression> stmt simple_stmt var arith_expr term factor
 
 %%
 
-input   : /* empty */                   { create_empy_ast(); }
+input   : /* empty */                       { create_empy_ast(); }
         | line
        
 
-line    : NEWLINE                       { create_empy_ast(); }
-        | stmt[U] NEWLINE               { create_ast($U); }
-        | error NEWLINE                 { yyerrok; }
+line    : NEWLINE                           { create_empy_ast(); }
+        | stmt[U] NEWLINE                   { create_ast($U); }
+        | error NEWLINE                     { yyerrok; }
         ;
 
-stmt    : simple_stmt[U]                { $$ = print_exp($U); }
+stmt    : simple_stmt[U]                    { $$ = print_exp($U); }
 
-simple_stmt : arith_expr[U]             { $$ = print_exp($U); }
+simple_stmt : var[L] ASSIGN arith_expr[R]   { $$ = create_bin_expr("=", $L, $R); }
 
-arith_expr  : term[L] ADD term[R]       { $$ = create_bin_expr("+", $L, $R); }
-            | term[L] SUB term[R]       { $$ = create_bin_expr("-", $L, $R); }
-            | term[U]                   { $$ = print_exp($U); }
+var     : ID[U]                            { $$ = create_var_expr($U); }
+
+arith_expr  : term[L] ADD term[R]           { $$ = create_bin_expr("+", $L, $R); }
+            | term[L] SUB term[R]           { $$ = create_bin_expr("-", $L, $R); }
+            | term[U]                       { $$ = print_exp($U); }
             ;
 
-term    : factor[L] MULT factor[R]      { $$ = create_bin_expr("*", $L, $R); }
-        | factor[L] DIV factor[R]       { $$ = create_bin_expr("/", $L, $R); }
-        | factor[U]                     { $$ = print_exp($U); }
+term    : factor[L] MULT factor[R]          { $$ = create_bin_expr("*", $L, $R); }
+        | factor[L] DIV factor[R]           { $$ = create_bin_expr("/", $L, $R); }
+        | factor[U]                         { $$ = print_exp($U); }
         ;
 
-factor  : INTEGER[U]                    { $$ = create_int_expr($U); }
+factor  : INTEGER[U]                        { $$ = create_int_expr($U); }
         ;
 
 %%

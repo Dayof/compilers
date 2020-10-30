@@ -11,56 +11,63 @@ Grammar
 
     6 stmt: simple_stmt
 
-    7 simple_stmt: arith_expr
+    7 simple_stmt: var ASSIGN arith_expr
 
-    8 arith_expr: term ADD term
-    9           | term SUB term
-   10           | term
+    8 var: ID
 
-   11 term: factor MULT factor
-   12     | factor DIV factor
-   13     | factor
+    9 arith_expr: term ADD term
+   10           | term SUB term
+   11           | term
 
-   14 factor: INTEGER
+   12 term: factor MULT factor
+   13     | factor DIV factor
+   14     | factor
+
+   15 factor: INTEGER
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256) 5
-    ADD <op> (258) 8
-    SUB <op> (259) 9
-    MULT <op> (260) 11
-    DIV <op> (261) 12
-    INTEGER <value> (262) 14
-    NEWLINE (263) 3 4 5
+    ADD <op> (258) 9
+    SUB <op> (259) 10
+    MULT <op> (260) 12
+    DIV <op> (261) 13
+    ASSIGN <op> (262) 7
+    INTEGER <int_value> (263) 15
+    ID <var> (264) 8
+    NEWLINE (265) 3 4 5
 
 
 Nonterminals, with rules where they appear
 
-    $accept (9)
+    $accept (11)
         on left: 0
-    input (10)
+    input (12)
         on left: 1 2
         on right: 0
-    line (11)
+    line (13)
         on left: 3 4 5
         on right: 2
-    stmt <expression> (12)
+    stmt <expression> (14)
         on left: 6
         on right: 4
-    simple_stmt <expression> (13)
+    simple_stmt <expression> (15)
         on left: 7
         on right: 6
-    arith_expr <expression> (14)
-        on left: 8 9 10
+    var <expression> (16)
+        on left: 8
         on right: 7
-    term <expression> (15)
-        on left: 11 12 13
-        on right: 8 9 10
-    factor <expression> (16)
-        on left: 14
-        on right: 11 12 13
+    arith_expr <expression> (17)
+        on left: 9 10 11
+        on right: 7
+    term <expression> (18)
+        on left: 12 13 14
+        on right: 9 10 11
+    factor <expression> (19)
+        on left: 15
+        on right: 12 13 14
 
 
 State 0
@@ -68,7 +75,7 @@ State 0
     0 $accept: . input $end
 
     error    shift, and go to state 1
-    INTEGER  shift, and go to state 2
+    ID       shift, and go to state 2
     NEWLINE  shift, and go to state 3
 
     $end  reduce using rule 1 (input)
@@ -77,23 +84,21 @@ State 0
     line         go to state 5
     stmt         go to state 6
     simple_stmt  go to state 7
-    arith_expr   go to state 8
-    term         go to state 9
-    factor       go to state 10
+    var          go to state 8
 
 
 State 1
 
     5 line: error . NEWLINE
 
-    NEWLINE  shift, and go to state 11
+    NEWLINE  shift, and go to state 9
 
 
 State 2
 
-   14 factor: INTEGER .
+    8 var: ID .
 
-    $default  reduce using rule 14 (factor)
+    $default  reduce using rule 8 (var)
 
 
 State 3
@@ -107,7 +112,7 @@ State 4
 
     0 $accept: input . $end
 
-    $end  shift, and go to state 12
+    $end  shift, and go to state 10
 
 
 State 5
@@ -121,7 +126,7 @@ State 6
 
     4 line: stmt . NEWLINE
 
-    NEWLINE  shift, and go to state 13
+    NEWLINE  shift, and go to state 11
 
 
 State 7
@@ -133,117 +138,142 @@ State 7
 
 State 8
 
-    7 simple_stmt: arith_expr .
+    7 simple_stmt: var . ASSIGN arith_expr
 
-    $default  reduce using rule 7 (simple_stmt)
+    ASSIGN  shift, and go to state 12
 
 
 State 9
-
-    8 arith_expr: term . ADD term
-    9           | term . SUB term
-   10           | term .
-
-    ADD  shift, and go to state 14
-    SUB  shift, and go to state 15
-
-    $default  reduce using rule 10 (arith_expr)
-
-
-State 10
-
-   11 term: factor . MULT factor
-   12     | factor . DIV factor
-   13     | factor .
-
-    MULT  shift, and go to state 16
-    DIV   shift, and go to state 17
-
-    $default  reduce using rule 13 (term)
-
-
-State 11
 
     5 line: error NEWLINE .
 
     $default  reduce using rule 5 (line)
 
 
-State 12
+State 10
 
     0 $accept: input $end .
 
     $default  accept
 
 
-State 13
+State 11
 
     4 line: stmt NEWLINE .
 
     $default  reduce using rule 4 (line)
 
 
+State 12
+
+    7 simple_stmt: var ASSIGN . arith_expr
+
+    INTEGER  shift, and go to state 13
+
+    arith_expr  go to state 14
+    term        go to state 15
+    factor      go to state 16
+
+
+State 13
+
+   15 factor: INTEGER .
+
+    $default  reduce using rule 15 (factor)
+
+
 State 14
 
-    8 arith_expr: term ADD . term
+    7 simple_stmt: var ASSIGN arith_expr .
 
-    INTEGER  shift, and go to state 2
-
-    term    go to state 18
-    factor  go to state 10
+    $default  reduce using rule 7 (simple_stmt)
 
 
 State 15
 
-    9 arith_expr: term SUB . term
+    9 arith_expr: term . ADD term
+   10           | term . SUB term
+   11           | term .
 
-    INTEGER  shift, and go to state 2
+    ADD  shift, and go to state 17
+    SUB  shift, and go to state 18
 
-    term    go to state 19
-    factor  go to state 10
+    $default  reduce using rule 11 (arith_expr)
 
 
 State 16
 
-   11 term: factor MULT . factor
+   12 term: factor . MULT factor
+   13     | factor . DIV factor
+   14     | factor .
 
-    INTEGER  shift, and go to state 2
+    MULT  shift, and go to state 19
+    DIV   shift, and go to state 20
 
-    factor  go to state 20
+    $default  reduce using rule 14 (term)
 
 
 State 17
 
-   12 term: factor DIV . factor
+    9 arith_expr: term ADD . term
 
-    INTEGER  shift, and go to state 2
+    INTEGER  shift, and go to state 13
 
-    factor  go to state 21
+    term    go to state 21
+    factor  go to state 16
 
 
 State 18
 
-    8 arith_expr: term ADD term .
+   10 arith_expr: term SUB . term
 
-    $default  reduce using rule 8 (arith_expr)
+    INTEGER  shift, and go to state 13
+
+    term    go to state 22
+    factor  go to state 16
 
 
 State 19
 
-    9 arith_expr: term SUB term .
+   12 term: factor MULT . factor
 
-    $default  reduce using rule 9 (arith_expr)
+    INTEGER  shift, and go to state 13
+
+    factor  go to state 23
 
 
 State 20
 
-   11 term: factor MULT factor .
+   13 term: factor DIV . factor
 
-    $default  reduce using rule 11 (term)
+    INTEGER  shift, and go to state 13
+
+    factor  go to state 24
 
 
 State 21
 
-   12 term: factor DIV factor .
+    9 arith_expr: term ADD term .
+
+    $default  reduce using rule 9 (arith_expr)
+
+
+State 22
+
+   10 arith_expr: term SUB term .
+
+    $default  reduce using rule 10 (arith_expr)
+
+
+State 23
+
+   12 term: factor MULT factor .
 
     $default  reduce using rule 12 (term)
+
+
+State 24
+
+   13 term: factor DIV factor .
+
+    $default  reduce using rule 13 (term)

@@ -1,5 +1,6 @@
-#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "ast.h"
 
 ast_node* create_bin_expr(char* operator, ast_node* left, ast_node* right) {
@@ -18,6 +19,14 @@ ast_node* create_int_expr(int value) {
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = INTEGER_TYPE;
     expr->op.integer_expr = value;
+    return expr;
+}
+
+ast_node* create_var_expr(char* value) {
+    if (PARSER_VERBOSE) printf("\n\nCreating variable expression node: %s\n", value);
+    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
+    expr->tag = VAR_TYPE;
+    strcpy(expr->op.variable_expr, value);
     return expr;
 }
 
@@ -41,7 +50,7 @@ ast_node* print_exp(ast_node* node) {
     return node;
 }
 
-void print_ast(ast_node* node) {
+void print_ast(ast_node* node, int lvl) {
     if (node == NULL) {
         printf("Empty AST.\n");
         return;
@@ -49,7 +58,7 @@ void print_ast(ast_node* node) {
     
     if (PARSER_VERBOSE) printf("TAG: %d\n", node->tag);
 
-    for (int i=0; i < AST_LVL; ++i) printf("  ");
+    for (int i=0; i < lvl; ++i) printf("  ");
 
     // terminal leaf
     if (node->tag == INTEGER_TYPE) {
@@ -62,9 +71,8 @@ void print_ast(ast_node* node) {
     // non terminal node
     } else if (node->tag == BINARY_TYPE) {
         printf("OP: %s\n", node->op.binary_expr.operator);
-        AST_LVL += 1;
-        print_ast(node->op.binary_expr.right);
-        print_ast(node->op.binary_expr.left);
+        print_ast(node->op.binary_expr.right, lvl+1);
+        print_ast(node->op.binary_expr.left, lvl+1);
     } else {
         printf("Print AST unknown error.\n");
         return;

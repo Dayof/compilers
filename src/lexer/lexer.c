@@ -371,8 +371,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 17
-#define YY_END_OF_BUFFER 18
+#define YY_NUM_RULES 18
+#define YY_END_OF_BUFFER 19
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -382,14 +382,14 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[80] =
     {   0,
-        0,    0,   18,   16,   14,   13,   16,   16,   16,   10,
-       16,    8,    6,    5,    4,    7,    2,    2,   10,    8,
-       10,   15,   15,   15,   15,   15,   15,   15,   15,   15,
-       15,   15,   15,   15,   15,   16,   14,   10,    0,   12,
-        0,   11,    0,   12,    0,    3,    0,    2,   15,   15,
-       15,   15,   15,   15,   15,    1,   15,   15,   10,   15,
-       15,   15,    3,   15,   15,   15,   15,   15,   15,   15,
-       15,   15,    9,   15,   15,   15,   15,   15,    0
+        0,    0,   19,   17,   15,   14,   17,   17,   17,   11,
+       17,    9,    6,    5,    4,    7,    2,    2,   11,    8,
+       11,   16,   16,   16,   16,   16,   16,   16,   16,   16,
+       16,   16,   16,   16,   16,   17,   15,   11,    0,   13,
+        0,   12,    0,   13,    0,    3,    0,    2,   16,   16,
+       16,   16,   16,   16,   16,    1,   16,   16,   11,   16,
+       16,   16,    3,   16,   16,   16,   16,   16,   16,   16,
+       16,   16,   10,   16,   16,   16,   16,   16,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -506,9 +506,9 @@ static const flex_int16_t yy_chk[180] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[18] =
+static const flex_int32_t yy_rule_can_match_eol[19] =
     {   0,
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,     };
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -527,6 +527,7 @@ char *yytext;
 #line 1 "lexer/cppython.lex"
 /* tokens mapping */
 #line 4 "lexer/cppython.lex"
+	#include <string.h>
 	#include <stdio.h>
 	#include "sym_tab.h"
 	#include "ast.h"
@@ -537,7 +538,9 @@ char *yytext;
 		NEWLINE_TOK,
 		WHITESPACE_TOK,
 		ID_TOK,
+		ASSIGN_TOK,
 		KEYWORD_TOK,
+		VAR_TOK,
 		FLOAT_TOK,
 		DELIMITER_TOK,
 		BOOLEAN_TOK,
@@ -550,11 +553,11 @@ char *yytext;
 		MULT_TOK,
 		DIV_TOK
 	};
-#line 554 "lexer/lexer.c"
+#line 557 "lexer/lexer.c"
 #define YY_NO_INPUT 1
-#line 35 "lexer/cppython.lex"
+#line 38 "lexer/cppython.lex"
 	/* regex and token definition */
-#line 558 "lexer/lexer.c"
+#line 561 "lexer/lexer.c"
 
 #define INITIAL 0
 
@@ -769,12 +772,12 @@ YY_DECL
 		}
 
 	{
-#line 57 "lexer/cppython.lex"
+#line 61 "lexer/cppython.lex"
 
 
 	/* reserved keywords */
 
-#line 778 "lexer/lexer.c"
+#line 781 "lexer/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -843,96 +846,101 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 61 "lexer/cppython.lex"
+#line 65 "lexer/cppython.lex"
 ;
 	YY_BREAK
 /* arithmetic expressions */
 case 2:
 YY_RULE_SETUP
-#line 65 "lexer/cppython.lex"
+#line 69 "lexer/cppython.lex"
 { handle_token(INTEGER_TOK); return INTEGER; };
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 66 "lexer/cppython.lex"
+#line 70 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 67 "lexer/cppython.lex"
+#line 71 "lexer/cppython.lex"
 { handle_token(SUB_TOK); return SUB; };
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 68 "lexer/cppython.lex"
+#line 72 "lexer/cppython.lex"
 { handle_token(ADD_TOK); return ADD; };
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 69 "lexer/cppython.lex"
+#line 73 "lexer/cppython.lex"
 { handle_token(MULT_TOK); return MULT; };
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 70 "lexer/cppython.lex"
+#line 74 "lexer/cppython.lex"
 { handle_token(DIV_TOK); return DIV; };
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 71 "lexer/cppython.lex"
-;
-	YY_BREAK
-/* conditional and booleans expressions */
-case 9:
-YY_RULE_SETUP
 #line 75 "lexer/cppython.lex"
-;
+{ handle_token(ASSIGN_TOK); return ASSIGN; };
 	YY_BREAK
-case 10:
+case 9:
 YY_RULE_SETUP
 #line 76 "lexer/cppython.lex"
 ;
 	YY_BREAK
-/* structure helpers */
-case 11:
-/* rule 11 can match eol */
+/* conditional and booleans expressions */
+case 10:
 YY_RULE_SETUP
 #line 80 "lexer/cppython.lex"
 ;
 	YY_BREAK
-case 12:
+case 11:
 YY_RULE_SETUP
 #line 81 "lexer/cppython.lex"
 ;
 	YY_BREAK
-/* general */
-case 13:
-/* rule 13 can match eol */
+/* structure helpers */
+case 12:
+/* rule 12 can match eol */
 YY_RULE_SETUP
 #line 85 "lexer/cppython.lex"
-{ handle_token(NEWLINE_TOK); return NEWLINE; };
+;
 	YY_BREAK
-case 14:
+case 13:
 YY_RULE_SETUP
 #line 86 "lexer/cppython.lex"
 ;
 	YY_BREAK
+/* general */
+case 14:
+/* rule 14 can match eol */
+YY_RULE_SETUP
+#line 90 "lexer/cppython.lex"
+{ handle_token(NEWLINE_TOK); return NEWLINE; };
+	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 87 "lexer/cppython.lex"
+#line 91 "lexer/cppython.lex"
 ;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 88 "lexer/cppython.lex"
-{ handle_token(ERROR_TOK); };  /* any character but newline */
+#line 92 "lexer/cppython.lex"
+{ handle_token(ID_TOK); return ID; };
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 90 "lexer/cppython.lex"
+#line 93 "lexer/cppython.lex"
+{ handle_token(ERROR_TOK); };  /* any character but newline */
+	YY_BREAK
+case 18:
+YY_RULE_SETUP
+#line 95 "lexer/cppython.lex"
 ECHO;
 	YY_BREAK
-#line 936 "lexer/lexer.c"
+#line 944 "lexer/lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1908,7 +1916,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 90 "lexer/cppython.lex"
+#line 95 "lexer/cppython.lex"
 
 
 /*
@@ -1922,7 +1930,7 @@ void handle_token(int token) {
 	switch (token) {
 		case INTEGER_TOK:
 			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
-			yylval.value = atoi(yytext); 
+			yylval.int_value = atoi(yytext); 
 			break;
 		case SUB_TOK:
 			if (LEX_VERBOSE) printf("Token: <sub, '%s'>", yytext);
@@ -1938,6 +1946,14 @@ void handle_token(int token) {
 			break;
 		case DIV_TOK:
 			if (LEX_VERBOSE) printf("Token: <div, '%s'>", yytext);
+			yylval.op = yytext;
+			break;
+		case ID_TOK:
+			if (LEX_VERBOSE) printf("Token: <id, '%s'>", yytext);
+			strcpy(yylval.var, yytext);
+			break;
+		case ASSIGN_TOK:
+			if (LEX_VERBOSE) printf("Token: <assign, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:

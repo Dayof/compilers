@@ -1,6 +1,7 @@
 /* tokens mapping */
 
 %{
+	#include <string.h>
 	#include <stdio.h>
 	#include "sym_tab.h"
 	#include "ast.h"
@@ -11,7 +12,9 @@
 		NEWLINE_TOK,
 		WHITESPACE_TOK,
 		ID_TOK,
+		ASSIGN_TOK,
 		KEYWORD_TOK,
+		VAR_TOK,
 		FLOAT_TOK,
 		DELIMITER_TOK,
 		BOOLEAN_TOK,
@@ -42,7 +45,8 @@ MULT			("*")
 DIV				("/")
 OPERATOR		(ADD|SUB|MULT|DIV)
 BOOLEAN_OP		("=="|"<="|">="|"!="|"<"|">"|"~"|"|"|"&"|"and"|"or"|"not")
-DELIMITER		("="|"("|")"|"["|"]"|";"|","|"."|":")
+ASSIGN			("=")
+DELIMITER		("("|")"|"["|"]"|";"|","|"."|":")
 BOOLEAN			("True"|"False")
 NULL			("None")
 NEWLINE			(\n)
@@ -67,6 +71,7 @@ NUMBER			({INTEGER}|{FLOAT})
 {ADD}			{ handle_token(ADD_TOK); return ADD; };
 {MULT}			{ handle_token(MULT_TOK); return MULT; };
 {DIV}			{ handle_token(DIV_TOK); return DIV; };
+{ASSIGN}		{ handle_token(ASSIGN_TOK); return ASSIGN; };
 {DELIMITER}															;
 
 	/* conditional and booleans expressions */
@@ -83,7 +88,7 @@ NUMBER			({INTEGER}|{FLOAT})
 
 {NEWLINE}		{ handle_token(NEWLINE_TOK); return NEWLINE; };
 {WHITESPACE}   														;
-{VAR}																;
+{VAR}			{ handle_token(ID_TOK); return ID; };
 .				{ handle_token(ERROR_TOK); };  /* any character but newline */
 
 %%
@@ -99,7 +104,7 @@ void handle_token(int token) {
 	switch (token) {
 		case INTEGER_TOK:
 			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
-			yylval.value = atoi(yytext); 
+			yylval.int_value = atoi(yytext); 
 			break;
 		case SUB_TOK:
 			if (LEX_VERBOSE) printf("Token: <sub, '%s'>", yytext);
@@ -115,6 +120,14 @@ void handle_token(int token) {
 			break;
 		case DIV_TOK:
 			if (LEX_VERBOSE) printf("Token: <div, '%s'>", yytext);
+			yylval.op = yytext;
+			break;
+		case ID_TOK:
+			if (LEX_VERBOSE) printf("Token: <id, '%s'>", yytext);
+			strcpy(yylval.var, yytext);
+			break;
+		case ASSIGN_TOK:
+			if (LEX_VERBOSE) printf("Token: <assign, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:
