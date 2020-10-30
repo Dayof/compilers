@@ -6,6 +6,8 @@ int lex_line, lex_column, parser_line, parser_column;
 
 enum TAG {
     INTEGER_TYPE=0, 
+    FLOAT_TYPE, 
+    BOOL_TYPE, 
     VAR_TYPE,
     BINARY_TYPE
 };
@@ -14,6 +16,7 @@ typedef struct exp {
     int tag;
     union { 
         int integer_expr;
+        float float_expr;
         char variable_expr[79];
         struct { 
             char* operator;
@@ -38,7 +41,9 @@ ast_node* print_exp(ast_node* node);
 void create_empy_ast();
 void add_ast(ast_node* expression);
 ast_node* create_int_expr(int value);
+ast_node* create_float_expr(float value);
 ast_node* create_var_expr(char* value);
+ast_node* create_bool_expr(int value);
 ast_node* create_bin_expr(char* operator, ast_node* left, ast_node* right);
 
 void handle_token(int token);

@@ -22,6 +22,22 @@ ast_node* create_int_expr(int value) {
     return expr;
 }
 
+ast_node* create_float_expr(float value) {
+    if (PARSER_VERBOSE) printf("\n\nCreating float expression node: %f\n", value);
+    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
+    expr->tag = FLOAT_TYPE;
+    expr->op.float_expr = value;
+    return expr;
+}
+
+ast_node* create_bool_expr(int value) {
+    if (PARSER_VERBOSE) printf("\n\nCreating boolean expression node: %d\n", value);
+    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
+    expr->tag = BOOL_TYPE;
+    expr->op.integer_expr = value;
+    return expr;
+}
+
 ast_node* create_var_expr(char* value) {
     if (PARSER_VERBOSE) printf("\n\nCreating variable expression node: %s\n", value);
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
@@ -87,6 +103,14 @@ void print_ast(ast_node* node, int lvl) {
     // terminal leaf
     if (node->tag == INTEGER_TYPE) {
         printf("INT: %d\n", node->op.integer_expr);
+        return;
+    // terminal leaf
+    } else if (node->tag == BOOL_TYPE) {
+        printf("BOOL: %d\n", node->op.integer_expr);
+        return;
+    // terminal leaf
+    } else if (node->tag == FLOAT_TYPE) {
+        printf("FLOAT: %.2f\n", node->op.float_expr);
         return;
     // terminal leaf
     } else if (node->tag == VAR_TYPE) {

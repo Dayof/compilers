@@ -30,9 +30,7 @@
 %}
 
 %option outfile="lexer/lexer.c" header-file="lexer/lexer.h"
-%option nounput
-%option noinput
-%option yylineno
+%option nounput noinput yylineno
 
 	/* regex and token definition */
 
@@ -43,19 +41,17 @@ SUB				("-")
 ADD				("+")
 MULT			("*")
 DIV				("/")
-OPERATOR		(ADD|SUB|MULT|DIV)
 BOOLEAN_OP		("=="|"<="|">="|"!="|"<"|">"|"~"|"|"|"&"|"and"|"or"|"not")
 ASSIGN			("=")
 DELIMITER		("("|")"|"["|"]"|";"|","|"."|":")
-BOOLEAN			("True"|"False")
-NULL			("None")
+BOOLEAN			(True|False)
+NULL			(None)
 NEWLINE			(\n)
 WHITESPACE		([ \t]+)
 VAR				({LETTER}|"_")({LETTER}|{DIGIT}|"_")*
 STRING			(\".*\"|\'.*\')
 INTEGER			({NDIGIT}{DIGIT}*|"0")
-FLOAT			([{DIGIT}+]"."{DIGIT}+|{DIGIT}+".")
-NUMBER			({INTEGER}|{FLOAT})
+FLOAT			({DIGIT}+\.{DIGIT}+)
 
 %%
 
@@ -65,8 +61,8 @@ NUMBER			({INTEGER}|{FLOAT})
 
 	/* arithmetic expressions */
 
+{FLOAT}			{ handle_token(FLOAT_TOK); return FLOAT; };
 {INTEGER}		{ handle_token(INTEGER_TOK); return INTEGER; };
-{FLOAT}																;
 {SUB}			{ handle_token(SUB_TOK); return SUB; };
 {ADD}			{ handle_token(ADD_TOK); return ADD; };
 {MULT}			{ handle_token(MULT_TOK); return MULT; };
@@ -76,7 +72,7 @@ NUMBER			({INTEGER}|{FLOAT})
 
 	/* conditional and booleans expressions */
 
-{BOOLEAN}															;
+{BOOLEAN}		{ handle_token(BOOLEAN_TOK); return BOOLEAN; };
 {BOOLEAN_OP}														;
 
 	/* structure helpers */
@@ -102,9 +98,18 @@ NUMBER			({INTEGER}|{FLOAT})
 void handle_token(int token) {
 	parser_column = lex_column;
 	switch (token) {
+		case BOOLEAN_TOK:
+			if (LEX_VERBOSE) printf("Token: <boolean, '%s'>", yytext);
+			if (strcmp(yytext, "True") == 0) yylval.int_value = 1; 
+			else if (strcmp(yytext, "False") == 0) yylval.int_value = 0; 
+			break;
 		case INTEGER_TOK:
 			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
 			yylval.int_value = atoi(yytext); 
+			break;
+		case FLOAT_TOK:
+			if (LEX_VERBOSE) printf("Token: <float, '%s'>", yytext);
+			yylval.float_value = atof(yytext); 
 			break;
 		case SUB_TOK:
 			if (LEX_VERBOSE) printf("Token: <sub, '%s'>", yytext);

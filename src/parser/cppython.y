@@ -16,21 +16,23 @@
 
 %union {
     int int_value;
+    float float_value;
     char var[79];
     char* op;
     ast_node* expression;
 }
 
-%token <op>         ADD SUB MULT DIV ASSIGN
-%token <int_value>  INTEGER
-%token <var>        ID
-%token              NEWLINE
+%token <op>             ADD SUB MULT DIV ASSIGN
+%token <int_value>      INTEGER BOOLEAN
+%token <float_value>    FLOAT
+%token <var>            ID
+%token                  NEWLINE
 
-%left               ASSIGN
-%left               ADD SUB
-%left               MULT DIV
+%left                   ASSIGN
+%left                   ADD SUB
+%left                   MULT DIV
 
-%type  <expression> stmt simple_stmt var arith_expr term factor
+%type  <expression>     stmt simple_stmt var expr arith_expr term factor
 
 %%
 
@@ -38,7 +40,7 @@ input   : /* empty */                       { create_empy_ast(); }
         | input line                        { ; }
         ;
 
-line    : NEWLINE                           { create_empy_ast(); }
+line    : NEWLINE                           { ; }
         | stmt[U] NEWLINE                   { add_ast($U); }
         | error NEWLINE                     { yyerrok; }
         ;
@@ -46,10 +48,14 @@ line    : NEWLINE                           { create_empy_ast(); }
 stmt    : simple_stmt[U]                    { $$ = print_exp($U); }
         ;
 
-simple_stmt : var[L] ASSIGN arith_expr[R]   { $$ = create_bin_expr("=", $L, $R); }
+simple_stmt : var[L] ASSIGN expr[R]         { $$ = create_bin_expr("=", $L, $R); }
             ;
 
 var     : ID[U]                             { $$ = create_var_expr($U); }
+        ;
+
+expr    : arith_expr[U]                     { $$ = print_exp($U); }
+        | BOOLEAN[U]                        { $$ = create_bool_expr($U); }
         ;
 
 arith_expr  : arith_expr[L] ADD term[R]     { $$ = create_bin_expr("+", $L, $R); }
@@ -63,6 +69,7 @@ term    : term[L] MULT factor[R]            { $$ = create_bin_expr("*", $L, $R);
         ;
 
 factor  : INTEGER[U]                        { $$ = create_int_expr($U); }
+        | FLOAT[U]                          { $$ = create_float_expr($U); }
         ;
 
 %%

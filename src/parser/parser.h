@@ -55,8 +55,10 @@ extern int yydebug;
     DIV = 261,
     ASSIGN = 262,
     INTEGER = 263,
-    ID = 264,
-    NEWLINE = 265
+    BOOLEAN = 264,
+    FLOAT = 265,
+    ID = 266,
+    NEWLINE = 267
   };
 #endif
 
@@ -67,11 +69,12 @@ union YYSTYPE
 #line 17 "parser/cppython.y"
 
     int int_value;
+    float float_value;
     char var[79];
     char* op;
     ast_node* expression;
 
-#line 75 "parser/parser.h"
+#line 78 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
