@@ -23,13 +23,19 @@ typedef struct exp {
     } op;
 } ast_node;
 
-ast_node* root;
+typedef struct exps { 
+  ast_node*    elem;
+  struct exps* next;
+} ast_list;
 
+ast_list* ast_root;
+
+void print_asts(ast_list* root);
 void print_ast(ast_node* node, int lvl);
 ast_node* print_exp(ast_node* node);
 
 void create_empy_ast();
-void create_ast(ast_node* expression);
+void add_ast(ast_node* expression);
 ast_node* create_int_expr(int value);
 ast_node* create_var_expr(char* value);
 ast_node* create_bin_expr(char* operator, ast_node* left, ast_node* right);

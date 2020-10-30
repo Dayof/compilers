@@ -462,9 +462,9 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  10
+#define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   17
+#define YYLAST   16
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  11
@@ -552,7 +552,7 @@ static const yytype_int16 yytoknum[] =
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-3)
+#define YYTABLE_NINF (-1)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -561,9 +561,9 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       0,    -2,   -14,   -14,    13,   -14,     4,   -14,     8,   -14,
-     -14,   -14,     9,   -14,   -14,    -1,     1,     9,     9,     9,
-       9,   -14,   -14,   -14,   -14
+     -14,     0,   -14,    -2,   -14,   -14,   -14,     3,   -14,     7,
+     -14,   -14,     8,   -14,   -14,    -1,     1,     8,     8,     8,
+       8,   -14,   -14,   -14,   -14
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -571,8 +571,8 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     9,     4,     0,     3,     0,     7,     0,     6,
-       1,     5,     0,    16,     8,    12,    15,     0,     0,     0,
+       2,     0,     1,     0,     9,     4,     3,     0,     7,     0,
+       6,     5,     0,    16,     8,    12,    15,     0,     0,     0,
        0,    10,    11,    13,    14
 };
 
@@ -585,7 +585,7 @@ static const yytype_int8 yypgoto[] =
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     4,     5,     6,     7,     8,    14,    15,    16
+      -1,     1,     6,     7,     8,     9,    14,    15,    16
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -593,22 +593,22 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      -2,     1,    17,    18,    21,    22,    19,    20,     9,     2,
-       3,    23,    24,    10,    11,    12,     0,    13
+       2,     3,    17,    18,    21,    22,    19,    20,    10,     4,
+       5,    23,    24,    11,    12,     0,    13
 };
 
 static const yytype_int8 yycheck[] =
 {
        0,     1,     3,     4,    17,    18,     5,     6,    10,     9,
-      10,    19,    20,     0,    10,     7,    -1,     8
+      10,    19,    20,    10,     7,    -1,     8
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     1,     9,    10,    12,    13,    14,    15,    16,    10,
-       0,    10,     7,     8,    17,    18,    19,     3,     4,     5,
+       0,    12,     0,     1,     9,    10,    13,    14,    15,    16,
+      10,    10,     7,     8,    17,    18,    19,     3,     4,     5,
        6,    18,    18,    19,    19
 };
 
@@ -622,7 +622,7 @@ static const yytype_int8 yyr1[] =
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     0,     1,     1,     2,     2,     1,     3,     1,
+       0,     2,     0,     2,     1,     2,     2,     1,     3,     1,
        3,     3,     1,     3,     3,     1,     1
 };
 
@@ -1332,7 +1332,7 @@ yyreduce:
 
   case 5:
 #line 42 "parser/cppython.y"
-                                            { create_ast((yyvsp[-1].expression)); }
+                                            { add_ast((yyvsp[-1].expression)); }
 #line 1337 "parser/parser.c"
     break;
 

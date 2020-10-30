@@ -7,7 +7,7 @@
 int main (int argc, char* argv[]) {
 	printf("Welcome to CPPython interpreter:\n");
     MAIN_VERBOSE = LEX_VERBOSE = PARSER_VERBOSE = 0;
-    root = NULL;
+    ast_root = NULL;
 
     // init lexer and parser
     printf("Lexer/parser:\n");
@@ -20,8 +20,8 @@ int main (int argc, char* argv[]) {
     fclose(yyin);
     printf("\nLexer and parser finished.\n\n");
 
-    printf("Abstract Syntax Tree:\n");
-    print_ast(root, 0);
+    printf("Abstract Syntax Trees:");
+    print_asts(ast_root);
 
     printf("\nSymbol Table:\n");
     print_st();

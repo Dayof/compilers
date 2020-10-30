@@ -3,7 +3,7 @@ Grammar
     0 $accept: input $end
 
     1 input: %empty
-    2      | line
+    2      | input line
 
     3 line: NEWLINE
     4     | stmt NEWLINE
@@ -46,7 +46,7 @@ Nonterminals, with rules where they appear
         on left: 0
     input (12)
         on left: 1 2
-        on right: 0
+        on right: 0 2
     line (13)
         on left: 3 4 5
         on right: 2
@@ -74,87 +74,88 @@ State 0
 
     0 $accept: . input $end
 
-    error    shift, and go to state 1
-    ID       shift, and go to state 2
-    NEWLINE  shift, and go to state 3
+    $default  reduce using rule 1 (input)
 
-    $end  reduce using rule 1 (input)
-
-    input        go to state 4
-    line         go to state 5
-    stmt         go to state 6
-    simple_stmt  go to state 7
-    var          go to state 8
+    input  go to state 1
 
 
 State 1
 
-    5 line: error . NEWLINE
+    0 $accept: input . $end
+    2 input: input . line
 
-    NEWLINE  shift, and go to state 9
+    $end     shift, and go to state 2
+    error    shift, and go to state 3
+    ID       shift, and go to state 4
+    NEWLINE  shift, and go to state 5
+
+    line         go to state 6
+    stmt         go to state 7
+    simple_stmt  go to state 8
+    var          go to state 9
 
 
 State 2
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+State 3
+
+    5 line: error . NEWLINE
+
+    NEWLINE  shift, and go to state 10
+
+
+State 4
 
     8 var: ID .
 
     $default  reduce using rule 8 (var)
 
 
-State 3
+State 5
 
     3 line: NEWLINE .
 
     $default  reduce using rule 3 (line)
 
 
-State 4
+State 6
 
-    0 $accept: input . $end
-
-    $end  shift, and go to state 10
-
-
-State 5
-
-    2 input: line .
+    2 input: input line .
 
     $default  reduce using rule 2 (input)
 
 
-State 6
+State 7
 
     4 line: stmt . NEWLINE
 
     NEWLINE  shift, and go to state 11
 
 
-State 7
+State 8
 
     6 stmt: simple_stmt .
 
     $default  reduce using rule 6 (stmt)
 
 
-State 8
+State 9
 
     7 simple_stmt: var . ASSIGN arith_expr
 
     ASSIGN  shift, and go to state 12
 
 
-State 9
+State 10
 
     5 line: error NEWLINE .
 
     $default  reduce using rule 5 (line)
-
-
-State 10
-
-    0 $accept: input $end .
-
-    $default  accept
 
 
 State 11

@@ -35,11 +35,11 @@
 %%
 
 input   : /* empty */                       { create_empy_ast(); }
-        | line
+        | input line
        
 
 line    : NEWLINE                           { create_empy_ast(); }
-        | stmt[U] NEWLINE                   { create_ast($U); }
+        | stmt[U] NEWLINE                   { add_ast($U); }
         | error NEWLINE                     { yyerrok; }
         ;
 

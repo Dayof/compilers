@@ -30,15 +30,27 @@ ast_node* create_var_expr(char* value) {
     return expr;
 }
 
-void create_ast(ast_node* expression) {
+void add_ast(ast_node* expression) {
     if (PARSER_VERBOSE) printf("\nCreating AST.\n");
-    root = expression;
+    if (ast_root == NULL) {
+        if (PARSER_VERBOSE) printf("First AST added.\n");
+        ast_root = (ast_list*) malloc(sizeof(ast_list));
+        ast_root->elem = expression;
+        ast_root->next = NULL;
+    } else {
+        ast_list* cur_ast = ast_root;
+        while (cur_ast->next != NULL) cur_ast = cur_ast->next;
+        ast_list* new_ast = (ast_list*) malloc(sizeof(ast_list));
+        new_ast->elem = expression;
+        new_ast->next = NULL;
+        cur_ast->next = new_ast;
+    }
     return;
 }
 
 void create_empy_ast() {
     if (PARSER_VERBOSE) printf("\nCreating empty AST.\n");
-    root = NULL;
+    ast_root = NULL;
     return;
 }
 
@@ -50,12 +62,24 @@ ast_node* print_exp(ast_node* node) {
     return node;
 }
 
-void print_ast(ast_node* node, int lvl) {
-    if (node == NULL) {
+void print_asts(ast_list* root) {
+    if (root == NULL) {
         printf("Empty AST.\n");
         return;
     }
-    
+
+    ast_list* cur_ast = root;
+    int ast_idx = 0;
+
+    while (cur_ast != NULL) {
+        printf("\n\n---- AST: %d\n\n", ast_idx + 1);
+        print_ast(cur_ast->elem, 0);
+        cur_ast = cur_ast->next;
+        ast_idx += 1;
+    }
+}
+
+void print_ast(ast_node* node, int lvl) {
     if (PARSER_VERBOSE) printf("TAG: %d\n", node->tag);
 
     for (int i=0; i < lvl; ++i) printf("  ");
