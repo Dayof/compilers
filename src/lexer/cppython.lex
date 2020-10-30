@@ -1,6 +1,7 @@
 /* tokens mapping */
 
 %{
+	#include <string.h>
 	#include <stdio.h>
 	#include "sym_tab.h"
 	#include "ast.h"
@@ -11,7 +12,9 @@
 		NEWLINE_TOK,
 		WHITESPACE_TOK,
 		ID_TOK,
+		ASSIGN_TOK,
 		KEYWORD_TOK,
+		VAR_TOK,
 		FLOAT_TOK,
 		DELIMITER_TOK,
 		BOOLEAN_TOK,
@@ -27,8 +30,7 @@
 %}
 
 %option outfile="lexer/lexer.c" header-file="lexer/lexer.h"
-%option nounput
-%option noinput
+%option nounput noinput yylineno
 
 	/* regex and token definition */
 
@@ -39,18 +41,17 @@ SUB				("-")
 ADD				("+")
 MULT			("*")
 DIV				("/")
-OPERATOR		(ADD|SUB|MULT|DIV)
 BOOLEAN_OP		("=="|"<="|">="|"!="|"<"|">"|"~"|"|"|"&"|"and"|"or"|"not")
-DELIMITER		("="|"("|")"|"["|"]"|";"|","|"."|":")
-BOOLEAN			("True"|"False")
-NULL			("None")
+ASSIGN			("=")
+DELIMITER		("("|")"|"["|"]"|";"|","|"."|":")
+BOOLEAN			(True|False)
+NULL			(None)
 NEWLINE			(\n)
 WHITESPACE		([ \t]+)
 VAR				({LETTER}|"_")({LETTER}|{DIGIT}|"_")*
 STRING			(\".*\"|\'.*\')
 INTEGER			({NDIGIT}{DIGIT}*|"0")
-FLOAT			([{DIGIT}+]"."{DIGIT}+|{DIGIT}+".")
-NUMBER			({INTEGER}|{FLOAT})
+FLOAT			({DIGIT}+\.{DIGIT}+)
 
 %%
 
@@ -60,17 +61,18 @@ NUMBER			({INTEGER}|{FLOAT})
 
 	/* arithmetic expressions */
 
+{FLOAT}			{ handle_token(FLOAT_TOK); return FLOAT; };
 {INTEGER}		{ handle_token(INTEGER_TOK); return INTEGER; };
-{FLOAT}																;
 {SUB}			{ handle_token(SUB_TOK); return SUB; };
 {ADD}			{ handle_token(ADD_TOK); return ADD; };
 {MULT}			{ handle_token(MULT_TOK); return MULT; };
 {DIV}			{ handle_token(DIV_TOK); return DIV; };
+{ASSIGN}		{ handle_token(ASSIGN_TOK); return ASSIGN; };
 {DELIMITER}															;
 
 	/* conditional and booleans expressions */
 
-{BOOLEAN}															;
+{BOOLEAN}		{ handle_token(BOOLEAN_TOK); return BOOLEAN; };
 {BOOLEAN_OP}														;
 
 	/* structure helpers */
@@ -80,9 +82,9 @@ NUMBER			({INTEGER}|{FLOAT})
 
 	/* general */
 
-{NEWLINE}		{ handle_token(NEWLINE_TOK); };
+{NEWLINE}		{ handle_token(NEWLINE_TOK); return NEWLINE; };
 {WHITESPACE}   														;
-{VAR}																;
+{VAR}			{ handle_token(ID_TOK); return ID; };
 .				{ handle_token(ERROR_TOK); };  /* any character but newline */
 
 %%
@@ -94,10 +96,20 @@ NUMBER			({INTEGER}|{FLOAT})
 */
 
 void handle_token(int token) {
+	parser_column = lex_column;
 	switch (token) {
+		case BOOLEAN_TOK:
+			if (LEX_VERBOSE) printf("Token: <boolean, '%s'>", yytext);
+			if (strcmp(yytext, "True") == 0) yylval.int_value = 1; 
+			else if (strcmp(yytext, "False") == 0) yylval.int_value = 0; 
+			break;
 		case INTEGER_TOK:
 			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
-			yylval.value = atoi(yytext); 
+			yylval.int_value = atoi(yytext); 
+			break;
+		case FLOAT_TOK:
+			if (LEX_VERBOSE) printf("Token: <float, '%s'>", yytext);
+			yylval.float_value = atof(yytext); 
 			break;
 		case SUB_TOK:
 			if (LEX_VERBOSE) printf("Token: <sub, '%s'>", yytext);
@@ -115,17 +127,27 @@ void handle_token(int token) {
 			if (LEX_VERBOSE) printf("Token: <div, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
+		case ID_TOK:
+			if (LEX_VERBOSE) printf("Token: <id, '%s'>", yytext);
+			add_word(len_st(), yytext);
+			strcpy(yylval.var, yytext);
+			break;
+		case ASSIGN_TOK:
+			if (LEX_VERBOSE) printf("Token: <assign, '%s'>", yytext);
+			yylval.op = yytext;
+			break;
 		case NEWLINE_TOK:
-			line += 1;
-			column = 0;  // reset column index 
-			if (LEX_VERBOSE) printf("\nline %d. ", line);
+			parser_line = lex_line;
+			parser_column = lex_column; 
+			lex_line += 1;
+			lex_column = 0;  // reset column index 
+			if (LEX_VERBOSE) printf("\nline %d. ", lex_line);
 			break;
 		case ERROR_TOK:
-			if (LEX_VERBOSE) printf("\nLexerError: line %d, column %d, token '%s' is not recognized\n",
-				   				line, column, yytext);
-			exit(1);
+			printf("\nLexError: token '%s' is not recognized in line %d, column %d.\n",
+			       yytext, lex_line, lex_column);
 		default:
 			break;  // ignore
 	}
-	column += strlen(yytext);
+	lex_column += strlen(yytext);
 }
