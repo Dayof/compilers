@@ -83,20 +83,13 @@ FLOAT			({DIGIT}+\.{DIGIT}+)
 	/* general */
 
 {NEWLINE}		{ handle_token(NEWLINE_TOK); return NEWLINE; };
-{WHITESPACE}   														;
+{WHITESPACE}   	{ lex_column += strlen(yytext); }													;
 {VAR}			{ handle_token(ID_TOK); return ID; };
 .				{ handle_token(ERROR_TOK); };  /* any character but newline */
 
 %%
 
-/*
-	Output example:
-	- Command: sum_numbers = 1 + 1.0
-	- Output: <id, 1> <delimiter, '='> <integer, '1'> <operator, '+'> <float, '1.0'> 
-*/
-
 void handle_token(int token) {
-	parser_column = lex_column;
 	switch (token) {
 		case BOOLEAN_TOK:
 			if (LEX_VERBOSE) printf("Token: <boolean, '%s'>", yytext);
@@ -129,17 +122,17 @@ void handle_token(int token) {
 			break;
 		case ID_TOK:
 			if (LEX_VERBOSE) printf("Token: <id, '%s'>", yytext);
-			add_word(len_st(), yytext);
-			strcpy(yylval.var, yytext);
+			int idx = add_word(len_st(), strdup(yytext));
+			yylval.st_ref = idx;
 			break;
 		case ASSIGN_TOK:
 			if (LEX_VERBOSE) printf("Token: <assign, '%s'>", yytext);
 			yylval.op = yytext;
 			break;
 		case NEWLINE_TOK:
-			parser_line = lex_line;
 			parser_column = lex_column; 
 			lex_line += 1;
+			parser_line = lex_line;
 			lex_column = 0;  // reset column index 
 			if (LEX_VERBOSE) printf("\nline %d. ", lex_line);
 			break;
@@ -150,4 +143,5 @@ void handle_token(int token) {
 			break;  // ignore
 	}
 	lex_column += strlen(yytext);
+	parser_column = lex_column;
 }

@@ -68,13 +68,12 @@ union YYSTYPE
 {
 #line 17 "parser/cppython.y"
 
-    int int_value;
+    int int_value, st_ref;
     float float_value;
-    char var[79];
     char* op;
     ast_node* expression;
 
-#line 78 "parser/parser.h"
+#line 77 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

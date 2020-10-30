@@ -15,9 +15,8 @@
 %start input
 
 %union {
-    int int_value;
+    int int_value, st_ref;
     float float_value;
-    char var[79];
     char* op;
     ast_node* expression;
 }
@@ -25,7 +24,7 @@
 %token <op>             ADD SUB MULT DIV ASSIGN
 %token <int_value>      INTEGER BOOLEAN
 %token <float_value>    FLOAT
-%token <var>            ID
+%token <st_ref>         ID
 %token                  NEWLINE
 
 %left                   ASSIGN
@@ -48,7 +47,10 @@ line    : NEWLINE                           { ; }
 stmt    : simple_stmt[U]                    { $$ = print_exp($U); }
         ;
 
-simple_stmt : var[L] ASSIGN expr[R]         { $$ = create_bin_expr("=", $L, $R); }
+simple_stmt : var[L] ASSIGN expr[R]         { 
+                                                $$ = create_bin_expr("=", $L, $R);
+                                                assign_var_type($L, $R);
+                                            }
             ;
 
 var     : ID[U]                             { $$ = create_var_expr($U); }

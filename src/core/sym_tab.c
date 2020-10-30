@@ -2,15 +2,15 @@
 #include "sym_tab.h"
 
 
-void add_word(int key, char* name) {
-    word* s;
-    HASH_FIND_INT(symbol_table, &key, s);
+int add_word(int key, char* name) {
+    word* s = find_word(key);
     if (s == NULL) {
         s = (word*) malloc(sizeof(word));
         s->key = key;
         HASH_ADD_INT(symbol_table, key, s);
     }
     strcpy(s->name, name);
+    return key;
 }
 
 word* find_word(int word_key) {
@@ -24,7 +24,7 @@ void delete_word(word* s) {
     free(s);
 }
 
-void delete_all() {
+void delete_all_st() {
     word* cur_word, *tmp;
     HASH_ITER(hh, symbol_table, cur_word, tmp) {
         HASH_DEL(symbol_table, cur_word);
@@ -47,9 +47,12 @@ void print_st() {
     printf("Size: %u\n\n", num_symbols);
 
     word* cur_word, *tmp;
+    cur_word = tmp = NULL;
     HASH_ITER(hh, symbol_table, cur_word, tmp) {
-        printf("KEY: %d, NAME: %s\n", cur_word->key, cur_word->name);
-        HASH_DEL(symbol_table, cur_word);
-        free(cur_word);
+        printf("KEY: %d, NAME: %s, TYPE: ", cur_word->key, cur_word->name);
+        if (cur_word->type == ST_INT) printf("INT");
+        else if (cur_word->type == ST_FLOAT) printf("FLOAT");
+        else if (cur_word->type == ST_BOOL) printf("BOOL");
+        printf("\n");
     }
 }
