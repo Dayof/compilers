@@ -42,7 +42,7 @@ Terminals, with rules where they appear
     INTEGER <int_value> (263) 17
     BOOLEAN <int_value> (264) 10
     FLOAT <float_value> (265) 18
-    ID <var> (266) 8
+    ID <st_ref> (266) 8
     NEWLINE (267) 3 4 5
 
 

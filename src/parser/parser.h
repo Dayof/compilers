@@ -69,8 +69,8 @@ union YYSTYPE
 #line 17 "parser/cppython.y"
 
     int int_value;
+    int st_ref;
     float float_value;
-    char var[79];
     char* op;
     ast_node* expression;
 

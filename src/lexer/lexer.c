@@ -1917,12 +1917,6 @@ void yyfree (void * ptr )
 #line 91 "lexer/cppython.lex"
 
 
-/*
-	Output example:
-	- Command: sum_numbers = 1 + 1.0
-	- Output: <id, 1> <delimiter, '='> <integer, '1'> <operator, '+'> <float, '1.0'> 
-*/
-
 void handle_token(int token) {
 	parser_column = lex_column;
 	switch (token) {
@@ -1957,8 +1951,8 @@ void handle_token(int token) {
 			break;
 		case ID_TOK:
 			if (LEX_VERBOSE) printf("Token: <id, '%s'>", yytext);
-			add_word(len_st(), yytext);
-			strcpy(yylval.var, yytext);
+			int idx = add_word(len_st(), yytext);
+			yylval.st_ref = idx;
 			break;
 		case ASSIGN_TOK:
 			if (LEX_VERBOSE) printf("Token: <assign, '%s'>", yytext);

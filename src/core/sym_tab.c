@@ -2,7 +2,7 @@
 #include "sym_tab.h"
 
 
-void add_word(int key, char* name) {
+int add_word(int key, char* name) {
     word* s;
     HASH_FIND_INT(symbol_table, &key, s);
     if (s == NULL) {
@@ -11,6 +11,7 @@ void add_word(int key, char* name) {
         HASH_ADD_INT(symbol_table, key, s);
     }
     strcpy(s->name, name);
+    return key;
 }
 
 word* find_word(int word_key) {
@@ -48,7 +49,10 @@ void print_st() {
 
     word* cur_word, *tmp;
     HASH_ITER(hh, symbol_table, cur_word, tmp) {
-        printf("KEY: %d, NAME: %s\n", cur_word->key, cur_word->name);
+        printf("KEY: %d, NAME: %s, TYPE: ", cur_word->key, cur_word->name);
+        if (cur_word->type == ST_INT) printf("INT\n");
+        if (cur_word->type == ST_FLOAT) printf("FLOAT\n");
+        if (cur_word->type == ST_BOOL) printf("BOOL\n");
         HASH_DEL(symbol_table, cur_word);
         free(cur_word);
     }
