@@ -53,6 +53,7 @@ void print_st() {
         if (cur_word->type == ST_INT) printf("INT");
         else if (cur_word->type == ST_FLOAT) printf("FLOAT");
         else if (cur_word->type == ST_BOOL) printf("BOOL");
+        else if (cur_word->type == ST_STR) printf("STRING");
         printf("\n");
     }
 }

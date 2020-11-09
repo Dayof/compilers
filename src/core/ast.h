@@ -3,11 +3,13 @@
 
 int LEX_VERBOSE, PARSER_VERBOSE, MAIN_VERBOSE;
 int lex_line, lex_column, parser_line, parser_column;
+int syntax_error;
 
 enum TAG {
     INTEGER_TYPE=0, 
     FLOAT_TYPE,
     BOOL_TYPE, 
+    STR_TYPE,
     VAR_TYPE,
     BINARY_TYPE
 };
@@ -17,6 +19,7 @@ typedef struct exp {
     union { 
         int integer_expr;
         float float_expr;
+        char* str_expr;
         int variable_expr;
         struct { 
             char* operator;
@@ -44,13 +47,12 @@ ast_node* create_int_expr(int value);
 ast_node* create_float_expr(float value);
 ast_node* create_var_expr(int st_ref);
 ast_node* create_bool_expr(int value);
+ast_node* create_str_expr(char* value);
 ast_node* create_bin_expr(char* operator, ast_node* left, ast_node* right);
 
 void handle_token(int token);
 
 void assign_var_type(ast_node* var, ast_node* expr);
-int find_bool(ast_node* expr);
-int find_int(ast_node* expr);
-int find_float(ast_node* expr);
+int find_type(ast_node* expr, int type);
 
 #endif // __AST_H__

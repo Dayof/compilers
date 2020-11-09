@@ -1,8 +1,8 @@
-FILES	= parser/parser.c lexer/lexer.c core/ast.c core/sym_tab.c core/main.c 
+FILES	= parser/parser.c lexer/lexer.c core/semantic.c core/ast.c core/sym_tab.c core/main.c
 CFLAGS	= -g -Wall -pedantic -x c
 CC		= gcc
 
-cppython:	$(FILES) core/ast.h core/sym_tab.h
+cppython:	$(FILES) core/semantic.h core/ast.h core/sym_tab.h
 			$(CC) $(CFLAGS) $(FILES) -I core -I lexer -I parser -o cppython -lfl
 
 lexer/lexer.c:	lexer/cppython.lex

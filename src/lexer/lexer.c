@@ -909,7 +909,7 @@ YY_RULE_SETUP
 case 13:
 YY_RULE_SETUP
 #line 82 "lexer/cppython.lex"
-;
+{ handle_token(STRING_TOK); return STRING; };
 	YY_BREAK
 /* general */
 case 14:
@@ -1919,43 +1919,48 @@ void yyfree (void * ptr )
 
 void handle_token(int token) {
 	switch (token) {
+		case STRING_TOK:
+			if (LEX_VERBOSE) printf("<string, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
 		case BOOLEAN_TOK:
-			if (LEX_VERBOSE) printf("Token: <boolean, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("<boolean, '%s'> ", yytext);
 			if (strcmp(yytext, "True") == 0) yylval.int_value = 1; 
 			else if (strcmp(yytext, "False") == 0) yylval.int_value = 0; 
 			break;
 		case INTEGER_TOK:
-			if (LEX_VERBOSE) printf("Token: <integer, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("<integer, '%s'> ", yytext);
 			yylval.int_value = atoi(yytext); 
 			break;
 		case FLOAT_TOK:
-			if (LEX_VERBOSE) printf("Token: <float, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("<float, '%s'> ", yytext);
 			yylval.float_value = atof(yytext); 
 			break;
 		case SUB_TOK:
-			if (LEX_VERBOSE) printf("Token: <sub, '%s'>", yytext);
-			yylval.op = yytext;
+			if (LEX_VERBOSE) printf("<sub, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case ADD_TOK:
-			if (LEX_VERBOSE) printf("Token: <add, '%s'>", yytext);
-			yylval.op = yytext;
+			if (LEX_VERBOSE) printf("<add, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case MULT_TOK:
-			if (LEX_VERBOSE) printf("Token: <mult, '%s'>", yytext);
-			yylval.op = yytext;
+			if (LEX_VERBOSE) printf("<mult, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case DIV_TOK:
-			if (LEX_VERBOSE) printf("Token: <div, '%s'>", yytext);
-			yylval.op = yytext;
+			if (LEX_VERBOSE) printf("<div, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case ID_TOK:
-			if (LEX_VERBOSE) printf("Token: <id, '%s'>", yytext);
+			if (LEX_VERBOSE) printf("<id, '%s'> ", yytext);
 			int idx = add_word(len_st(), strdup(yytext));
 			yylval.st_ref = idx;
 			break;
 		case ASSIGN_TOK:
-			if (LEX_VERBOSE) printf("Token: <assign, '%s'>", yytext);
-			yylval.op = yytext;
+			if (LEX_VERBOSE) printf("<assign, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case NEWLINE_TOK:
 			parser_column = lex_column; 
@@ -1967,6 +1972,7 @@ void handle_token(int token) {
 		case ERROR_TOK:
 			printf("\nLexError: token '%s' is not recognized in line %d, column %d.\n",
 			       yytext, lex_line, lex_column);
+			lex_error = 1;
 		default:
 			break;  // ignore
 	}

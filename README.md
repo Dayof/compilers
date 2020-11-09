@@ -10,9 +10,10 @@
 
 ## Usage
 
-The first command clean the environment, compile the system again and generates all the binaries, outputs.
+The first command clean the environment, compile the system again and generates all the binaries, outputs:
 
 ```bash
+$ cd src
 $ make clean; make
 $ ./cppython tests/parser/valid_arithmetic_int_float.ppy
 $ ./cppython tests/parser/invalid_assigns.ppy

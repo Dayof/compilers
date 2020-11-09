@@ -54,11 +54,12 @@ extern int yydebug;
     MULT = 260,
     DIV = 261,
     ASSIGN = 262,
-    INTEGER = 263,
-    BOOLEAN = 264,
-    FLOAT = 265,
-    ID = 266,
-    NEWLINE = 267
+    STRING = 263,
+    INTEGER = 264,
+    BOOLEAN = 265,
+    FLOAT = 266,
+    ID = 267,
+    NEWLINE = 268
   };
 #endif
 
@@ -70,10 +71,11 @@ union YYSTYPE
 
     int int_value, st_ref;
     float float_value;
-    char* op;
+    char op;
+    char* str_value;
     ast_node* expression;
 
-#line 77 "parser/parser.h"
+#line 79 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -40,6 +40,15 @@ ast_node* create_bool_expr(int value) {
     return expr;
 }
 
+ast_node* create_str_expr(char* value) {
+    if (PARSER_VERBOSE) printf("\n\nCreating string expression node: %s\n", value);
+    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
+    expr->tag = STR_TYPE;
+    expr->op.str_expr = (char*) malloc(256);
+    strcpy(expr->op.str_expr, value);
+    return expr;
+}
+
 ast_node* create_var_expr(int st_ref) {
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = VAR_TYPE;
@@ -72,50 +81,29 @@ void create_empy_ast() {
     return;
 }
 
-int find_bool(ast_node* expr) {
-    if (expr->tag == BOOL_TYPE) return 1;
-    else if (expr->tag == BINARY_TYPE) {
-        if (find_bool(expr->op.binary_expr.left)) return 1;
-        if (find_bool(expr->op.binary_expr.right)) return 1;
-    }
-    return 0;
-}
-
-int find_float(ast_node* expr) {
-    if (expr->tag == FLOAT_TYPE) return 1;
-    else if (expr->tag == BINARY_TYPE) {
-        if (find_float(expr->op.binary_expr.left)) return 1;
-        if (find_float(expr->op.binary_expr.right)) return 1;
-    } 
-    return 0;
-}
-
-int find_int(ast_node* expr) {
-    if (expr->tag == INTEGER_TYPE) return 1;
-    else if (expr->tag == BINARY_TYPE) {
-        if (find_int(expr->op.binary_expr.left)) return 1;
-        if (find_int(expr->op.binary_expr.right)) return 1;
-    }
-    return 0;
-}
-
 void assign_var_type(ast_node* var, ast_node* expr) {
     word* var_word = find_word(var->op.variable_expr);
     if (PARSER_VERBOSE) printf("VAR: %d, %s\n", var_word->key, var_word->name);
 
-    if (find_bool(expr)) {
+    if (find_type(expr, STR_TYPE)) {
+        if (PARSER_VERBOSE) printf("FOUND STR TYPE\n");
+        var_word->type = ST_STR;
+        return;
+    }
+
+    if (find_type(expr, BOOL_TYPE)) {
         if (PARSER_VERBOSE) printf("FOUND BOOL TYPE\n");
         var_word->type = ST_BOOL;
         return;
     }
     
-    if (find_float(expr)) {
+    if (find_type(expr, FLOAT_TYPE)) {
         if (PARSER_VERBOSE) printf("FOUND FLOAT TYPE\n");
         var_word->type = ST_FLOAT;
         return;
     }
     
-    if (find_int(expr)) {
+    if (find_type(expr, INTEGER_TYPE)) {
         if (PARSER_VERBOSE) printf("FOUND INT TYPE\n");
         var_word->type = ST_INT;
         return;
@@ -159,6 +147,10 @@ void print_ast(ast_node* node, int lvl) {
     // terminal leaf
     if (node->tag == INTEGER_TYPE) {
         printf("INT: %d\n", node->op.integer_expr);
+        return;
+    // terminal leaf
+    } else if (node->tag == STR_TYPE) {
+        printf("STRING: %s\n", node->op.str_expr);
         return;
     // terminal leaf
     } else if (node->tag == BOOL_TYPE) {
