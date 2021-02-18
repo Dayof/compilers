@@ -1,0 +1,5 @@
+t_t = True
+var_modified = 2.0 + 1
+input1 = 1
+var_str = "another brick in the wall"
+var_str_2 = 'the colors'

@@ -1,0 +1,6 @@
+set add_set(set s) {
+    set newset;
+    newset = EMPTY;
+    return add(add_int(newset) in s);
+    //{{1,2}}
+}
