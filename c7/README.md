@@ -23,7 +23,7 @@ $ ./c7 tests/lexer/invalid_1.c7
 Run valgrind to check for memory leaks:
 
 ```bash
-$ make clean; make; make valgrind < tests/lexer/valid_1.c7
+$ make clean; make; export TEST_FILE=tests/lexer/valid_1.c7; make valgrind
 ```
 
 ## Author

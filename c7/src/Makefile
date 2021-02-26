@@ -9,7 +9,8 @@ lexer/lexer.c: lexer/c7.lex
 	flex lexer/c7.lex
 
 valgrind:
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="logfile.out" ./c7
+	@echo "Test file: ${TEST_FILE}"
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="logfile.out" ./c7 ${TEST_FILE}
 
 clean:
 	rm -f *.o *~ lexer/lexer.c lexer/lexer.h logfile.out c7
