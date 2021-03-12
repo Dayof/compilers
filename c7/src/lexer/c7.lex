@@ -4,6 +4,7 @@
 	#include <stdio.h>
 	#include "main.h"
 	#include "sym_tab.h"
+	#include "parser.h"
 
 	enum TOKENS {
 		ERROR_TOK=1,
@@ -117,8 +118,8 @@ COMMENT			("//".*)
 {ASSIGN}		{ handle_token(ASSIGN_TOK); };
 {PARENT_LEFT}	{ handle_token(PARENT_LEFT_TOK); };
 {PARENT_RIGHT}	{ handle_token(PARENT_RIGHT_TOK); };
-{BRACK_LEFT}	{ handle_token(BRACK_LEFT_TOK); };
-{BRACK_RIGHT}	{ handle_token(BRACK_RIGHT_TOK); };
+{BRACK_LEFT}	{ handle_token(BRACK_LEFT_TOK); return BRACK_LEFT; };
+{BRACK_RIGHT}	{ handle_token(BRACK_RIGHT_TOK); return BRACK_RIGHT; };
 {SEMICOLON}		{ handle_token(SEMICOLON_TOK); };
 {COMMA}			{ handle_token(COMMA_TOK); };
 {OR_OP}			{ handle_token(OR_OP_TOK); };
@@ -220,9 +221,11 @@ void handle_token(int token) {
 			break;
 		case BRACK_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<brack_left, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case BRACK_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<brack_right, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case SEMICOLON_TOK:
 			if (LEX_VERBOSE) printf("<semicolon, '%s'> ", yytext);

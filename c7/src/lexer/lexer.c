@@ -532,6 +532,7 @@ char *yytext;
 	#include <stdio.h>
 	#include "main.h"
 	#include "sym_tab.h"
+	#include "parser.h"
 
 	enum TOKENS {
 		ERROR_TOK=1,
@@ -571,11 +572,11 @@ char *yytext;
 		ID_TOK,
 		EOF_TOK
 	};
-#line 575 "lexer/lexer.c"
+#line 576 "lexer/lexer.c"
 #define YY_NO_INPUT 1
-#line 52 "lexer/c7.lex"
+#line 53 "lexer/c7.lex"
 	/* regex and token definition */
-#line 579 "lexer/lexer.c"
+#line 580 "lexer/lexer.c"
 
 #define INITIAL 0
 
@@ -790,12 +791,12 @@ YY_DECL
 		}
 
 	{
-#line 94 "lexer/c7.lex"
+#line 95 "lexer/c7.lex"
 
 
 	/* reserved keywords */
 
-#line 799 "lexer/lexer.c"
+#line 800 "lexer/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -864,190 +865,190 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 98 "lexer/c7.lex"
+#line 99 "lexer/c7.lex"
 { handle_token(TYPE_TOK); };
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 99 "lexer/c7.lex"
+#line 100 "lexer/c7.lex"
 { handle_token(IF_TOK); };
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 100 "lexer/c7.lex"
+#line 101 "lexer/c7.lex"
 { handle_token(ELSE_TOK); };
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 101 "lexer/c7.lex"
+#line 102 "lexer/c7.lex"
 { handle_token(FOR_TOK); };
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 102 "lexer/c7.lex"
+#line 103 "lexer/c7.lex"
 { handle_token(FORALL_TOK); };
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 103 "lexer/c7.lex"
+#line 104 "lexer/c7.lex"
 { handle_token(RETURN_TOK); };
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 104 "lexer/c7.lex"
+#line 105 "lexer/c7.lex"
 { handle_token(READ_TOK); };
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 105 "lexer/c7.lex"
+#line 106 "lexer/c7.lex"
 { handle_token(WRITE_TOK); };
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 106 "lexer/c7.lex"
+#line 107 "lexer/c7.lex"
 { handle_token(WRITELN_TOK); };
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 107 "lexer/c7.lex"
+#line 108 "lexer/c7.lex"
 { handle_token(IN_TOK); };
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 108 "lexer/c7.lex"
+#line 109 "lexer/c7.lex"
 { handle_token(EMPTY_TOK); };
 	YY_BREAK
 /* arithmetic expressions */
 case 12:
 YY_RULE_SETUP
-#line 112 "lexer/c7.lex"
+#line 113 "lexer/c7.lex"
 { handle_token(FLOAT_TOK); };
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 113 "lexer/c7.lex"
+#line 114 "lexer/c7.lex"
 { handle_token(INTEGER_TOK); };
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 114 "lexer/c7.lex"
+#line 115 "lexer/c7.lex"
 { handle_token(ADD_TOK); };
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 115 "lexer/c7.lex"
+#line 116 "lexer/c7.lex"
 { handle_token(SUB_TOK); };
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 116 "lexer/c7.lex"
+#line 117 "lexer/c7.lex"
 { handle_token(MULT_TOK); };
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 117 "lexer/c7.lex"
+#line 118 "lexer/c7.lex"
 { handle_token(DIV_TOK); };
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 118 "lexer/c7.lex"
+#line 119 "lexer/c7.lex"
 { handle_token(ASSIGN_TOK); };
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 119 "lexer/c7.lex"
+#line 120 "lexer/c7.lex"
 { handle_token(PARENT_LEFT_TOK); };
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 120 "lexer/c7.lex"
+#line 121 "lexer/c7.lex"
 { handle_token(PARENT_RIGHT_TOK); };
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 121 "lexer/c7.lex"
-{ handle_token(BRACK_LEFT_TOK); };
+#line 122 "lexer/c7.lex"
+{ handle_token(BRACK_LEFT_TOK); return BRACK_LEFT; };
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 122 "lexer/c7.lex"
-{ handle_token(BRACK_RIGHT_TOK); };
+#line 123 "lexer/c7.lex"
+{ handle_token(BRACK_RIGHT_TOK); return BRACK_RIGHT; };
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 123 "lexer/c7.lex"
+#line 124 "lexer/c7.lex"
 { handle_token(SEMICOLON_TOK); };
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 124 "lexer/c7.lex"
+#line 125 "lexer/c7.lex"
 { handle_token(COMMA_TOK); };
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 125 "lexer/c7.lex"
+#line 126 "lexer/c7.lex"
 { handle_token(OR_OP_TOK); };
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 126 "lexer/c7.lex"
+#line 127 "lexer/c7.lex"
 { handle_token(AND_OP_TOK); };
 	YY_BREAK
 /* conditional and booleans expressions */
 case 27:
 YY_RULE_SETUP
-#line 130 "lexer/c7.lex"
+#line 131 "lexer/c7.lex"
 { handle_token(BOOLEAN_OP_TOK); };
 	YY_BREAK
 /* structure helpers */
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 134 "lexer/c7.lex"
+#line 135 "lexer/c7.lex"
 { handle_token(COMMENT_TOK); };														;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 135 "lexer/c7.lex"
+#line 136 "lexer/c7.lex"
 { handle_token(STRING_TOK); };
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 136 "lexer/c7.lex"
+#line 137 "lexer/c7.lex"
 { handle_token(CHAR_TOK); };
 	YY_BREAK
 /* general */
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 140 "lexer/c7.lex"
+#line 141 "lexer/c7.lex"
 { handle_token(NEWLINE_TOK); };
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 141 "lexer/c7.lex"
+#line 142 "lexer/c7.lex"
 { lex_column += strlen(yytext); }													;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 142 "lexer/c7.lex"
+#line 143 "lexer/c7.lex"
 { handle_token(ID_TOK); };
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 143 "lexer/c7.lex"
+#line 144 "lexer/c7.lex"
 { handle_token(EOF_TOK); yyterminate(); };
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 144 "lexer/c7.lex"
+#line 145 "lexer/c7.lex"
 { handle_token(ERROR_TOK); };  /* any character but newline */
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 146 "lexer/c7.lex"
+#line 147 "lexer/c7.lex"
 ECHO;
 	YY_BREAK
-#line 1051 "lexer/lexer.c"
+#line 1052 "lexer/lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2021,7 +2022,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 146 "lexer/c7.lex"
+#line 147 "lexer/c7.lex"
 
 
 /*
@@ -2100,9 +2101,11 @@ void handle_token(int token) {
 			break;
 		case BRACK_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<brack_left, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case BRACK_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<brack_right, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case SEMICOLON_TOK:
 			if (LEX_VERBOSE) printf("<semicolon, '%s'> ", yytext);
