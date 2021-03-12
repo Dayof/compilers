@@ -896,7 +896,7 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 #line 105 "lexer/c7.lex"
-{ handle_token(READ_TOK); };
+{ handle_token(READ_TOK); return READ; };
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
@@ -957,12 +957,12 @@ YY_RULE_SETUP
 case 19:
 YY_RULE_SETUP
 #line 120 "lexer/c7.lex"
-{ handle_token(PARENT_LEFT_TOK); };
+{ handle_token(PARENT_LEFT_TOK); return PARENT_LEFT; };
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 121 "lexer/c7.lex"
-{ handle_token(PARENT_RIGHT_TOK); };
+{ handle_token(PARENT_RIGHT_TOK); return PARENT_RIGHT; };
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
@@ -1032,7 +1032,7 @@ YY_RULE_SETUP
 case 33:
 YY_RULE_SETUP
 #line 143 "lexer/c7.lex"
-{ handle_token(ID_TOK); };
+{ handle_token(ID_TOK); return ID; };
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 #line 144 "lexer/c7.lex"
@@ -2059,6 +2059,8 @@ void handle_token(int token) {
 			break;
 		case READ_TOK:
 			if (LEX_VERBOSE) printf("<read> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case WRITE_TOK:
 			if (LEX_VERBOSE) printf("<write> ");
@@ -2095,9 +2097,11 @@ void handle_token(int token) {
 			break;
 		case PARENT_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<parent_left, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case PARENT_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<parent_right, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case BRACK_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<brack_left, '%s'> ", yytext);
@@ -2133,6 +2137,8 @@ void handle_token(int token) {
 		case ID_TOK:;
 			int idx = add_word(len_st(), strdup(yytext));
 			if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case NEWLINE_TOK:
 			newline_counter += 1;

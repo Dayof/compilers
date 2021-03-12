@@ -15,21 +15,28 @@
 %start program
 
 %union {
-        char op;
+    char op;
+    char* str_value;
 }
 
-%token <op>     BRACK_LEFT BRACK_RIGHT
+%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT
+%token <str_value>      READ ID
 
 %%
 
-program : block                         { ; }
+program : block                                         { ; }
         ;
 
-block   : BRACK_LEFT[L] stmts BRACK_RIGHT[R]  { printf("%c stmts %c", $L, $R); }
+block   : BRACK_LEFT[L] stmts BRACK_RIGHT[R]            { printf("\n\nSYNTAX - %c stmts %c", $L, $R); }
         ; 
 
-stmts   : /* empty */                   { ; }
+stmts   : stmts stmt                                    { ; }
+        | /* empty */                                   { ; }
         ;
+
+stmt    : READ[F] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R]  { printf("\n\nSYNTAX - %s %c %s %c", $F, $L, $C, $R); }
+        ;
+        
 
 %%
 

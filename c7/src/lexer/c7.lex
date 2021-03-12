@@ -101,7 +101,7 @@ COMMENT			("//".*)
 {FOR}			{ handle_token(FOR_TOK); };
 {FORALL}		{ handle_token(FORALL_TOK); };
 {RETURN}		{ handle_token(RETURN_TOK); };
-{READ}			{ handle_token(READ_TOK); };
+{READ}			{ handle_token(READ_TOK); return READ; };
 {WRITE}			{ handle_token(WRITE_TOK); };
 {WRITELN}		{ handle_token(WRITELN_TOK); };
 {IN}			{ handle_token(IN_TOK); };
@@ -116,8 +116,8 @@ COMMENT			("//".*)
 {MULT}			{ handle_token(MULT_TOK); };
 {DIV}			{ handle_token(DIV_TOK); };
 {ASSIGN}		{ handle_token(ASSIGN_TOK); };
-{PARENT_LEFT}	{ handle_token(PARENT_LEFT_TOK); };
-{PARENT_RIGHT}	{ handle_token(PARENT_RIGHT_TOK); };
+{PARENT_LEFT}	{ handle_token(PARENT_LEFT_TOK); return PARENT_LEFT; };
+{PARENT_RIGHT}	{ handle_token(PARENT_RIGHT_TOK); return PARENT_RIGHT; };
 {BRACK_LEFT}	{ handle_token(BRACK_LEFT_TOK); return BRACK_LEFT; };
 {BRACK_RIGHT}	{ handle_token(BRACK_RIGHT_TOK); return BRACK_RIGHT; };
 {SEMICOLON}		{ handle_token(SEMICOLON_TOK); };
@@ -139,7 +139,7 @@ COMMENT			("//".*)
 
 {NEWLINE}		{ handle_token(NEWLINE_TOK); };
 {WHITESPACE}   	{ lex_column += strlen(yytext); }													;
-{ID}			{ handle_token(ID_TOK); };
+{ID}			{ handle_token(ID_TOK); return ID; };
 <<EOF>>         { handle_token(EOF_TOK); yyterminate(); };
 .				{ handle_token(ERROR_TOK); };  /* any character but newline */
 
@@ -179,6 +179,8 @@ void handle_token(int token) {
 			break;
 		case READ_TOK:
 			if (LEX_VERBOSE) printf("<read> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case WRITE_TOK:
 			if (LEX_VERBOSE) printf("<write> ");
@@ -215,9 +217,11 @@ void handle_token(int token) {
 			break;
 		case PARENT_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<parent_left, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case PARENT_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<parent_right, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case BRACK_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<brack_left, '%s'> ", yytext);
@@ -253,6 +257,8 @@ void handle_token(int token) {
 		case ID_TOK:;
 			int idx = add_word(len_st(), strdup(yytext));
 			if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case NEWLINE_TOK:
 			newline_counter += 1;

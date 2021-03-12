@@ -6,7 +6,10 @@ Grammar
 
     2 block: BRACK_LEFT stmts BRACK_RIGHT
 
-    3 stmts: %empty
+    3 stmts: stmts stmt
+    4      | %empty
+
+    5 stmt: READ PARENT_LEFT ID PARENT_RIGHT
 
 
 Terminals, with rules where they appear
@@ -15,21 +18,28 @@ Terminals, with rules where they appear
     error (256)
     BRACK_LEFT <op> (258) 2
     BRACK_RIGHT <op> (259) 2
+    PARENT_LEFT <op> (260) 5
+    PARENT_RIGHT <op> (261) 5
+    READ <str_value> (262) 5
+    ID <str_value> (263) 5
 
 
 Nonterminals, with rules where they appear
 
-    $accept (5)
+    $accept (9)
         on left: 0
-    program (6)
+    program (10)
         on left: 1
         on right: 0
-    block (7)
+    block (11)
         on left: 2
         on right: 1
-    stmts (8)
-        on left: 3
-        on right: 2
+    stmts (12)
+        on left: 3 4
+        on right: 2 3
+    stmt (13)
+        on left: 5
+        on right: 3
 
 
 State 0
@@ -46,7 +56,8 @@ State 1
 
     2 block: BRACK_LEFT . stmts BRACK_RIGHT
 
-    BRACK_RIGHT  reduce using rule 3 (stmts)
+    BRACK_RIGHT  reduce using rule 4 (stmts)
+    READ         reduce using rule 4 (stmts)
 
     stmts  go to state 4
 
@@ -68,8 +79,12 @@ State 3
 State 4
 
     2 block: BRACK_LEFT stmts . BRACK_RIGHT
+    3 stmts: stmts . stmt
 
     BRACK_RIGHT  shift, and go to state 6
+    READ         shift, and go to state 7
+
+    stmt  go to state 8
 
 
 State 5
@@ -84,3 +99,40 @@ State 6
     2 block: BRACK_LEFT stmts BRACK_RIGHT .
 
     $end  reduce using rule 2 (block)
+
+
+State 7
+
+    5 stmt: READ . PARENT_LEFT ID PARENT_RIGHT
+
+    PARENT_LEFT  shift, and go to state 9
+
+
+State 8
+
+    3 stmts: stmts stmt .
+
+    BRACK_RIGHT  reduce using rule 3 (stmts)
+    READ         reduce using rule 3 (stmts)
+
+
+State 9
+
+    5 stmt: READ PARENT_LEFT . ID PARENT_RIGHT
+
+    ID  shift, and go to state 10
+
+
+State 10
+
+    5 stmt: READ PARENT_LEFT ID . PARENT_RIGHT
+
+    PARENT_RIGHT  shift, and go to state 11
+
+
+State 11
+
+    5 stmt: READ PARENT_LEFT ID PARENT_RIGHT .
+
+    BRACK_RIGHT  reduce using rule 5 (stmt)
+    READ         reduce using rule 5 (stmt)

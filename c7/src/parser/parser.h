@@ -50,7 +50,11 @@ extern int yydebug;
   enum yytokentype
   {
     BRACK_LEFT = 258,
-    BRACK_RIGHT = 259
+    BRACK_RIGHT = 259,
+    PARENT_LEFT = 260,
+    PARENT_RIGHT = 261,
+    READ = 262,
+    ID = 263
   };
 #endif
 
@@ -60,9 +64,10 @@ union YYSTYPE
 {
 #line 17 "parser/c7.y"
 
-        char op;
+    char op;
+    char* str_value;
 
-#line 66 "parser/parser.h"
+#line 71 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
