@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "sym_tab.h"
 #include "main.h"
 #include "lexer.h"
 
@@ -21,7 +22,11 @@ int main (int argc, char* argv[]) {
     fclose(yyin);
     printf("\nLexer finished.\n");
 
-    // clean flex memory
+    printf("\n## Symbol Table ##\n");
+    print_st();
+
+    // clean memory
+    delete_all_st();
     yylex_destroy();
 	
     return 0;

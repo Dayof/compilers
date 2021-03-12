@@ -3,6 +3,7 @@
 %{
 	#include <stdio.h>
 	#include "main.h"
+	#include "sym_tab.h"
 
 	enum TOKENS {
 		ERROR_TOK=1,
@@ -246,8 +247,9 @@ void handle_token(int token) {
 				printf("\nline %d. ", lex_line);
 			}
 			break;
-		case ID_TOK:
-			if (LEX_VERBOSE) printf("<id, '%s'> ", yytext);
+		case ID_TOK:;
+			int idx = add_word(len_st(), strdup(yytext));
+			if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
 			break;
 		case NEWLINE_TOK:
 			newline_counter += 1;

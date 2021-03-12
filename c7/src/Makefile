@@ -1,8 +1,8 @@
-FILES	= lexer/lexer.c core/main.c
+FILES	= lexer/lexer.c core/sym_tab.c core/main.c
 CFLAGS	= -g -Wall -pedantic -x c
 CC		= gcc
 
-c7:		$(FILES) core/main.h
+c7:		$(FILES) core/main.h core/sym_tab.h
 		$(CC) $(CFLAGS) $(FILES) -I core -I lexer -o c7 -lfl
 
 lexer/lexer.c: lexer/c7.lex
