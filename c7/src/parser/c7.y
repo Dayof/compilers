@@ -19,24 +19,25 @@
     char* str_value;
 }
 
-%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT
-%token <str_value>      READ ID
+%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON
+%token <str_value>      READ TYPE ID
 
 %%
 
-program : block                                         { ; }
+program : block { ; }
         ;
 
-block   : BRACK_LEFT[L] stmts BRACK_RIGHT[R]            { printf("\n\nSYNTAX - %c stmts %c", $L, $R); }
+block   : TYPE[T] ID[F] PARENT_LEFT[L1] PARENT_RIGHT[R1] BRACK_LEFT[L2] stmts BRACK_RIGHT[R2] block  { printf("\n\nSYNTAX - %s %s %c %c %c stmts %c block",
+                                                                                                       $T, $F, $L1, $R1, $L2, $R2); }
+        | /* empty */   { ; }
         ; 
 
-stmts   : stmts stmt                                    { ; }
-        | /* empty */                                   { ; }
+stmts   : stmt SEMICOLON[C] stmts   { printf("\n\nSYNTAX - stmt %c stmts", $C); }
+        | /* empty */   { ; }
         ;
 
 stmt    : READ[F] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R]  { printf("\n\nSYNTAX - %s %c %s %c", $F, $L, $C, $R); }
         ;
-        
 
 %%
 

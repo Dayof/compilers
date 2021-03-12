@@ -866,7 +866,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 99 "lexer/c7.lex"
-{ handle_token(TYPE_TOK); };
+{ handle_token(TYPE_TOK); return TYPE; };
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
@@ -977,7 +977,7 @@ YY_RULE_SETUP
 case 23:
 YY_RULE_SETUP
 #line 124 "lexer/c7.lex"
-{ handle_token(SEMICOLON_TOK); };
+{ handle_token(SEMICOLON_TOK); return SEMICOLON; };
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
@@ -2041,6 +2041,8 @@ void handle_token(int token) {
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case IF_TOK:
 			if (LEX_VERBOSE) printf("<if> ");
@@ -2113,6 +2115,7 @@ void handle_token(int token) {
 			break;
 		case SEMICOLON_TOK:
 			if (LEX_VERBOSE) printf("<semicolon, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case COMMA_TOK:
 			if (LEX_VERBOSE) printf("<comma, '%s'> ", yytext);

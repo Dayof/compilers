@@ -1,1 +1,8 @@
-{ read ( something ) }
+set add_float() {
+    read(something);
+    read(something_else);
+}
+
+set add_set() {
+    read(another_thing);
+}

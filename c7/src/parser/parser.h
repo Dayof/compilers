@@ -53,8 +53,10 @@ extern int yydebug;
     BRACK_RIGHT = 259,
     PARENT_LEFT = 260,
     PARENT_RIGHT = 261,
-    READ = 262,
-    ID = 263
+    SEMICOLON = 262,
+    READ = 263,
+    TYPE = 264,
+    ID = 265
   };
 #endif
 
@@ -67,7 +69,7 @@ union YYSTYPE
     char op;
     char* str_value;
 
-#line 71 "parser/parser.h"
+#line 73 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

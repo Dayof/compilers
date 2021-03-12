@@ -95,7 +95,7 @@ COMMENT			("//".*)
 
 	/* reserved keywords */
 
-{TYPE}			{ handle_token(TYPE_TOK); };
+{TYPE}			{ handle_token(TYPE_TOK); return TYPE; };
 {IF}			{ handle_token(IF_TOK); };
 {ELSE}			{ handle_token(ELSE_TOK); };
 {FOR}			{ handle_token(FOR_TOK); };
@@ -120,7 +120,7 @@ COMMENT			("//".*)
 {PARENT_RIGHT}	{ handle_token(PARENT_RIGHT_TOK); return PARENT_RIGHT; };
 {BRACK_LEFT}	{ handle_token(BRACK_LEFT_TOK); return BRACK_LEFT; };
 {BRACK_RIGHT}	{ handle_token(BRACK_RIGHT_TOK); return BRACK_RIGHT; };
-{SEMICOLON}		{ handle_token(SEMICOLON_TOK); };
+{SEMICOLON}		{ handle_token(SEMICOLON_TOK); return SEMICOLON; };
 {COMMA}			{ handle_token(COMMA_TOK); };
 {OR_OP}			{ handle_token(OR_OP_TOK); };
 {AND_OP}		{ handle_token(AND_OP_TOK); };
@@ -161,6 +161,8 @@ void handle_token(int token) {
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case IF_TOK:
 			if (LEX_VERBOSE) printf("<if> ");
@@ -233,6 +235,7 @@ void handle_token(int token) {
 			break;
 		case SEMICOLON_TOK:
 			if (LEX_VERBOSE) printf("<semicolon, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case COMMA_TOK:
 			if (LEX_VERBOSE) printf("<comma, '%s'> ", yytext);
