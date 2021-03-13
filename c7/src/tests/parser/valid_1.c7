@@ -13,4 +13,6 @@ set add_set() {
     int another_thing;
     write(1/2+5.3-1/4*6.25);
     writeln(20+50);
+    write(EMPTY);
+    writeln(EMPTY);
 }

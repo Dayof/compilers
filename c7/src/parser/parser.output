@@ -25,17 +25,18 @@ Grammar
    14           | var_decl_stmt
 
    15 simple_expr: arith_expr
+   16            | EMPTY
 
-   16 arith_expr: arith_expr ADD term
-   17           | arith_expr SUB term
-   18           | term
+   17 arith_expr: arith_expr ADD term
+   18           | arith_expr SUB term
+   19           | term
 
-   19 term: term MULT factor
-   20     | term DIV factor
-   21     | factor
+   20 term: term MULT factor
+   21     | term DIV factor
+   22     | factor
 
-   22 factor: INTEGER
-   23       | FLOAT
+   23 factor: INTEGER
+   24       | FLOAT
 
 
 Terminals, with rules where they appear
@@ -47,59 +48,60 @@ Terminals, with rules where they appear
     PARENT_LEFT <op> (260) 6 11 12 13
     PARENT_RIGHT <op> (261) 6 11 12 13
     SEMICOLON <op> (262) 7 11 12 13
-    ADD <op> (263) 16
-    SUB <op> (264) 17
-    MULT <op> (265) 19
-    DIV <op> (266) 20
+    ADD <op> (263) 17
+    SUB <op> (264) 18
+    MULT <op> (265) 20
+    DIV <op> (266) 21
     READ <str_value> (267) 11
     WRITE <str_value> (268) 12
     WRITELN <str_value> (269) 13
     TYPE <str_value> (270) 6 7
     ID <str_value> (271) 6 7 11
-    INTEGER <int_value> (272) 22
-    FLOAT <float_value> (273) 23
+    EMPTY <str_value> (272) 16
+    INTEGER <int_value> (273) 23
+    FLOAT <float_value> (274) 24
 
 
 Nonterminals, with rules where they appear
 
-    $accept (19)
+    $accept (20)
         on left: 0
-    program (20)
+    program (21)
         on left: 1
         on right: 0
-    stmts (21)
+    stmts (22)
         on left: 2 3
         on right: 1 2
-    stmt (22)
+    stmt (23)
         on left: 4 5
         on right: 2 3
-    func_stmt (23)
+    func_stmt (24)
         on left: 6
         on right: 4
-    var_decl_stmt (24)
+    var_decl_stmt (25)
         on left: 7
         on right: 5 14
-    comp_block_stmt (25)
+    comp_block_stmt (26)
         on left: 8
         on right: 6
-    block_stmts (26)
+    block_stmts (27)
         on left: 9 10
         on right: 8 9
-    block_stmt (27)
+    block_stmt (28)
         on left: 11 12 13 14
         on right: 9
-    simple_expr (28)
-        on left: 15
+    simple_expr (29)
+        on left: 15 16
         on right: 12 13
-    arith_expr (29)
-        on left: 16 17 18
-        on right: 15 16 17
-    term (30)
-        on left: 19 20 21
-        on right: 16 17 18 19 20
-    factor (31)
-        on left: 22 23
-        on right: 19 20 21
+    arith_expr (30)
+        on left: 17 18 19
+        on right: 15 17 18
+    term (31)
+        on left: 20 21 22
+        on right: 17 18 19 20 21
+    factor (32)
+        on left: 23 24
+        on right: 20 21 22
 
 
 State 0
@@ -321,56 +323,54 @@ State 24
 
    12 block_stmt: WRITE PARENT_LEFT . simple_expr PARENT_RIGHT SEMICOLON
 
-    INTEGER  shift, and go to state 28
-    FLOAT    shift, and go to state 29
+    EMPTY    shift, and go to state 28
+    INTEGER  shift, and go to state 29
+    FLOAT    shift, and go to state 30
 
-    simple_expr  go to state 30
-    arith_expr   go to state 31
-    term         go to state 32
-    factor       go to state 33
+    simple_expr  go to state 31
+    arith_expr   go to state 32
+    term         go to state 33
+    factor       go to state 34
 
 
 State 25
 
    13 block_stmt: WRITELN PARENT_LEFT . simple_expr PARENT_RIGHT SEMICOLON
 
-    INTEGER  shift, and go to state 28
-    FLOAT    shift, and go to state 29
+    EMPTY    shift, and go to state 28
+    INTEGER  shift, and go to state 29
+    FLOAT    shift, and go to state 30
 
-    simple_expr  go to state 34
-    arith_expr   go to state 31
-    term         go to state 32
-    factor       go to state 33
+    simple_expr  go to state 35
+    arith_expr   go to state 32
+    term         go to state 33
+    factor       go to state 34
 
 
 State 26
 
     7 var_decl_stmt: TYPE ID . SEMICOLON
 
-    SEMICOLON  shift, and go to state 49
+    SEMICOLON  shift, and go to state 50
 
 
 State 27
 
    11 block_stmt: READ PARENT_LEFT ID . PARENT_RIGHT SEMICOLON
 
-    PARENT_RIGHT  shift, and go to state 35
+    PARENT_RIGHT  shift, and go to state 36
 
 
 State 28
 
-   22 factor: INTEGER .
+   16 simple_expr: EMPTY .
 
-    PARENT_RIGHT  reduce using rule 22 (factor)
-    ADD           reduce using rule 22 (factor)
-    SUB           reduce using rule 22 (factor)
-    MULT          reduce using rule 22 (factor)
-    DIV           reduce using rule 22 (factor)
+    PARENT_RIGHT  reduce using rule 16 (simple_expr)
 
 
 State 29
 
-   23 factor: FLOAT .
+   23 factor: INTEGER .
 
     PARENT_RIGHT  reduce using rule 23 (factor)
     ADD           reduce using rule 23 (factor)
@@ -381,119 +381,130 @@ State 29
 
 State 30
 
-   12 block_stmt: WRITE PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
+   24 factor: FLOAT .
 
-    PARENT_RIGHT  shift, and go to state 36
+    PARENT_RIGHT  reduce using rule 24 (factor)
+    ADD           reduce using rule 24 (factor)
+    SUB           reduce using rule 24 (factor)
+    MULT          reduce using rule 24 (factor)
+    DIV           reduce using rule 24 (factor)
 
 
 State 31
 
-   15 simple_expr: arith_expr .
-   16 arith_expr: arith_expr . ADD term
-   17           | arith_expr . SUB term
+   12 block_stmt: WRITE PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
 
-    ADD  shift, and go to state 37
-    SUB  shift, and go to state 38
-
-    PARENT_RIGHT  reduce using rule 15 (simple_expr)
+    PARENT_RIGHT  shift, and go to state 37
 
 
 State 32
 
-   18 arith_expr: term .
-   19 term: term . MULT factor
-   20     | term . DIV factor
+   15 simple_expr: arith_expr .
+   17 arith_expr: arith_expr . ADD term
+   18           | arith_expr . SUB term
 
-    MULT  shift, and go to state 39
-    DIV   shift, and go to state 40
+    ADD  shift, and go to state 38
+    SUB  shift, and go to state 39
 
-    PARENT_RIGHT  reduce using rule 18 (arith_expr)
-    ADD           reduce using rule 18 (arith_expr)
-    SUB           reduce using rule 18 (arith_expr)
+    PARENT_RIGHT  reduce using rule 15 (simple_expr)
 
 
 State 33
 
-   21 term: factor .
+   19 arith_expr: term .
+   20 term: term . MULT factor
+   21     | term . DIV factor
 
-    PARENT_RIGHT  reduce using rule 21 (term)
-    ADD           reduce using rule 21 (term)
-    SUB           reduce using rule 21 (term)
-    MULT          reduce using rule 21 (term)
-    DIV           reduce using rule 21 (term)
+    MULT  shift, and go to state 40
+    DIV   shift, and go to state 41
+
+    PARENT_RIGHT  reduce using rule 19 (arith_expr)
+    ADD           reduce using rule 19 (arith_expr)
+    SUB           reduce using rule 19 (arith_expr)
 
 
 State 34
 
-   13 block_stmt: WRITELN PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
+   22 term: factor .
 
-    PARENT_RIGHT  shift, and go to state 41
+    PARENT_RIGHT  reduce using rule 22 (term)
+    ADD           reduce using rule 22 (term)
+    SUB           reduce using rule 22 (term)
+    MULT          reduce using rule 22 (term)
+    DIV           reduce using rule 22 (term)
 
 
 State 35
 
-   11 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT . SEMICOLON
+   13 block_stmt: WRITELN PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
 
-    SEMICOLON  shift, and go to state 42
+    PARENT_RIGHT  shift, and go to state 42
 
 
 State 36
 
-   12 block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
+   11 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT . SEMICOLON
 
     SEMICOLON  shift, and go to state 43
 
 
 State 37
 
-   16 arith_expr: arith_expr ADD . term
+   12 block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
 
-    INTEGER  shift, and go to state 28
-    FLOAT    shift, and go to state 29
-
-    term    go to state 44
-    factor  go to state 33
+    SEMICOLON  shift, and go to state 44
 
 
 State 38
 
-   17 arith_expr: arith_expr SUB . term
+   17 arith_expr: arith_expr ADD . term
 
-    INTEGER  shift, and go to state 28
-    FLOAT    shift, and go to state 29
+    INTEGER  shift, and go to state 29
+    FLOAT    shift, and go to state 30
 
     term    go to state 45
-    factor  go to state 33
+    factor  go to state 34
 
 
 State 39
 
-   19 term: term MULT . factor
+   18 arith_expr: arith_expr SUB . term
 
-    INTEGER  shift, and go to state 28
-    FLOAT    shift, and go to state 29
+    INTEGER  shift, and go to state 29
+    FLOAT    shift, and go to state 30
 
-    factor  go to state 46
+    term    go to state 46
+    factor  go to state 34
 
 
 State 40
 
-   20 term: term DIV . factor
+   20 term: term MULT . factor
 
-    INTEGER  shift, and go to state 28
-    FLOAT    shift, and go to state 29
+    INTEGER  shift, and go to state 29
+    FLOAT    shift, and go to state 30
 
     factor  go to state 47
 
 
 State 41
 
-   13 block_stmt: WRITELN PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
+   21 term: term DIV . factor
 
-    SEMICOLON  shift, and go to state 48
+    INTEGER  shift, and go to state 29
+    FLOAT    shift, and go to state 30
+
+    factor  go to state 48
 
 
 State 42
+
+   13 block_stmt: WRITELN PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
+
+    SEMICOLON  shift, and go to state 49
+
+
+State 43
 
    11 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT SEMICOLON .
 
@@ -504,7 +515,7 @@ State 42
     TYPE         reduce using rule 11 (block_stmt)
 
 
-State 43
+State 44
 
    12 block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON .
 
@@ -515,28 +526,14 @@ State 43
     TYPE         reduce using rule 12 (block_stmt)
 
 
-State 44
-
-   16 arith_expr: arith_expr ADD term .
-   19 term: term . MULT factor
-   20     | term . DIV factor
-
-    MULT  shift, and go to state 39
-    DIV   shift, and go to state 40
-
-    PARENT_RIGHT  reduce using rule 16 (arith_expr)
-    ADD           reduce using rule 16 (arith_expr)
-    SUB           reduce using rule 16 (arith_expr)
-
-
 State 45
 
-   17 arith_expr: arith_expr SUB term .
-   19 term: term . MULT factor
-   20     | term . DIV factor
+   17 arith_expr: arith_expr ADD term .
+   20 term: term . MULT factor
+   21     | term . DIV factor
 
-    MULT  shift, and go to state 39
-    DIV   shift, and go to state 40
+    MULT  shift, and go to state 40
+    DIV   shift, and go to state 41
 
     PARENT_RIGHT  reduce using rule 17 (arith_expr)
     ADD           reduce using rule 17 (arith_expr)
@@ -545,18 +542,21 @@ State 45
 
 State 46
 
-   19 term: term MULT factor .
+   18 arith_expr: arith_expr SUB term .
+   20 term: term . MULT factor
+   21     | term . DIV factor
 
-    PARENT_RIGHT  reduce using rule 19 (term)
-    ADD           reduce using rule 19 (term)
-    SUB           reduce using rule 19 (term)
-    MULT          reduce using rule 19 (term)
-    DIV           reduce using rule 19 (term)
+    MULT  shift, and go to state 40
+    DIV   shift, and go to state 41
+
+    PARENT_RIGHT  reduce using rule 18 (arith_expr)
+    ADD           reduce using rule 18 (arith_expr)
+    SUB           reduce using rule 18 (arith_expr)
 
 
 State 47
 
-   20 term: term DIV factor .
+   20 term: term MULT factor .
 
     PARENT_RIGHT  reduce using rule 20 (term)
     ADD           reduce using rule 20 (term)
@@ -567,6 +567,17 @@ State 47
 
 State 48
 
+   21 term: term DIV factor .
+
+    PARENT_RIGHT  reduce using rule 21 (term)
+    ADD           reduce using rule 21 (term)
+    SUB           reduce using rule 21 (term)
+    MULT          reduce using rule 21 (term)
+    DIV           reduce using rule 21 (term)
+
+
+State 49
+
    13 block_stmt: WRITELN PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON .
 
     BRACK_RIGHT  reduce using rule 13 (block_stmt)
@@ -576,7 +587,7 @@ State 48
     TYPE         reduce using rule 13 (block_stmt)
 
 
-State 49
+State 50
 
     7 var_decl_stmt: TYPE ID SEMICOLON .
 

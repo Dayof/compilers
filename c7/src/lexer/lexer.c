@@ -916,7 +916,7 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 109 "lexer/c7.lex"
-{ handle_token(EMPTY_TOK); };
+{ handle_token(EMPTY_TOK); return EMPTY; };
 	YY_BREAK
 /* arithmetic expressions */
 case 12:
@@ -2079,6 +2079,8 @@ void handle_token(int token) {
 			break;
 		case EMPTY_TOK:
 			if (LEX_VERBOSE) printf("<EMPTY> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case FLOAT_TOK:
 			if (LEX_VERBOSE) printf("<float, '%s'> ", yytext);
