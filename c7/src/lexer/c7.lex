@@ -115,7 +115,7 @@ COMMENT			("//".*)
 {SUB}			{ handle_token(SUB_TOK); return SUB; };
 {MULT}			{ handle_token(MULT_TOK); return MULT; };
 {DIV}			{ handle_token(DIV_TOK); return DIV; };
-{ASSIGN}		{ handle_token(ASSIGN_TOK); };
+{ASSIGN}		{ handle_token(ASSIGN_TOK); return ASSIGN; };
 {PARENT_LEFT}	{ handle_token(PARENT_LEFT_TOK); return PARENT_LEFT; };
 {PARENT_RIGHT}	{ handle_token(PARENT_RIGHT_TOK); return PARENT_RIGHT; };
 {BRACK_LEFT}	{ handle_token(BRACK_LEFT_TOK); return BRACK_LEFT; };
@@ -231,6 +231,7 @@ void handle_token(int token) {
 			break;
 		case ASSIGN_TOK:
 			if (LEX_VERBOSE) printf("<assign, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case PARENT_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<parent_left, '%s'> ", yytext);

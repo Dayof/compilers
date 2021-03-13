@@ -21,7 +21,7 @@
     float float_value;
 }
 
-%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR COMMA
+%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR COMMA ASSIGN
 %token <str_value>      READ WRITE WRITELN TYPE ID EMPTY STRING
 %token <int_value>      INTEGER
 %token <float_value>    FLOAT
@@ -69,6 +69,8 @@ block_stmt  : READ[F] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R] SEMICOLON[E] { printf
             | WRITELN[F] PARENT_LEFT[L] simple_expr PARENT_RIGHT[R] SEMICOLON[E] { printf("\n\nSYNTAX - %s %c simple_expr %c %c\n",
                                                                                           $F, $L, $R, $E); }                                                                     
             | var_decl_stmt { printf("\n\nSYNTAX - block_stmt -> var_decl_stmt\n"); }
+            | ID[V] ASSIGN[C] simple_expr SEMICOLON[E] { printf("\n\nSYNTAX - %s %c simple_expr %c\n",
+                                                                $V, $C, $E); }
             ;
 
 simple_expr : arith_expr { printf("\n\nSYNTAX - simple_expr -> arith_expr\n"); }

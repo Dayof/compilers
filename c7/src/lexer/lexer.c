@@ -952,7 +952,7 @@ YY_RULE_SETUP
 case 18:
 YY_RULE_SETUP
 #line 119 "lexer/c7.lex"
-{ handle_token(ASSIGN_TOK); };
+{ handle_token(ASSIGN_TOK); return ASSIGN; };
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
@@ -2111,6 +2111,7 @@ void handle_token(int token) {
 			break;
 		case ASSIGN_TOK:
 			if (LEX_VERBOSE) printf("<assign, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case PARENT_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<parent_left, '%s'> ", yytext);

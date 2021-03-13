@@ -22,5 +22,6 @@ set add_set() {
 }
 
 set subsum(set s, int target, int cur_sum, set ans) {
-
+    set zero; set one; set two; set three;
+    zero = EMPTY;
 }
