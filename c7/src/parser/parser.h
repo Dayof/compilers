@@ -60,10 +60,11 @@ extern int yydebug;
     DIV = 266,
     READ = 267,
     WRITE = 268,
-    TYPE = 269,
-    ID = 270,
-    INTEGER = 271,
-    FLOAT = 272
+    WRITELN = 269,
+    TYPE = 270,
+    ID = 271,
+    INTEGER = 272,
+    FLOAT = 273
   };
 #endif
 
@@ -78,7 +79,7 @@ union YYSTYPE
     int int_value;
     float float_value;
 
-#line 82 "parser/parser.h"
+#line 83 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

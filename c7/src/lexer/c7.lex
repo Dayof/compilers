@@ -103,7 +103,7 @@ COMMENT			("//".*)
 {RETURN}		{ handle_token(RETURN_TOK); };
 {READ}			{ handle_token(READ_TOK); return READ; };
 {WRITE}			{ handle_token(WRITE_TOK); return WRITE; };
-{WRITELN}		{ handle_token(WRITELN_TOK); };
+{WRITELN}		{ handle_token(WRITELN_TOK); return WRITELN; };
 {IN}			{ handle_token(IN_TOK); };
 {EMPTY}			{ handle_token(EMPTY_TOK); };
 
@@ -191,6 +191,8 @@ void handle_token(int token) {
 			break;
 		case WRITELN_TOK:
 			if (LEX_VERBOSE) printf("<writeln> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case IN_TOK:
 			if (LEX_VERBOSE) printf("<in> ");

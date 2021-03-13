@@ -906,7 +906,7 @@ YY_RULE_SETUP
 case 9:
 YY_RULE_SETUP
 #line 107 "lexer/c7.lex"
-{ handle_token(WRITELN_TOK); };
+{ handle_token(WRITELN_TOK); return WRITELN; };
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
@@ -2071,6 +2071,8 @@ void handle_token(int token) {
 			break;
 		case WRITELN_TOK:
 			if (LEX_VERBOSE) printf("<writeln> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case IN_TOK:
 			if (LEX_VERBOSE) printf("<in> ");

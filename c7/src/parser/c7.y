@@ -22,7 +22,7 @@
 }
 
 %token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV
-%token <str_value>      READ WRITE TYPE ID
+%token <str_value>      READ WRITE WRITELN TYPE ID
 %token <int_value>      INTEGER
 %token <float_value>    FLOAT
 
@@ -60,7 +60,9 @@ block_stmts : block_stmts block_stmt { printf("\n\nSYNTAX - block_stmts block_st
 block_stmt  : READ[F] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R] SEMICOLON[E] { printf("\n\nSYNTAX - %s %c %s %c %c\n",
                                                                                  $F, $L, $C, $R, $E); }
             | WRITE[F] PARENT_LEFT[L] simple_expr PARENT_RIGHT[R] SEMICOLON[E] { printf("\n\nSYNTAX - %s %c simple_expr %c %c\n",
-                                                                                 $F, $L, $R, $E); }                                                                     
+                                                                                        $F, $L, $R, $E); }                                                                     
+            | WRITELN[F] PARENT_LEFT[L] simple_expr PARENT_RIGHT[R] SEMICOLON[E] { printf("\n\nSYNTAX - %s %c simple_expr %c %c\n",
+                                                                                          $F, $L, $R, $E); }                                                                     
             | var_decl_stmt { printf("\n\nSYNTAX - block_stmt -> var_decl_stmt\n"); }
             ;
 
