@@ -1010,12 +1010,12 @@ YY_RULE_SETUP
 case 29:
 YY_RULE_SETUP
 #line 136 "lexer/c7.lex"
-{ handle_token(STRING_TOK); };
+{ handle_token(STRING_TOK); return STRING; };
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 137 "lexer/c7.lex"
-{ handle_token(CHAR_TOK); };
+{ handle_token(CHAR_TOK); return CHAR; };
 	YY_BREAK
 /* general */
 case 31:
@@ -2035,9 +2035,12 @@ void handle_token(int token) {
 	switch (token) {
 		case STRING_TOK:
 			if (LEX_VERBOSE) printf("<string, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);

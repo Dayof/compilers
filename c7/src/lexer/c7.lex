@@ -132,8 +132,8 @@ COMMENT			("//".*)
 	/* structure helpers */
 
 {COMMENT}{NEWLINE} { handle_token(COMMENT_TOK); };														;
-{STRING}		   { handle_token(STRING_TOK); };
-{CHAR}			   { handle_token(CHAR_TOK); };
+{STRING}		   { handle_token(STRING_TOK); return STRING; };
+{CHAR}			   { handle_token(CHAR_TOK); return CHAR; };
 
 	/* general */
 
@@ -155,9 +155,12 @@ void handle_token(int token) {
 	switch (token) {
 		case STRING_TOK:
 			if (LEX_VERBOSE) printf("<string, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);

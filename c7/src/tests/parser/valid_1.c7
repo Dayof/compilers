@@ -15,4 +15,8 @@ set add_set() {
     writeln(20+50);
     write(EMPTY);
     writeln(EMPTY);
+    write("a string example");
+    writeln("a string example");
+    write('A');
+    writeln('A');
 }
