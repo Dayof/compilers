@@ -99,12 +99,12 @@ COMMENT			("//".*)
 {IF}			{ handle_token(IF_TOK); };
 {ELSE}			{ handle_token(ELSE_TOK); };
 {FOR}			{ handle_token(FOR_TOK); };
-{FORALL}		{ handle_token(FORALL_TOK); };
+{FORALL}		{ handle_token(FORALL_TOK); return FORALL; };
 {RETURN}		{ handle_token(RETURN_TOK); return RETURN; };
 {READ}			{ handle_token(READ_TOK); return READ; };
 {WRITE}			{ handle_token(WRITE_TOK); return WRITE; };
 {WRITELN}		{ handle_token(WRITELN_TOK); return WRITELN; };
-{IN}			{ handle_token(IN_TOK); };
+{IN}			{ handle_token(IN_TOK); return IN; };
 {EMPTY}			{ handle_token(EMPTY_TOK); return EMPTY; };
 
 	/* arithmetic expressions */
@@ -178,6 +178,8 @@ void handle_token(int token) {
 			break;
 		case FORALL_TOK:
 			if (LEX_VERBOSE) printf("<forall> ");
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case RETURN_TOK:
 			if (LEX_VERBOSE) printf("<return> ");
@@ -201,6 +203,8 @@ void handle_token(int token) {
 			break;
 		case IN_TOK:
 			if (LEX_VERBOSE) printf("<in> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case EMPTY_TOK:
 			if (LEX_VERBOSE) printf("<EMPTY> ");

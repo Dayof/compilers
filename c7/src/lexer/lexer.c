@@ -886,7 +886,7 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 103 "lexer/c7.lex"
-{ handle_token(FORALL_TOK); };
+{ handle_token(FORALL_TOK); return FORALL; };
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
@@ -911,7 +911,7 @@ YY_RULE_SETUP
 case 10:
 YY_RULE_SETUP
 #line 108 "lexer/c7.lex"
-{ handle_token(IN_TOK); };
+{ handle_token(IN_TOK); return IN; };
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
@@ -2058,6 +2058,8 @@ void handle_token(int token) {
 			break;
 		case FORALL_TOK:
 			if (LEX_VERBOSE) printf("<forall> ");
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case RETURN_TOK:
 			if (LEX_VERBOSE) printf("<return> ");
@@ -2081,6 +2083,8 @@ void handle_token(int token) {
 			break;
 		case IN_TOK:
 			if (LEX_VERBOSE) printf("<in> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case EMPTY_TOK:
 			if (LEX_VERBOSE) printf("<EMPTY> ");
