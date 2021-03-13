@@ -2,29 +2,39 @@ Grammar
 
     0 $accept: program $end
 
-    1 program: block
+    1 program: stmts
 
-    2 block: TYPE ID PARENT_LEFT PARENT_RIGHT BRACK_LEFT stmts BRACK_RIGHT block
-    3      | %empty
+    2 stmts: stmts stmt
+    3      | stmt
 
-    4 stmts: stmt SEMICOLON stmts
-    5      | %empty
+    4 stmt: func_stmt
+    5     | var_decl_stmt
 
-    6 stmt: READ PARENT_LEFT ID PARENT_RIGHT
+    6 func_stmt: TYPE ID PARENT_LEFT PARENT_RIGHT comp_block_stmt
+
+    7 var_decl_stmt: TYPE ID SEMICOLON
+
+    8 comp_block_stmt: BRACK_LEFT block_stmts BRACK_RIGHT
+
+    9 block_stmts: block_stmts block_stmt
+   10            | %empty
+
+   11 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT SEMICOLON
+   12           | var_decl_stmt
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    BRACK_LEFT <op> (258) 2
-    BRACK_RIGHT <op> (259) 2
-    PARENT_LEFT <op> (260) 2 6
-    PARENT_RIGHT <op> (261) 2 6
-    SEMICOLON <op> (262) 4
-    READ <str_value> (263) 6
-    TYPE <str_value> (264) 2
-    ID <str_value> (265) 2 6
+    BRACK_LEFT <op> (258) 8
+    BRACK_RIGHT <op> (259) 8
+    PARENT_LEFT <op> (260) 6 11
+    PARENT_RIGHT <op> (261) 6 11
+    SEMICOLON <op> (262) 7 11
+    READ <str_value> (263) 11
+    TYPE <str_value> (264) 6 7
+    ID <str_value> (265) 6 7 11
 
 
 Nonterminals, with rules where they appear
@@ -34,15 +44,27 @@ Nonterminals, with rules where they appear
     program (12)
         on left: 1
         on right: 0
-    block (13)
+    stmts (13)
         on left: 2 3
         on right: 1 2
-    stmts (14)
+    stmt (14)
         on left: 4 5
-        on right: 2 4
-    stmt (15)
+        on right: 2 3
+    func_stmt (15)
         on left: 6
         on right: 4
+    var_decl_stmt (16)
+        on left: 7
+        on right: 5 12
+    comp_block_stmt (17)
+        on left: 8
+        on right: 6
+    block_stmts (18)
+        on left: 9 10
+        on right: 8 9
+    block_stmt (19)
+        on left: 11 12
+        on right: 9
 
 
 State 0
@@ -51,147 +73,227 @@ State 0
 
     TYPE  shift, and go to state 1
 
-    $end  reduce using rule 3 (block)
-
-    program  go to state 2
-    block    go to state 3
+    program        go to state 2
+    stmts          go to state 3
+    stmt           go to state 4
+    func_stmt      go to state 5
+    var_decl_stmt  go to state 6
 
 
 State 1
 
-    2 block: TYPE . ID PARENT_LEFT PARENT_RIGHT BRACK_LEFT stmts BRACK_RIGHT block
+    6 func_stmt: TYPE . ID PARENT_LEFT PARENT_RIGHT comp_block_stmt
+    7 var_decl_stmt: TYPE . ID SEMICOLON
 
-    ID  shift, and go to state 4
+    ID  shift, and go to state 7
 
 
 State 2
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 5
+    $end  shift, and go to state 8
 
 
 State 3
 
-    1 program: block .
+    1 program: stmts .
+    2 stmts: stmts . stmt
+
+    TYPE  shift, and go to state 1
 
     $end  reduce using rule 1 (program)
+
+    stmt           go to state 9
+    func_stmt      go to state 5
+    var_decl_stmt  go to state 6
 
 
 State 4
 
-    2 block: TYPE ID . PARENT_LEFT PARENT_RIGHT BRACK_LEFT stmts BRACK_RIGHT block
+    3 stmts: stmt .
 
-    PARENT_LEFT  shift, and go to state 6
+    $end  reduce using rule 3 (stmts)
+    TYPE  reduce using rule 3 (stmts)
 
 
 State 5
+
+    4 stmt: func_stmt .
+
+    $end  reduce using rule 4 (stmt)
+    TYPE  reduce using rule 4 (stmt)
+
+
+State 6
+
+    5 stmt: var_decl_stmt .
+
+    $end  reduce using rule 5 (stmt)
+    TYPE  reduce using rule 5 (stmt)
+
+
+State 7
+
+    6 func_stmt: TYPE ID . PARENT_LEFT PARENT_RIGHT comp_block_stmt
+    7 var_decl_stmt: TYPE ID . SEMICOLON
+
+    PARENT_LEFT  shift, and go to state 10
+    SEMICOLON    shift, and go to state 11
+
+
+State 8
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 6
-
-    2 block: TYPE ID PARENT_LEFT . PARENT_RIGHT BRACK_LEFT stmts BRACK_RIGHT block
-
-    PARENT_RIGHT  shift, and go to state 7
-
-
-State 7
-
-    2 block: TYPE ID PARENT_LEFT PARENT_RIGHT . BRACK_LEFT stmts BRACK_RIGHT block
-
-    BRACK_LEFT  shift, and go to state 8
-
-
-State 8
-
-    2 block: TYPE ID PARENT_LEFT PARENT_RIGHT BRACK_LEFT . stmts BRACK_RIGHT block
-
-    READ  shift, and go to state 9
-
-    BRACK_RIGHT  reduce using rule 5 (stmts)
-
-    stmts  go to state 10
-    stmt   go to state 11
-
-
 State 9
 
-    6 stmt: READ . PARENT_LEFT ID PARENT_RIGHT
+    2 stmts: stmts stmt .
 
-    PARENT_LEFT  shift, and go to state 12
+    $end  reduce using rule 2 (stmts)
+    TYPE  reduce using rule 2 (stmts)
 
 
 State 10
 
-    2 block: TYPE ID PARENT_LEFT PARENT_RIGHT BRACK_LEFT stmts . BRACK_RIGHT block
+    6 func_stmt: TYPE ID PARENT_LEFT . PARENT_RIGHT comp_block_stmt
 
-    BRACK_RIGHT  shift, and go to state 13
+    PARENT_RIGHT  shift, and go to state 12
 
 
 State 11
 
-    4 stmts: stmt . SEMICOLON stmts
+    7 var_decl_stmt: TYPE ID SEMICOLON .
 
-    SEMICOLON  shift, and go to state 14
+    $end  reduce using rule 7 (var_decl_stmt)
+    TYPE  reduce using rule 7 (var_decl_stmt)
 
 
 State 12
 
-    6 stmt: READ PARENT_LEFT . ID PARENT_RIGHT
+    6 func_stmt: TYPE ID PARENT_LEFT PARENT_RIGHT . comp_block_stmt
 
-    ID  shift, and go to state 15
+    BRACK_LEFT  shift, and go to state 13
+
+    comp_block_stmt  go to state 14
 
 
 State 13
 
-    2 block: TYPE ID PARENT_LEFT PARENT_RIGHT BRACK_LEFT stmts BRACK_RIGHT . block
+    8 comp_block_stmt: BRACK_LEFT . block_stmts BRACK_RIGHT
 
-    TYPE  shift, and go to state 1
+    BRACK_RIGHT  reduce using rule 10 (block_stmts)
+    READ         reduce using rule 10 (block_stmts)
+    TYPE         reduce using rule 10 (block_stmts)
 
-    $end  reduce using rule 3 (block)
-
-    block  go to state 16
+    block_stmts  go to state 15
 
 
 State 14
 
-    4 stmts: stmt SEMICOLON . stmts
+    6 func_stmt: TYPE ID PARENT_LEFT PARENT_RIGHT comp_block_stmt .
 
-    READ  shift, and go to state 9
-
-    BRACK_RIGHT  reduce using rule 5 (stmts)
-
-    stmts  go to state 17
-    stmt   go to state 11
+    $end  reduce using rule 6 (func_stmt)
+    TYPE  reduce using rule 6 (func_stmt)
 
 
 State 15
 
-    6 stmt: READ PARENT_LEFT ID . PARENT_RIGHT
+    8 comp_block_stmt: BRACK_LEFT block_stmts . BRACK_RIGHT
+    9 block_stmts: block_stmts . block_stmt
 
-    PARENT_RIGHT  shift, and go to state 18
+    BRACK_RIGHT  shift, and go to state 16
+    READ         shift, and go to state 17
+    TYPE         shift, and go to state 18
+
+    var_decl_stmt  go to state 19
+    block_stmt     go to state 20
 
 
 State 16
 
-    2 block: TYPE ID PARENT_LEFT PARENT_RIGHT BRACK_LEFT stmts BRACK_RIGHT block .
+    8 comp_block_stmt: BRACK_LEFT block_stmts BRACK_RIGHT .
 
-    $end  reduce using rule 2 (block)
+    $end  reduce using rule 8 (comp_block_stmt)
+    TYPE  reduce using rule 8 (comp_block_stmt)
 
 
 State 17
 
-    4 stmts: stmt SEMICOLON stmts .
+   11 block_stmt: READ . PARENT_LEFT ID PARENT_RIGHT SEMICOLON
 
-    BRACK_RIGHT  reduce using rule 4 (stmts)
+    PARENT_LEFT  shift, and go to state 21
 
 
 State 18
 
-    6 stmt: READ PARENT_LEFT ID PARENT_RIGHT .
+    7 var_decl_stmt: TYPE . ID SEMICOLON
 
-    SEMICOLON  reduce using rule 6 (stmt)
+    ID  shift, and go to state 22
+
+
+State 19
+
+   12 block_stmt: var_decl_stmt .
+
+    BRACK_RIGHT  reduce using rule 12 (block_stmt)
+    READ         reduce using rule 12 (block_stmt)
+    TYPE         reduce using rule 12 (block_stmt)
+
+
+State 20
+
+    9 block_stmts: block_stmts block_stmt .
+
+    BRACK_RIGHT  reduce using rule 9 (block_stmts)
+    READ         reduce using rule 9 (block_stmts)
+    TYPE         reduce using rule 9 (block_stmts)
+
+
+State 21
+
+   11 block_stmt: READ PARENT_LEFT . ID PARENT_RIGHT SEMICOLON
+
+    ID  shift, and go to state 23
+
+
+State 22
+
+    7 var_decl_stmt: TYPE ID . SEMICOLON
+
+    SEMICOLON  shift, and go to state 26
+
+
+State 23
+
+   11 block_stmt: READ PARENT_LEFT ID . PARENT_RIGHT SEMICOLON
+
+    PARENT_RIGHT  shift, and go to state 24
+
+
+State 24
+
+   11 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT . SEMICOLON
+
+    SEMICOLON  shift, and go to state 25
+
+
+State 25
+
+   11 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT SEMICOLON .
+
+    BRACK_RIGHT  reduce using rule 11 (block_stmt)
+    READ         reduce using rule 11 (block_stmt)
+    TYPE         reduce using rule 11 (block_stmt)
+
+
+State 26
+
+    7 var_decl_stmt: TYPE ID SEMICOLON .
+
+    BRACK_RIGHT  reduce using rule 7 (var_decl_stmt)
+    READ         reduce using rule 7 (var_decl_stmt)
+    TYPE         reduce using rule 7 (var_decl_stmt)

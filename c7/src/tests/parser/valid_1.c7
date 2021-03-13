@@ -1,8 +1,13 @@
+float first_thing;
+
 set add_float() {
     read(something);
     read(something_else);
 }
 
+float second_thing;
+
 set add_set() {
     read(another_thing);
+    int another_thing;
 }
