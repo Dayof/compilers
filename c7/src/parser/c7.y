@@ -54,6 +54,11 @@ param_list  : param_list COMMA[C] TYPE[T] ID[V] { printf("\n\nSYNTAX - param_lis
             | /* empty */ { printf("\n\nSYNTAX - param_list -> empty\n"); }
             ;
 
+simple_param_list   : simple_param_list COMMA[C] ID[V] { printf("\n\nSYNTAX - simple_param_list %c %s\n", $C, $V); }
+                    | ID[V] { printf("\n\nSYNTAX - simple_param_list -> %s\n", $V); }
+                    | /* empty */ { printf("\n\nSYNTAX - simple_param_list -> empty\n"); }
+                    ;
+
 comp_block_stmt : BRACK_LEFT[L] block_stmts BRACK_RIGHT[R] { printf("\n\nSYNTAX - %c block_stmts %c\n",
                                                                     $L, $R); }
                 ;
@@ -71,12 +76,18 @@ block_stmt  : READ[F] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R] SEMICOLON[E] { printf
             | var_decl_stmt { printf("\n\nSYNTAX - block_stmt -> var_decl_stmt\n"); }
             | ID[V] ASSIGN[C] simple_expr SEMICOLON[E] { printf("\n\nSYNTAX - %s %c simple_expr %c\n",
                                                                 $V, $C, $E); }
+            | func_call { printf("\n\nSYNTAX - block_stmt -> func_call\n"); }
+            ;
+
+func_call   : ID[V] PARENT_LEFT[L] simple_param_list PARENT_RIGHT[R] { printf("\n\nSYNTAX - %s %c simple_param_list %c\n",
+                                                                              $V, $L, $R); }
             ;
 
 simple_expr : arith_expr { printf("\n\nSYNTAX - simple_expr -> arith_expr\n"); }
             | EMPTY[C] { printf("\n\nSYNTAX - simple_expr -> %s\n", $C); }
             | STRING[C] { printf("\n\nSYNTAX - simple_expr -> %s\n", $C); }
             | CHAR[C] { printf("\n\nSYNTAX - simple_expr -> %c\n", $C); }
+            | func_call { printf("\n\nSYNTAX - simple_expr -> func_call\n"); }
             ;
 
 arith_expr  : arith_expr ADD[C] term { printf("\n\nSYNTAX - arith_expr %c term\n", $C); }
