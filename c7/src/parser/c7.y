@@ -21,7 +21,7 @@
     float float_value;
 }
 
-%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR
+%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR COMMA
 %token <str_value>      READ WRITE WRITELN TYPE ID EMPTY STRING
 %token <int_value>      INTEGER
 %token <float_value>    FLOAT
@@ -42,12 +42,17 @@ stmt    : func_stmt { printf("\n\nSYNTAX - func_stmt\n"); }
         | var_decl_stmt { printf("\n\nSYNTAX - var_decl_stmt\n"); }
         ;
 
-func_stmt   : TYPE[T] ID[F] PARENT_LEFT[L] PARENT_RIGHT[R] comp_block_stmt { printf("\n\nSYNTAX - %s %s %c %c comp_block_stmt\n",
-                                                                                    $T, $F, $L, $R); }
+func_stmt   : TYPE[T] ID[F] PARENT_LEFT[L] param_list PARENT_RIGHT[R] comp_block_stmt { printf("\n\nSYNTAX - %s %s %c param_list %c comp_block_stmt\n",
+                                                                                               $T, $F, $L, $R); }
             ;
 
 var_decl_stmt   : TYPE[T] ID[V] SEMICOLON[E] { printf("\n\nSYNTAX - %s %s %c\n", $T, $V, $E); }
                 ; 
+
+param_list  : param_list COMMA[C] TYPE[T] ID[V] { printf("\n\nSYNTAX - param_list %c %s %s\n", $C, $T, $V); }
+            | TYPE[T] ID[V] { printf("\n\nSYNTAX - param_list -> %s %s\n", $T, $V); }
+            | /* empty */ { printf("\n\nSYNTAX - param_list -> empty\n"); }
+            ;
 
 comp_block_stmt : BRACK_LEFT[L] block_stmts BRACK_RIGHT[R] { printf("\n\nSYNTAX - %c block_stmts %c\n",
                                                                     $L, $R); }
@@ -85,7 +90,6 @@ term    : term MULT[C] factor { printf("\n\nSYNTAX - term %c factor\n", $C); }
 factor  : INTEGER[C] { printf("\n\nSYNTAX - integer -> %d\n", $C); }
         | FLOAT[C] { printf("\n\nSYNTAX - float -> %f\n", $C); }
         ;
-
 
 %%
 

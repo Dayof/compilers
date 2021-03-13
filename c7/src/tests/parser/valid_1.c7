@@ -20,3 +20,7 @@ set add_set() {
     write('A');
     writeln('A');
 }
+
+set subsum(set s, int target, int cur_sum, set ans) {
+
+}

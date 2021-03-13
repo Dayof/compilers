@@ -982,7 +982,7 @@ YY_RULE_SETUP
 case 24:
 YY_RULE_SETUP
 #line 125 "lexer/c7.lex"
-{ handle_token(COMMA_TOK); };
+{ handle_token(COMMA_TOK); return COMMA; };
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
@@ -2134,6 +2134,7 @@ void handle_token(int token) {
 			break;
 		case COMMA_TOK:
 			if (LEX_VERBOSE) printf("<comma, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case OR_OP_TOK:
 			if (LEX_VERBOSE) printf("<or_op, '%s'> ", yytext);

@@ -121,7 +121,7 @@ COMMENT			("//".*)
 {BRACK_LEFT}	{ handle_token(BRACK_LEFT_TOK); return BRACK_LEFT; };
 {BRACK_RIGHT}	{ handle_token(BRACK_RIGHT_TOK); return BRACK_RIGHT; };
 {SEMICOLON}		{ handle_token(SEMICOLON_TOK); return SEMICOLON; };
-{COMMA}			{ handle_token(COMMA_TOK); };
+{COMMA}			{ handle_token(COMMA_TOK); return COMMA; };
 {OR_OP}			{ handle_token(OR_OP_TOK); };
 {AND_OP}		{ handle_token(AND_OP_TOK); };
 
@@ -254,6 +254,7 @@ void handle_token(int token) {
 			break;
 		case COMMA_TOK:
 			if (LEX_VERBOSE) printf("<comma, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case OR_OP_TOK:
 			if (LEX_VERBOSE) printf("<or_op, '%s'> ", yytext);
