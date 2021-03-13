@@ -901,7 +901,7 @@ YY_RULE_SETUP
 case 8:
 YY_RULE_SETUP
 #line 106 "lexer/c7.lex"
-{ handle_token(WRITE_TOK); };
+{ handle_token(WRITE_TOK); return WRITE; };
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
@@ -922,32 +922,32 @@ YY_RULE_SETUP
 case 12:
 YY_RULE_SETUP
 #line 113 "lexer/c7.lex"
-{ handle_token(FLOAT_TOK); };
+{ handle_token(FLOAT_TOK); return FLOAT; };
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 114 "lexer/c7.lex"
-{ handle_token(INTEGER_TOK); };
+{ handle_token(INTEGER_TOK); return INTEGER; };
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 115 "lexer/c7.lex"
-{ handle_token(ADD_TOK); };
+{ handle_token(ADD_TOK); return ADD; };
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 116 "lexer/c7.lex"
-{ handle_token(SUB_TOK); };
+{ handle_token(SUB_TOK); return SUB; };
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 117 "lexer/c7.lex"
-{ handle_token(MULT_TOK); };
+{ handle_token(MULT_TOK); return MULT; };
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 118 "lexer/c7.lex"
-{ handle_token(DIV_TOK); };
+{ handle_token(DIV_TOK); return DIV; };
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
@@ -2066,6 +2066,8 @@ void handle_token(int token) {
 			break;
 		case WRITE_TOK:
 			if (LEX_VERBOSE) printf("<write> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case WRITELN_TOK:
 			if (LEX_VERBOSE) printf("<writeln> ");
@@ -2078,21 +2080,27 @@ void handle_token(int token) {
 			break;
 		case FLOAT_TOK:
 			if (LEX_VERBOSE) printf("<float, '%s'> ", yytext);
+			yylval.float_value = atof(yytext); 
 			break;
 		case INTEGER_TOK:
 			if (LEX_VERBOSE) printf("<integer, '%s'> ", yytext);
+			yylval.int_value = atoi(yytext);
 			break;
 		case ADD_TOK:
 			if (LEX_VERBOSE) printf("<add, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case SUB_TOK:
 			if (LEX_VERBOSE) printf("<sub, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case MULT_TOK:
 			if (LEX_VERBOSE) printf("<mult, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case DIV_TOK:
 			if (LEX_VERBOSE) printf("<div, '%s'> ", yytext);
+			yylval.op = yytext[0];
 			break;
 		case ASSIGN_TOK:
 			if (LEX_VERBOSE) printf("<assign, '%s'> ", yytext);

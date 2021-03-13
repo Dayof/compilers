@@ -17,10 +17,17 @@
 %union {
     char op;
     char* str_value;
+    int int_value;
+    float float_value;
 }
 
-%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON
-%token <str_value>      READ TYPE ID
+%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV
+%token <str_value>      READ WRITE TYPE ID
+%token <int_value>      INTEGER
+%token <float_value>    FLOAT
+
+%left                   ADD SUB
+%left                   MULT DIV
 
 %%
 
@@ -52,8 +59,28 @@ block_stmts : block_stmts block_stmt { printf("\n\nSYNTAX - block_stmts block_st
 
 block_stmt  : READ[F] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R] SEMICOLON[E] { printf("\n\nSYNTAX - %s %c %s %c %c\n",
                                                                                  $F, $L, $C, $R, $E); }
+            | WRITE[F] PARENT_LEFT[L] simple_expr PARENT_RIGHT[R] SEMICOLON[E] { printf("\n\nSYNTAX - %s %c simple_expr %c %c\n",
+                                                                                 $F, $L, $R, $E); }                                                                     
             | var_decl_stmt { printf("\n\nSYNTAX - block_stmt -> var_decl_stmt\n"); }
             ;
+
+simple_expr : arith_expr
+            ;
+
+arith_expr  : arith_expr ADD[C] term { printf("\n\nSYNTAX - arith_expr %c term\n", $C); }
+            | arith_expr SUB[C] term { printf("\n\nSYNTAX - arith_expr %c term\n", $C); }
+            | term { printf("\n\nSYNTAX - arith_expr -> term\n"); }
+            ;
+
+term    : term MULT[C] factor { printf("\n\nSYNTAX - term %c factor\n", $C); }
+        | term DIV[C] factor { printf("\n\nSYNTAX - term %c factor\n", $C); }
+        | factor { printf("\n\nSYNTAX - term -> factor\n"); }
+        ;
+
+factor  : INTEGER[C] { printf("\n\nSYNTAX - integer -> %d\n", $C); }
+        | FLOAT[C] { printf("\n\nSYNTAX - float -> %f\n", $C); }
+        ;
+
 
 %%
 

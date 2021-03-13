@@ -3,6 +3,7 @@ float first_thing;
 set add_float() {
     read(something);
     read(something_else);
+    write(10);
 }
 
 float second_thing;
@@ -10,4 +11,5 @@ float second_thing;
 set add_set() {
     read(another_thing);
     int another_thing;
+    write(1/2+5.3-1/4*6.25);
 }
