@@ -71,8 +71,12 @@ extern int yydebug;
     RETURN = 277,
     FORALL = 278,
     IN = 279,
-    INTEGER = 280,
-    FLOAT = 281
+    IS_SET = 280,
+    ADD_SET = 281,
+    REMOVE = 282,
+    EXISTS = 283,
+    INTEGER = 284,
+    FLOAT = 285
   };
 #endif
 
@@ -87,7 +91,7 @@ union YYSTYPE
     int int_value;
     float float_value;
 
-#line 91 "parser/parser.h"
+#line 95 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

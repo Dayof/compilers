@@ -20,6 +20,10 @@
 		WRITE_TOK,
 		WRITELN_TOK,
 		IN_TOK,
+		IS_SET_TOK,
+		ADD_SET_TOK,
+		REMOVE_TOK,
+		EXISTS_TOK,
 		EMPTY_TOK,
 		COMMENT_TOK,
 		FLOAT_TOK,
@@ -88,6 +92,10 @@ READ			("read")
 WRITE			("write")
 WRITELN			("writeln")
 IN				("in")
+IS_SET			("is_set")
+ADD_SET 		("add")
+REMOVE			("remove")
+EXISTS			("exists")
 EMPTY			("EMPTY")
 COMMENT			("//".*)
 
@@ -105,6 +113,10 @@ COMMENT			("//".*)
 {WRITE}			{ handle_token(WRITE_TOK); return WRITE; };
 {WRITELN}		{ handle_token(WRITELN_TOK); return WRITELN; };
 {IN}			{ handle_token(IN_TOK); return IN; };
+{IS_SET}		{ handle_token(IS_SET_TOK); return IS_SET; };
+{ADD_SET}		{ handle_token(ADD_SET_TOK); return ADD_SET; };
+{REMOVE}		{ handle_token(REMOVE_TOK); return REMOVE; };
+{EXISTS}		{ handle_token(EXISTS_TOK); return EXISTS; };
 {EMPTY}			{ handle_token(EMPTY_TOK); return EMPTY; };
 
 	/* arithmetic expressions */
@@ -206,6 +218,26 @@ void handle_token(int token) {
 			yylval.str_value = (char*) malloc(256); 
 			strcpy(yylval.str_value, yytext);
 			break;
+		case IS_SET_TOK:
+			if (LEX_VERBOSE) printf("<is_set> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case ADD_SET_TOK:
+			if (LEX_VERBOSE) printf("<add> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case REMOVE_TOK:
+			if (LEX_VERBOSE) printf("<remove> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case EXISTS_TOK:
+			if (LEX_VERBOSE) printf("<exists> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
 		case EMPTY_TOK:
 			if (LEX_VERBOSE) printf("<EMPTY> ");
 			yylval.str_value = (char*) malloc(256); 
@@ -288,7 +320,9 @@ void handle_token(int token) {
 			break;
 		case NEWLINE_TOK:
 			newline_counter += 1;
+			parser_column = lex_column; 
 			lex_line += 1;
+			parser_line = lex_line;
 			lex_column = 0;  // reset column index 
 			if (LEX_VERBOSE) printf("\nline %d. ", lex_line);
 			break;
@@ -302,4 +336,5 @@ void handle_token(int token) {
 			break;  // ignore
 	}
 	lex_column += strlen(yytext);
+	parser_column = lex_column;
 }

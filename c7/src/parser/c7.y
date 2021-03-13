@@ -22,7 +22,7 @@
 }
 
 %token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR COMMA ASSIGN
-%token <str_value>      READ WRITE WRITELN TYPE ID EMPTY STRING RETURN FORALL IN
+%token <str_value>      READ WRITE WRITELN TYPE ID EMPTY STRING RETURN FORALL IN IS_SET ADD_SET REMOVE EXISTS
 %token <int_value>      INTEGER
 %token <float_value>    FLOAT
 
@@ -84,21 +84,38 @@ block_stmt  : READ[F] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R] SEMICOLON[E] { printf
             | RETURN[O] simple_expr SEMICOLON[E] { printf("\n\nSYNTAX - %s simple_expr %c\n", $O, $E); }
             | FORALL[O] PARENT_LEFT[L] set_expr PARENT_RIGHT[R] flex_comp_block_stmt { printf("\n\nSYNTAX - %s %c set_expr %c flex_comp_block_stmt\n",
                                                                                               $O, $L, $R); }
+            | set_func_call SEMICOLON[E] { printf("\n\nSYNTAX - block_stmt -> set_func_call %c\n", $E); }
+            // | error { printf("\n\nSYNTAX - ERROR RECOVERY\n"); }
             ;
 
-set_expr    : ID[V1] IN[C] ID[V2] { printf("\n\nSYNTAX - %s %s %s\n", $V1, $C, $V2); }
+set_expr    : simple_expr IN[C] simple_expr { printf("\n\nSYNTAX - simple_expr %s simple_expr\n", $C); }
             ;   
 
 func_call   : ID[V] PARENT_LEFT[L] simple_param_list PARENT_RIGHT[R] { printf("\n\nSYNTAX - %s %c simple_param_list %c\n",
                                                                               $V, $L, $R); }
             ;
 
+set_func_call   : IS_SET[O] PARENT_LEFT[L] ID[C] PARENT_RIGHT[R] { printf("\n\nSYNTAX - %s %c %s %c\n",
+                                                                              $O, $L, $C, $R); }
+                | ADD_SET[O] PARENT_LEFT[L] set_expr PARENT_RIGHT[R] { printf("\n\nSYNTAX - %s %c set_expr %c\n",
+                                                                              $O, $L, $R); }
+                | REMOVE[O] PARENT_LEFT[L] set_expr PARENT_RIGHT[R] { printf("\n\nSYNTAX - %s %c set_expr %c\n",
+                                                                              $O, $L, $R); }
+                | EXISTS[O] PARENT_LEFT[L] set_expr PARENT_RIGHT[R] { printf("\n\nSYNTAX - %s %c set_expr %c\n",
+                                                                              $O, $L, $R); }
+                ;
+
 simple_expr : arith_expr { printf("\n\nSYNTAX - simple_expr -> arith_expr\n"); }
-            | EMPTY[C] { printf("\n\nSYNTAX - simple_expr -> %s\n", $C); }
-            | STRING[C] { printf("\n\nSYNTAX - simple_expr -> %s\n", $C); }
-            | CHAR[C] { printf("\n\nSYNTAX - simple_expr -> %c\n", $C); }
-            | func_call { printf("\n\nSYNTAX - simple_expr -> func_call\n"); }
+            | func_cte_expr { printf("\n\nSYNTAX - simple_expr -> func_cte_expr\n"); }
             ;
+
+func_cte_expr   : EMPTY[C] { printf("\n\nSYNTAX - simple_expr -> %s\n", $C); }
+                | STRING[C] { printf("\n\nSYNTAX - simple_expr -> %s\n", $C); }
+                | CHAR[C] { printf("\n\nSYNTAX - simple_expr -> %c\n", $C); }
+                | func_call { printf("\n\nSYNTAX - simple_expr -> func_call\n"); }
+                | set_func_call { printf("\n\nSYNTAX - simple_expr -> set_func_call\n"); }
+                | PARENT_LEFT[L] func_cte_expr PARENT_RIGHT[R] { printf("\n\nSYNTAX - %c func_cte_expr %c\n", $L, $R); }
+                ;
 
 arith_expr  : arith_expr ADD[C] term { printf("\n\nSYNTAX - arith_expr %c term\n", $C); }
             | arith_expr SUB[C] term { printf("\n\nSYNTAX - arith_expr %c term\n", $C); }
@@ -113,6 +130,7 @@ term    : term MULT[C] factor { printf("\n\nSYNTAX - term %c factor\n", $C); }
 factor  : INTEGER[C] { printf("\n\nSYNTAX - integer -> %d\n", $C); }
         | FLOAT[C] { printf("\n\nSYNTAX - float -> %f\n", $C); }
         | ID[C] { printf("\n\nSYNTAX - var -> %s\n", $C); }
+        | PARENT_LEFT[L] arith_expr PARENT_RIGHT[R] { printf("\n\nSYNTAX - %c arith_expr %c\n", $L, $R); }
         ;
 
 %%
