@@ -100,7 +100,7 @@ COMMENT			("//".*)
 {ELSE}			{ handle_token(ELSE_TOK); };
 {FOR}			{ handle_token(FOR_TOK); };
 {FORALL}		{ handle_token(FORALL_TOK); };
-{RETURN}		{ handle_token(RETURN_TOK); };
+{RETURN}		{ handle_token(RETURN_TOK); return RETURN; };
 {READ}			{ handle_token(READ_TOK); return READ; };
 {WRITE}			{ handle_token(WRITE_TOK); return WRITE; };
 {WRITELN}		{ handle_token(WRITELN_TOK); return WRITELN; };
@@ -160,7 +160,7 @@ void handle_token(int token) {
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.op = yytext[1];
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);
@@ -181,6 +181,8 @@ void handle_token(int token) {
 			break;
 		case RETURN_TOK:
 			if (LEX_VERBOSE) printf("<return> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case READ_TOK:
 			if (LEX_VERBOSE) printf("<read> ");

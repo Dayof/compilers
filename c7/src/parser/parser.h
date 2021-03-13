@@ -68,8 +68,9 @@ extern int yydebug;
     ID = 274,
     EMPTY = 275,
     STRING = 276,
-    INTEGER = 277,
-    FLOAT = 278
+    RETURN = 277,
+    INTEGER = 278,
+    FLOAT = 279
   };
 #endif
 
@@ -84,7 +85,7 @@ union YYSTYPE
     int int_value;
     float float_value;
 
-#line 88 "parser/parser.h"
+#line 89 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

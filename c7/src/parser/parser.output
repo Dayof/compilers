@@ -33,25 +33,27 @@ Grammar
    20           | var_decl_stmt
    21           | ID ASSIGN simple_expr SEMICOLON
    22           | func_call
+   23           | RETURN simple_expr SEMICOLON
 
-   23 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT
+   24 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT
 
-   24 simple_expr: arith_expr
-   25            | EMPTY
-   26            | STRING
-   27            | CHAR
-   28            | func_call
+   25 simple_expr: arith_expr
+   26            | EMPTY
+   27            | STRING
+   28            | CHAR
+   29            | func_call
+   30            | ID
 
-   29 arith_expr: arith_expr ADD term
-   30           | arith_expr SUB term
-   31           | term
+   31 arith_expr: arith_expr ADD term
+   32           | arith_expr SUB term
+   33           | term
 
-   32 term: term MULT factor
-   33     | term DIV factor
-   34     | factor
+   34 term: term MULT factor
+   35     | term DIV factor
+   36     | factor
 
-   35 factor: INTEGER
-   36       | FLOAT
+   37 factor: INTEGER
+   38       | FLOAT
 
 
 Terminals, with rules where they appear
@@ -60,76 +62,77 @@ Terminals, with rules where they appear
     error (256)
     BRACK_LEFT <op> (258) 14
     BRACK_RIGHT <op> (259) 14
-    PARENT_LEFT <op> (260) 6 17 18 19 23
-    PARENT_RIGHT <op> (261) 6 17 18 19 23
-    SEMICOLON <op> (262) 7 17 18 19 21
-    ADD <op> (263) 29
-    SUB <op> (264) 30
-    MULT <op> (265) 32
-    DIV <op> (266) 33
-    CHAR <op> (267) 27
+    PARENT_LEFT <op> (260) 6 17 18 19 24
+    PARENT_RIGHT <op> (261) 6 17 18 19 24
+    SEMICOLON <op> (262) 7 17 18 19 21 23
+    ADD <op> (263) 31
+    SUB <op> (264) 32
+    MULT <op> (265) 34
+    DIV <op> (266) 35
+    CHAR <op> (267) 28
     COMMA <op> (268) 8 11
     ASSIGN <op> (269) 21
     READ <str_value> (270) 17
     WRITE <str_value> (271) 18
     WRITELN <str_value> (272) 19
     TYPE <str_value> (273) 6 7 8 9
-    ID <str_value> (274) 6 7 8 9 11 12 17 21 23
-    EMPTY <str_value> (275) 25
-    STRING <str_value> (276) 26
-    INTEGER <int_value> (277) 35
-    FLOAT <float_value> (278) 36
+    ID <str_value> (274) 6 7 8 9 11 12 17 21 24 30
+    EMPTY <str_value> (275) 26
+    STRING <str_value> (276) 27
+    RETURN <str_value> (277) 23
+    INTEGER <int_value> (278) 37
+    FLOAT <float_value> (279) 38
 
 
 Nonterminals, with rules where they appear
 
-    $accept (24)
+    $accept (25)
         on left: 0
-    program (25)
+    program (26)
         on left: 1
         on right: 0
-    stmts (26)
+    stmts (27)
         on left: 2 3
         on right: 1 2
-    stmt (27)
+    stmt (28)
         on left: 4 5
         on right: 2 3
-    func_stmt (28)
+    func_stmt (29)
         on left: 6
         on right: 4
-    var_decl_stmt (29)
+    var_decl_stmt (30)
         on left: 7
         on right: 5 20
-    param_list (30)
+    param_list (31)
         on left: 8 9 10
         on right: 6 8
-    simple_param_list (31)
+    simple_param_list (32)
         on left: 11 12 13
-        on right: 11 23
-    comp_block_stmt (32)
+        on right: 11 24
+    comp_block_stmt (33)
         on left: 14
         on right: 6
-    block_stmts (33)
+    block_stmts (34)
         on left: 15 16
         on right: 14 15
-    block_stmt (34)
-        on left: 17 18 19 20 21 22
+    block_stmt (35)
+        on left: 17 18 19 20 21 22 23
         on right: 15
-    func_call (35)
-        on left: 23
-        on right: 22 28
-    simple_expr (36)
-        on left: 24 25 26 27 28
-        on right: 18 19 21
-    arith_expr (37)
-        on left: 29 30 31
-        on right: 24 29 30
-    term (38)
-        on left: 32 33 34
-        on right: 29 30 31 32 33
-    factor (39)
-        on left: 35 36
-        on right: 32 33 34
+    func_call (36)
+        on left: 24
+        on right: 22 29
+    simple_expr (37)
+        on left: 25 26 27 28 29 30
+        on right: 18 19 21 23
+    arith_expr (38)
+        on left: 31 32 33
+        on right: 25 31 32
+    term (39)
+        on left: 34 35 36
+        on right: 31 32 33 34 35
+    factor (40)
+        on left: 37 38
+        on right: 34 35 36
 
 
 State 0
@@ -292,6 +295,7 @@ State 17
     WRITELN      reduce using rule 16 (block_stmts)
     TYPE         reduce using rule 16 (block_stmts)
     ID           reduce using rule 16 (block_stmts)
+    RETURN       reduce using rule 16 (block_stmts)
 
     block_stmts  go to state 20
 
@@ -322,10 +326,11 @@ State 20
     WRITELN      shift, and go to state 25
     TYPE         shift, and go to state 26
     ID           shift, and go to state 27
+    RETURN       shift, and go to state 28
 
-    var_decl_stmt  go to state 28
-    block_stmt     go to state 29
-    func_call      go to state 30
+    var_decl_stmt  go to state 29
+    block_stmt     go to state 30
+    func_call      go to state 31
 
 
 State 21
@@ -348,85 +353,42 @@ State 23
 
    17 block_stmt: READ . PARENT_LEFT ID PARENT_RIGHT SEMICOLON
 
-    PARENT_LEFT  shift, and go to state 31
+    PARENT_LEFT  shift, and go to state 32
 
 
 State 24
 
    18 block_stmt: WRITE . PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON
 
-    PARENT_LEFT  shift, and go to state 32
+    PARENT_LEFT  shift, and go to state 33
 
 
 State 25
 
    19 block_stmt: WRITELN . PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON
 
-    PARENT_LEFT  shift, and go to state 33
+    PARENT_LEFT  shift, and go to state 34
 
 
 State 26
 
     7 var_decl_stmt: TYPE . ID SEMICOLON
 
-    ID  shift, and go to state 34
+    ID  shift, and go to state 35
 
 
 State 27
 
    21 block_stmt: ID . ASSIGN simple_expr SEMICOLON
-   23 func_call: ID . PARENT_LEFT simple_param_list PARENT_RIGHT
+   24 func_call: ID . PARENT_LEFT simple_param_list PARENT_RIGHT
 
-    PARENT_LEFT  shift, and go to state 35
-    ASSIGN       shift, and go to state 36
+    PARENT_LEFT  shift, and go to state 36
+    ASSIGN       shift, and go to state 37
 
 
 State 28
 
-   20 block_stmt: var_decl_stmt .
-
-    BRACK_RIGHT  reduce using rule 20 (block_stmt)
-    READ         reduce using rule 20 (block_stmt)
-    WRITE        reduce using rule 20 (block_stmt)
-    WRITELN      reduce using rule 20 (block_stmt)
-    TYPE         reduce using rule 20 (block_stmt)
-    ID           reduce using rule 20 (block_stmt)
-
-
-State 29
-
-   15 block_stmts: block_stmts block_stmt .
-
-    BRACK_RIGHT  reduce using rule 15 (block_stmts)
-    READ         reduce using rule 15 (block_stmts)
-    WRITE        reduce using rule 15 (block_stmts)
-    WRITELN      reduce using rule 15 (block_stmts)
-    TYPE         reduce using rule 15 (block_stmts)
-    ID           reduce using rule 15 (block_stmts)
-
-
-State 30
-
-   22 block_stmt: func_call .
-
-    BRACK_RIGHT  reduce using rule 22 (block_stmt)
-    READ         reduce using rule 22 (block_stmt)
-    WRITE        reduce using rule 22 (block_stmt)
-    WRITELN      reduce using rule 22 (block_stmt)
-    TYPE         reduce using rule 22 (block_stmt)
-    ID           reduce using rule 22 (block_stmt)
-
-
-State 31
-
-   17 block_stmt: READ PARENT_LEFT . ID PARENT_RIGHT SEMICOLON
-
-    ID  shift, and go to state 37
-
-
-State 32
-
-   18 block_stmt: WRITE PARENT_LEFT . simple_expr PARENT_RIGHT SEMICOLON
+   23 block_stmt: RETURN . simple_expr SEMICOLON
 
     CHAR     shift, and go to state 38
     ID       shift, and go to state 39
@@ -442,9 +404,110 @@ State 32
     factor       go to state 48
 
 
+State 29
+
+   20 block_stmt: var_decl_stmt .
+
+    BRACK_RIGHT  reduce using rule 20 (block_stmt)
+    READ         reduce using rule 20 (block_stmt)
+    WRITE        reduce using rule 20 (block_stmt)
+    WRITELN      reduce using rule 20 (block_stmt)
+    TYPE         reduce using rule 20 (block_stmt)
+    ID           reduce using rule 20 (block_stmt)
+    RETURN       reduce using rule 20 (block_stmt)
+
+
+State 30
+
+   15 block_stmts: block_stmts block_stmt .
+
+    BRACK_RIGHT  reduce using rule 15 (block_stmts)
+    READ         reduce using rule 15 (block_stmts)
+    WRITE        reduce using rule 15 (block_stmts)
+    WRITELN      reduce using rule 15 (block_stmts)
+    TYPE         reduce using rule 15 (block_stmts)
+    ID           reduce using rule 15 (block_stmts)
+    RETURN       reduce using rule 15 (block_stmts)
+
+
+State 31
+
+   22 block_stmt: func_call .
+
+    BRACK_RIGHT  reduce using rule 22 (block_stmt)
+    READ         reduce using rule 22 (block_stmt)
+    WRITE        reduce using rule 22 (block_stmt)
+    WRITELN      reduce using rule 22 (block_stmt)
+    TYPE         reduce using rule 22 (block_stmt)
+    ID           reduce using rule 22 (block_stmt)
+    RETURN       reduce using rule 22 (block_stmt)
+
+
+State 32
+
+   17 block_stmt: READ PARENT_LEFT . ID PARENT_RIGHT SEMICOLON
+
+    ID  shift, and go to state 49
+
+
 State 33
 
+   18 block_stmt: WRITE PARENT_LEFT . simple_expr PARENT_RIGHT SEMICOLON
+
+    CHAR     shift, and go to state 74
+    ID       shift, and go to state 75
+    EMPTY    shift, and go to state 76
+    STRING   shift, and go to state 77
+    INTEGER  shift, and go to state 78
+    FLOAT    shift, and go to state 79
+
+    func_call    go to state 80
+    simple_expr  go to state 50
+    arith_expr   go to state 81
+    term         go to state 82
+    factor       go to state 83
+
+
+State 34
+
    19 block_stmt: WRITELN PARENT_LEFT . simple_expr PARENT_RIGHT SEMICOLON
+
+    CHAR     shift, and go to state 74
+    ID       shift, and go to state 75
+    EMPTY    shift, and go to state 76
+    STRING   shift, and go to state 77
+    INTEGER  shift, and go to state 78
+    FLOAT    shift, and go to state 79
+
+    func_call    go to state 80
+    simple_expr  go to state 51
+    arith_expr   go to state 81
+    term         go to state 82
+    factor       go to state 83
+
+
+State 35
+
+    7 var_decl_stmt: TYPE ID . SEMICOLON
+
+    SEMICOLON  shift, and go to state 84
+
+
+State 36
+
+   24 func_call: ID PARENT_LEFT . simple_param_list PARENT_RIGHT
+
+    ID  shift, and go to state 52
+
+    PARENT_RIGHT  reduce using rule 13 (simple_param_list)
+    COMMA         reduce using rule 13 (simple_param_list)
+
+    simple_param_list  go to state 53
+
+
+State 37
+
+   21 block_stmt: ID ASSIGN . simple_expr SEMICOLON
 
     CHAR     shift, and go to state 38
     ID       shift, and go to state 39
@@ -454,165 +517,138 @@ State 33
     FLOAT    shift, and go to state 43
 
     func_call    go to state 44
-    simple_expr  go to state 49
+    simple_expr  go to state 54
     arith_expr   go to state 46
     term         go to state 47
     factor       go to state 48
 
 
-State 34
-
-    7 var_decl_stmt: TYPE ID . SEMICOLON
-
-    SEMICOLON  shift, and go to state 71
-
-
-State 35
-
-   23 func_call: ID PARENT_LEFT . simple_param_list PARENT_RIGHT
-
-    ID  shift, and go to state 50
-
-    PARENT_RIGHT  reduce using rule 13 (simple_param_list)
-    COMMA         reduce using rule 13 (simple_param_list)
-
-    simple_param_list  go to state 51
-
-
-State 36
-
-   21 block_stmt: ID ASSIGN . simple_expr SEMICOLON
-
-    CHAR     shift, and go to state 72
-    ID       shift, and go to state 73
-    EMPTY    shift, and go to state 74
-    STRING   shift, and go to state 75
-    INTEGER  shift, and go to state 76
-    FLOAT    shift, and go to state 77
-
-    func_call    go to state 78
-    simple_expr  go to state 52
-    arith_expr   go to state 79
-    term         go to state 80
-    factor       go to state 81
-
-
-State 37
-
-   17 block_stmt: READ PARENT_LEFT ID . PARENT_RIGHT SEMICOLON
-
-    PARENT_RIGHT  shift, and go to state 53
-
-
 State 38
 
-   27 simple_expr: CHAR .
+   28 simple_expr: CHAR .
 
-    PARENT_RIGHT  reduce using rule 27 (simple_expr)
+    SEMICOLON  reduce using rule 28 (simple_expr)
 
 
 State 39
 
-   23 func_call: ID . PARENT_LEFT simple_param_list PARENT_RIGHT
+   24 func_call: ID . PARENT_LEFT simple_param_list PARENT_RIGHT
+   30 simple_expr: ID .
 
-    PARENT_LEFT  shift, and go to state 82
+    PARENT_LEFT  shift, and go to state 85
+
+    SEMICOLON  reduce using rule 30 (simple_expr)
 
 
 State 40
 
-   25 simple_expr: EMPTY .
+   26 simple_expr: EMPTY .
 
-    PARENT_RIGHT  reduce using rule 25 (simple_expr)
+    SEMICOLON  reduce using rule 26 (simple_expr)
 
 
 State 41
 
-   26 simple_expr: STRING .
+   27 simple_expr: STRING .
 
-    PARENT_RIGHT  reduce using rule 26 (simple_expr)
+    SEMICOLON  reduce using rule 27 (simple_expr)
 
 
 State 42
 
-   35 factor: INTEGER .
+   37 factor: INTEGER .
 
-    PARENT_RIGHT  reduce using rule 35 (factor)
-    ADD           reduce using rule 35 (factor)
-    SUB           reduce using rule 35 (factor)
-    MULT          reduce using rule 35 (factor)
-    DIV           reduce using rule 35 (factor)
+    SEMICOLON  reduce using rule 37 (factor)
+    ADD        reduce using rule 37 (factor)
+    SUB        reduce using rule 37 (factor)
+    MULT       reduce using rule 37 (factor)
+    DIV        reduce using rule 37 (factor)
 
 
 State 43
 
-   36 factor: FLOAT .
+   38 factor: FLOAT .
 
-    PARENT_RIGHT  reduce using rule 36 (factor)
-    ADD           reduce using rule 36 (factor)
-    SUB           reduce using rule 36 (factor)
-    MULT          reduce using rule 36 (factor)
-    DIV           reduce using rule 36 (factor)
+    SEMICOLON  reduce using rule 38 (factor)
+    ADD        reduce using rule 38 (factor)
+    SUB        reduce using rule 38 (factor)
+    MULT       reduce using rule 38 (factor)
+    DIV        reduce using rule 38 (factor)
 
 
 State 44
 
-   28 simple_expr: func_call .
+   29 simple_expr: func_call .
 
-    PARENT_RIGHT  reduce using rule 28 (simple_expr)
+    SEMICOLON  reduce using rule 29 (simple_expr)
 
 
 State 45
 
-   18 block_stmt: WRITE PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
+   23 block_stmt: RETURN simple_expr . SEMICOLON
 
-    PARENT_RIGHT  shift, and go to state 54
+    SEMICOLON  shift, and go to state 55
 
 
 State 46
 
-   24 simple_expr: arith_expr .
-   29 arith_expr: arith_expr . ADD term
-   30           | arith_expr . SUB term
+   25 simple_expr: arith_expr .
+   31 arith_expr: arith_expr . ADD term
+   32           | arith_expr . SUB term
 
-    ADD  shift, and go to state 55
-    SUB  shift, and go to state 56
+    ADD  shift, and go to state 56
+    SUB  shift, and go to state 57
 
-    PARENT_RIGHT  reduce using rule 24 (simple_expr)
+    SEMICOLON  reduce using rule 25 (simple_expr)
 
 
 State 47
 
-   31 arith_expr: term .
-   32 term: term . MULT factor
-   33     | term . DIV factor
+   33 arith_expr: term .
+   34 term: term . MULT factor
+   35     | term . DIV factor
 
-    MULT  shift, and go to state 57
-    DIV   shift, and go to state 58
+    MULT  shift, and go to state 58
+    DIV   shift, and go to state 59
 
-    PARENT_RIGHT  reduce using rule 31 (arith_expr)
-    ADD           reduce using rule 31 (arith_expr)
-    SUB           reduce using rule 31 (arith_expr)
+    SEMICOLON  reduce using rule 33 (arith_expr)
+    ADD        reduce using rule 33 (arith_expr)
+    SUB        reduce using rule 33 (arith_expr)
 
 
 State 48
 
-   34 term: factor .
+   36 term: factor .
 
-    PARENT_RIGHT  reduce using rule 34 (term)
-    ADD           reduce using rule 34 (term)
-    SUB           reduce using rule 34 (term)
-    MULT          reduce using rule 34 (term)
-    DIV           reduce using rule 34 (term)
+    SEMICOLON  reduce using rule 36 (term)
+    ADD        reduce using rule 36 (term)
+    SUB        reduce using rule 36 (term)
+    MULT       reduce using rule 36 (term)
+    DIV        reduce using rule 36 (term)
 
 
 State 49
 
-   19 block_stmt: WRITELN PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
+   17 block_stmt: READ PARENT_LEFT ID . PARENT_RIGHT SEMICOLON
 
-    PARENT_RIGHT  shift, and go to state 59
+    PARENT_RIGHT  shift, and go to state 60
 
 
 State 50
+
+   18 block_stmt: WRITE PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
+
+    PARENT_RIGHT  shift, and go to state 61
+
+
+State 51
+
+   19 block_stmt: WRITELN PARENT_LEFT simple_expr . PARENT_RIGHT SEMICOLON
+
+    PARENT_RIGHT  shift, and go to state 62
+
+
+State 52
 
    12 simple_param_list: ID .
 
@@ -620,50 +656,38 @@ State 50
     COMMA         reduce using rule 12 (simple_param_list)
 
 
-State 51
-
-   11 simple_param_list: simple_param_list . COMMA ID
-   23 func_call: ID PARENT_LEFT simple_param_list . PARENT_RIGHT
-
-    PARENT_RIGHT  shift, and go to state 60
-    COMMA         shift, and go to state 61
-
-
-State 52
-
-   21 block_stmt: ID ASSIGN simple_expr . SEMICOLON
-
-    SEMICOLON  shift, and go to state 62
-
-
 State 53
 
-   17 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT . SEMICOLON
+   11 simple_param_list: simple_param_list . COMMA ID
+   24 func_call: ID PARENT_LEFT simple_param_list . PARENT_RIGHT
 
-    SEMICOLON  shift, and go to state 63
+    PARENT_RIGHT  shift, and go to state 63
+    COMMA         shift, and go to state 64
 
 
 State 54
 
-   18 block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
+   21 block_stmt: ID ASSIGN simple_expr . SEMICOLON
 
-    SEMICOLON  shift, and go to state 64
+    SEMICOLON  shift, and go to state 65
 
 
 State 55
 
-   29 arith_expr: arith_expr ADD . term
+   23 block_stmt: RETURN simple_expr SEMICOLON .
 
-    INTEGER  shift, and go to state 42
-    FLOAT    shift, and go to state 43
-
-    term    go to state 65
-    factor  go to state 48
+    BRACK_RIGHT  reduce using rule 23 (block_stmt)
+    READ         reduce using rule 23 (block_stmt)
+    WRITE        reduce using rule 23 (block_stmt)
+    WRITELN      reduce using rule 23 (block_stmt)
+    TYPE         reduce using rule 23 (block_stmt)
+    ID           reduce using rule 23 (block_stmt)
+    RETURN       reduce using rule 23 (block_stmt)
 
 
 State 56
 
-   30 arith_expr: arith_expr SUB . term
+   31 arith_expr: arith_expr ADD . term
 
     INTEGER  shift, and go to state 42
     FLOAT    shift, and go to state 43
@@ -674,17 +698,18 @@ State 56
 
 State 57
 
-   32 term: term MULT . factor
+   32 arith_expr: arith_expr SUB . term
 
     INTEGER  shift, and go to state 42
     FLOAT    shift, and go to state 43
 
-    factor  go to state 67
+    term    go to state 67
+    factor  go to state 48
 
 
 State 58
 
-   33 term: term DIV . factor
+   34 term: term MULT . factor
 
     INTEGER  shift, and go to state 42
     FLOAT    shift, and go to state 43
@@ -694,31 +719,56 @@ State 58
 
 State 59
 
-   19 block_stmt: WRITELN PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
+   35 term: term DIV . factor
 
-    SEMICOLON  shift, and go to state 69
+    INTEGER  shift, and go to state 42
+    FLOAT    shift, and go to state 43
+
+    factor  go to state 69
 
 
 State 60
 
-   23 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT .
+   17 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT . SEMICOLON
 
-    BRACK_RIGHT  reduce using rule 23 (func_call)
-    READ         reduce using rule 23 (func_call)
-    WRITE        reduce using rule 23 (func_call)
-    WRITELN      reduce using rule 23 (func_call)
-    TYPE         reduce using rule 23 (func_call)
-    ID           reduce using rule 23 (func_call)
+    SEMICOLON  shift, and go to state 70
 
 
 State 61
 
-   11 simple_param_list: simple_param_list COMMA . ID
+   18 block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
 
-    ID  shift, and go to state 70
+    SEMICOLON  shift, and go to state 71
 
 
 State 62
+
+   19 block_stmt: WRITELN PARENT_LEFT simple_expr PARENT_RIGHT . SEMICOLON
+
+    SEMICOLON  shift, and go to state 72
+
+
+State 63
+
+   24 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT .
+
+    BRACK_RIGHT  reduce using rule 24 (func_call)
+    READ         reduce using rule 24 (func_call)
+    WRITE        reduce using rule 24 (func_call)
+    WRITELN      reduce using rule 24 (func_call)
+    TYPE         reduce using rule 24 (func_call)
+    ID           reduce using rule 24 (func_call)
+    RETURN       reduce using rule 24 (func_call)
+
+
+State 64
+
+   11 simple_param_list: simple_param_list COMMA . ID
+
+    ID  shift, and go to state 73
+
+
+State 65
 
    21 block_stmt: ID ASSIGN simple_expr SEMICOLON .
 
@@ -728,9 +778,60 @@ State 62
     WRITELN      reduce using rule 21 (block_stmt)
     TYPE         reduce using rule 21 (block_stmt)
     ID           reduce using rule 21 (block_stmt)
+    RETURN       reduce using rule 21 (block_stmt)
 
 
-State 63
+State 66
+
+   31 arith_expr: arith_expr ADD term .
+   34 term: term . MULT factor
+   35     | term . DIV factor
+
+    MULT  shift, and go to state 58
+    DIV   shift, and go to state 59
+
+    SEMICOLON  reduce using rule 31 (arith_expr)
+    ADD        reduce using rule 31 (arith_expr)
+    SUB        reduce using rule 31 (arith_expr)
+
+
+State 67
+
+   32 arith_expr: arith_expr SUB term .
+   34 term: term . MULT factor
+   35     | term . DIV factor
+
+    MULT  shift, and go to state 58
+    DIV   shift, and go to state 59
+
+    SEMICOLON  reduce using rule 32 (arith_expr)
+    ADD        reduce using rule 32 (arith_expr)
+    SUB        reduce using rule 32 (arith_expr)
+
+
+State 68
+
+   34 term: term MULT factor .
+
+    SEMICOLON  reduce using rule 34 (term)
+    ADD        reduce using rule 34 (term)
+    SUB        reduce using rule 34 (term)
+    MULT       reduce using rule 34 (term)
+    DIV        reduce using rule 34 (term)
+
+
+State 69
+
+   35 term: term DIV factor .
+
+    SEMICOLON  reduce using rule 35 (term)
+    ADD        reduce using rule 35 (term)
+    SUB        reduce using rule 35 (term)
+    MULT       reduce using rule 35 (term)
+    DIV        reduce using rule 35 (term)
+
+
+State 70
 
    17 block_stmt: READ PARENT_LEFT ID PARENT_RIGHT SEMICOLON .
 
@@ -740,9 +841,10 @@ State 63
     WRITELN      reduce using rule 17 (block_stmt)
     TYPE         reduce using rule 17 (block_stmt)
     ID           reduce using rule 17 (block_stmt)
+    RETURN       reduce using rule 17 (block_stmt)
 
 
-State 64
+State 71
 
    18 block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON .
 
@@ -752,59 +854,10 @@ State 64
     WRITELN      reduce using rule 18 (block_stmt)
     TYPE         reduce using rule 18 (block_stmt)
     ID           reduce using rule 18 (block_stmt)
+    RETURN       reduce using rule 18 (block_stmt)
 
 
-State 65
-
-   29 arith_expr: arith_expr ADD term .
-   32 term: term . MULT factor
-   33     | term . DIV factor
-
-    MULT  shift, and go to state 57
-    DIV   shift, and go to state 58
-
-    PARENT_RIGHT  reduce using rule 29 (arith_expr)
-    ADD           reduce using rule 29 (arith_expr)
-    SUB           reduce using rule 29 (arith_expr)
-
-
-State 66
-
-   30 arith_expr: arith_expr SUB term .
-   32 term: term . MULT factor
-   33     | term . DIV factor
-
-    MULT  shift, and go to state 57
-    DIV   shift, and go to state 58
-
-    PARENT_RIGHT  reduce using rule 30 (arith_expr)
-    ADD           reduce using rule 30 (arith_expr)
-    SUB           reduce using rule 30 (arith_expr)
-
-
-State 67
-
-   32 term: term MULT factor .
-
-    PARENT_RIGHT  reduce using rule 32 (term)
-    ADD           reduce using rule 32 (term)
-    SUB           reduce using rule 32 (term)
-    MULT          reduce using rule 32 (term)
-    DIV           reduce using rule 32 (term)
-
-
-State 68
-
-   33 term: term DIV factor .
-
-    PARENT_RIGHT  reduce using rule 33 (term)
-    ADD           reduce using rule 33 (term)
-    SUB           reduce using rule 33 (term)
-    MULT          reduce using rule 33 (term)
-    DIV           reduce using rule 33 (term)
-
-
-State 69
+State 72
 
    19 block_stmt: WRITELN PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON .
 
@@ -814,9 +867,10 @@ State 69
     WRITELN      reduce using rule 19 (block_stmt)
     TYPE         reduce using rule 19 (block_stmt)
     ID           reduce using rule 19 (block_stmt)
+    RETURN       reduce using rule 19 (block_stmt)
 
 
-State 70
+State 73
 
    11 simple_param_list: simple_param_list COMMA ID .
 
@@ -824,7 +878,104 @@ State 70
     COMMA         reduce using rule 11 (simple_param_list)
 
 
-State 71
+State 74
+
+   28 simple_expr: CHAR .
+
+    PARENT_RIGHT  reduce using rule 28 (simple_expr)
+
+
+State 75
+
+   24 func_call: ID . PARENT_LEFT simple_param_list PARENT_RIGHT
+   30 simple_expr: ID .
+
+    PARENT_LEFT  shift, and go to state 86
+
+    PARENT_RIGHT  reduce using rule 30 (simple_expr)
+
+
+State 76
+
+   26 simple_expr: EMPTY .
+
+    PARENT_RIGHT  reduce using rule 26 (simple_expr)
+
+
+State 77
+
+   27 simple_expr: STRING .
+
+    PARENT_RIGHT  reduce using rule 27 (simple_expr)
+
+
+State 78
+
+   37 factor: INTEGER .
+
+    PARENT_RIGHT  reduce using rule 37 (factor)
+    ADD           reduce using rule 37 (factor)
+    SUB           reduce using rule 37 (factor)
+    MULT          reduce using rule 37 (factor)
+    DIV           reduce using rule 37 (factor)
+
+
+State 79
+
+   38 factor: FLOAT .
+
+    PARENT_RIGHT  reduce using rule 38 (factor)
+    ADD           reduce using rule 38 (factor)
+    SUB           reduce using rule 38 (factor)
+    MULT          reduce using rule 38 (factor)
+    DIV           reduce using rule 38 (factor)
+
+
+State 80
+
+   29 simple_expr: func_call .
+
+    PARENT_RIGHT  reduce using rule 29 (simple_expr)
+
+
+State 81
+
+   25 simple_expr: arith_expr .
+   31 arith_expr: arith_expr . ADD term
+   32           | arith_expr . SUB term
+
+    ADD  shift, and go to state 87
+    SUB  shift, and go to state 88
+
+    PARENT_RIGHT  reduce using rule 25 (simple_expr)
+
+
+State 82
+
+   33 arith_expr: term .
+   34 term: term . MULT factor
+   35     | term . DIV factor
+
+    MULT  shift, and go to state 89
+    DIV   shift, and go to state 90
+
+    PARENT_RIGHT  reduce using rule 33 (arith_expr)
+    ADD           reduce using rule 33 (arith_expr)
+    SUB           reduce using rule 33 (arith_expr)
+
+
+State 83
+
+   36 term: factor .
+
+    PARENT_RIGHT  reduce using rule 36 (term)
+    ADD           reduce using rule 36 (term)
+    SUB           reduce using rule 36 (term)
+    MULT          reduce using rule 36 (term)
+    DIV           reduce using rule 36 (term)
+
+
+State 84
 
     7 var_decl_stmt: TYPE ID SEMICOLON .
 
@@ -834,245 +985,152 @@ State 71
     WRITELN      reduce using rule 7 (var_decl_stmt)
     TYPE         reduce using rule 7 (var_decl_stmt)
     ID           reduce using rule 7 (var_decl_stmt)
-
-
-State 72
-
-   27 simple_expr: CHAR .
-
-    SEMICOLON  reduce using rule 27 (simple_expr)
-
-
-State 73
-
-   23 func_call: ID . PARENT_LEFT simple_param_list PARENT_RIGHT
-
-    PARENT_LEFT  shift, and go to state 83
-
-
-State 74
-
-   25 simple_expr: EMPTY .
-
-    SEMICOLON  reduce using rule 25 (simple_expr)
-
-
-State 75
-
-   26 simple_expr: STRING .
-
-    SEMICOLON  reduce using rule 26 (simple_expr)
-
-
-State 76
-
-   35 factor: INTEGER .
-
-    SEMICOLON  reduce using rule 35 (factor)
-    ADD        reduce using rule 35 (factor)
-    SUB        reduce using rule 35 (factor)
-    MULT       reduce using rule 35 (factor)
-    DIV        reduce using rule 35 (factor)
-
-
-State 77
-
-   36 factor: FLOAT .
-
-    SEMICOLON  reduce using rule 36 (factor)
-    ADD        reduce using rule 36 (factor)
-    SUB        reduce using rule 36 (factor)
-    MULT       reduce using rule 36 (factor)
-    DIV        reduce using rule 36 (factor)
-
-
-State 78
-
-   28 simple_expr: func_call .
-
-    SEMICOLON  reduce using rule 28 (simple_expr)
-
-
-State 79
-
-   24 simple_expr: arith_expr .
-   29 arith_expr: arith_expr . ADD term
-   30           | arith_expr . SUB term
-
-    ADD  shift, and go to state 84
-    SUB  shift, and go to state 85
-
-    SEMICOLON  reduce using rule 24 (simple_expr)
-
-
-State 80
-
-   31 arith_expr: term .
-   32 term: term . MULT factor
-   33     | term . DIV factor
-
-    MULT  shift, and go to state 86
-    DIV   shift, and go to state 87
-
-    SEMICOLON  reduce using rule 31 (arith_expr)
-    ADD        reduce using rule 31 (arith_expr)
-    SUB        reduce using rule 31 (arith_expr)
-
-
-State 81
-
-   34 term: factor .
-
-    SEMICOLON  reduce using rule 34 (term)
-    ADD        reduce using rule 34 (term)
-    SUB        reduce using rule 34 (term)
-    MULT       reduce using rule 34 (term)
-    DIV        reduce using rule 34 (term)
-
-
-State 82
-
-   23 func_call: ID PARENT_LEFT . simple_param_list PARENT_RIGHT
-
-    ID  shift, and go to state 50
-
-    PARENT_RIGHT  reduce using rule 13 (simple_param_list)
-    COMMA         reduce using rule 13 (simple_param_list)
-
-    simple_param_list  go to state 88
-
-
-State 83
-
-   23 func_call: ID PARENT_LEFT . simple_param_list PARENT_RIGHT
-
-    ID  shift, and go to state 50
-
-    PARENT_RIGHT  reduce using rule 13 (simple_param_list)
-    COMMA         reduce using rule 13 (simple_param_list)
-
-    simple_param_list  go to state 89
-
-
-State 84
-
-   29 arith_expr: arith_expr ADD . term
-
-    INTEGER  shift, and go to state 76
-    FLOAT    shift, and go to state 77
-
-    term    go to state 90
-    factor  go to state 81
+    RETURN       reduce using rule 7 (var_decl_stmt)
 
 
 State 85
 
-   30 arith_expr: arith_expr SUB . term
+   24 func_call: ID PARENT_LEFT . simple_param_list PARENT_RIGHT
 
-    INTEGER  shift, and go to state 76
-    FLOAT    shift, and go to state 77
+    ID  shift, and go to state 52
 
-    term    go to state 91
-    factor  go to state 81
+    PARENT_RIGHT  reduce using rule 13 (simple_param_list)
+    COMMA         reduce using rule 13 (simple_param_list)
+
+    simple_param_list  go to state 91
 
 
 State 86
 
-   32 term: term MULT . factor
+   24 func_call: ID PARENT_LEFT . simple_param_list PARENT_RIGHT
 
-    INTEGER  shift, and go to state 76
-    FLOAT    shift, and go to state 77
+    ID  shift, and go to state 52
 
-    factor  go to state 92
+    PARENT_RIGHT  reduce using rule 13 (simple_param_list)
+    COMMA         reduce using rule 13 (simple_param_list)
+
+    simple_param_list  go to state 92
 
 
 State 87
 
-   33 term: term DIV . factor
+   31 arith_expr: arith_expr ADD . term
 
-    INTEGER  shift, and go to state 76
-    FLOAT    shift, and go to state 77
+    INTEGER  shift, and go to state 78
+    FLOAT    shift, and go to state 79
 
-    factor  go to state 93
+    term    go to state 93
+    factor  go to state 83
 
 
 State 88
 
-   11 simple_param_list: simple_param_list . COMMA ID
-   23 func_call: ID PARENT_LEFT simple_param_list . PARENT_RIGHT
+   32 arith_expr: arith_expr SUB . term
 
-    PARENT_RIGHT  shift, and go to state 94
-    COMMA         shift, and go to state 61
+    INTEGER  shift, and go to state 78
+    FLOAT    shift, and go to state 79
+
+    term    go to state 94
+    factor  go to state 83
 
 
 State 89
 
-   11 simple_param_list: simple_param_list . COMMA ID
-   23 func_call: ID PARENT_LEFT simple_param_list . PARENT_RIGHT
+   34 term: term MULT . factor
 
-    PARENT_RIGHT  shift, and go to state 95
-    COMMA         shift, and go to state 61
+    INTEGER  shift, and go to state 78
+    FLOAT    shift, and go to state 79
+
+    factor  go to state 95
 
 
 State 90
 
-   29 arith_expr: arith_expr ADD term .
-   32 term: term . MULT factor
-   33     | term . DIV factor
+   35 term: term DIV . factor
 
-    MULT  shift, and go to state 86
-    DIV   shift, and go to state 87
+    INTEGER  shift, and go to state 78
+    FLOAT    shift, and go to state 79
 
-    SEMICOLON  reduce using rule 29 (arith_expr)
-    ADD        reduce using rule 29 (arith_expr)
-    SUB        reduce using rule 29 (arith_expr)
+    factor  go to state 96
 
 
 State 91
 
-   30 arith_expr: arith_expr SUB term .
-   32 term: term . MULT factor
-   33     | term . DIV factor
+   11 simple_param_list: simple_param_list . COMMA ID
+   24 func_call: ID PARENT_LEFT simple_param_list . PARENT_RIGHT
 
-    MULT  shift, and go to state 86
-    DIV   shift, and go to state 87
-
-    SEMICOLON  reduce using rule 30 (arith_expr)
-    ADD        reduce using rule 30 (arith_expr)
-    SUB        reduce using rule 30 (arith_expr)
+    PARENT_RIGHT  shift, and go to state 97
+    COMMA         shift, and go to state 64
 
 
 State 92
 
-   32 term: term MULT factor .
+   11 simple_param_list: simple_param_list . COMMA ID
+   24 func_call: ID PARENT_LEFT simple_param_list . PARENT_RIGHT
 
-    SEMICOLON  reduce using rule 32 (term)
-    ADD        reduce using rule 32 (term)
-    SUB        reduce using rule 32 (term)
-    MULT       reduce using rule 32 (term)
-    DIV        reduce using rule 32 (term)
+    PARENT_RIGHT  shift, and go to state 98
+    COMMA         shift, and go to state 64
 
 
 State 93
 
-   33 term: term DIV factor .
+   31 arith_expr: arith_expr ADD term .
+   34 term: term . MULT factor
+   35     | term . DIV factor
 
-    SEMICOLON  reduce using rule 33 (term)
-    ADD        reduce using rule 33 (term)
-    SUB        reduce using rule 33 (term)
-    MULT       reduce using rule 33 (term)
-    DIV        reduce using rule 33 (term)
+    MULT  shift, and go to state 89
+    DIV   shift, and go to state 90
+
+    PARENT_RIGHT  reduce using rule 31 (arith_expr)
+    ADD           reduce using rule 31 (arith_expr)
+    SUB           reduce using rule 31 (arith_expr)
 
 
 State 94
 
-   23 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT .
+   32 arith_expr: arith_expr SUB term .
+   34 term: term . MULT factor
+   35     | term . DIV factor
 
-    PARENT_RIGHT  reduce using rule 23 (func_call)
+    MULT  shift, and go to state 89
+    DIV   shift, and go to state 90
+
+    PARENT_RIGHT  reduce using rule 32 (arith_expr)
+    ADD           reduce using rule 32 (arith_expr)
+    SUB           reduce using rule 32 (arith_expr)
 
 
 State 95
 
-   23 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT .
+   34 term: term MULT factor .
 
-    SEMICOLON  reduce using rule 23 (func_call)
+    PARENT_RIGHT  reduce using rule 34 (term)
+    ADD           reduce using rule 34 (term)
+    SUB           reduce using rule 34 (term)
+    MULT          reduce using rule 34 (term)
+    DIV           reduce using rule 34 (term)
+
+
+State 96
+
+   35 term: term DIV factor .
+
+    PARENT_RIGHT  reduce using rule 35 (term)
+    ADD           reduce using rule 35 (term)
+    SUB           reduce using rule 35 (term)
+    MULT          reduce using rule 35 (term)
+    DIV           reduce using rule 35 (term)
+
+
+State 97
+
+   24 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT .
+
+    SEMICOLON  reduce using rule 24 (func_call)
+
+
+State 98
+
+   24 func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT .
+
+    PARENT_RIGHT  reduce using rule 24 (func_call)

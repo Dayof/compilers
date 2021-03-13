@@ -891,7 +891,7 @@ YY_RULE_SETUP
 case 6:
 YY_RULE_SETUP
 #line 104 "lexer/c7.lex"
-{ handle_token(RETURN_TOK); };
+{ handle_token(RETURN_TOK); return RETURN; };
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
@@ -2040,7 +2040,7 @@ void handle_token(int token) {
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.op = yytext[1];
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);
@@ -2061,6 +2061,8 @@ void handle_token(int token) {
 			break;
 		case RETURN_TOK:
 			if (LEX_VERBOSE) printf("<return> ");
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case READ_TOK:
 			if (LEX_VERBOSE) printf("<read> ");
