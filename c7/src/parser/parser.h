@@ -75,25 +75,26 @@ extern int yydebug;
     STRING = 276,                  /* STRING  */
     RETURN = 277,                  /* RETURN  */
     FORALL = 278,                  /* FORALL  */
-    IN = 279,                      /* IN  */
-    IS_SET = 280,                  /* IS_SET  */
-    ADD_SET = 281,                 /* ADD_SET  */
-    REMOVE = 282,                  /* REMOVE  */
-    EXISTS = 283,                  /* EXISTS  */
-    IF = 284,                      /* IF  */
-    ELSE = 285,                    /* ELSE  */
-    NOT_OP = 286,                  /* NOT_OP  */
-    L_OP = 287,                    /* L_OP  */
-    G_OP = 288,                    /* G_OP  */
-    EQ_OP = 289,                   /* EQ_OP  */
-    NE_OP = 290,                   /* NE_OP  */
-    LE_OP = 291,                   /* LE_OP  */
-    GE_OP = 292,                   /* GE_OP  */
-    OR_OP = 293,                   /* OR_OP  */
-    AND_OP = 294,                  /* AND_OP  */
-    INTEGER = 295,                 /* INTEGER  */
-    FLOAT = 296,                   /* FLOAT  */
-    THEN = 297                     /* THEN  */
+    FOR = 279,                     /* FOR  */
+    IN = 280,                      /* IN  */
+    IS_SET = 281,                  /* IS_SET  */
+    ADD_SET = 282,                 /* ADD_SET  */
+    REMOVE = 283,                  /* REMOVE  */
+    EXISTS = 284,                  /* EXISTS  */
+    IF = 285,                      /* IF  */
+    ELSE = 286,                    /* ELSE  */
+    NOT_OP = 287,                  /* NOT_OP  */
+    L_OP = 288,                    /* L_OP  */
+    G_OP = 289,                    /* G_OP  */
+    EQ_OP = 290,                   /* EQ_OP  */
+    NE_OP = 291,                   /* NE_OP  */
+    LE_OP = 292,                   /* LE_OP  */
+    GE_OP = 293,                   /* GE_OP  */
+    OR_OP = 294,                   /* OR_OP  */
+    AND_OP = 295,                  /* AND_OP  */
+    INTEGER = 296,                 /* INTEGER  */
+    FLOAT = 297,                   /* FLOAT  */
+    THEN = 298                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -108,8 +109,9 @@ union YYSTYPE
     char* str_value;
     int int_value;
     float float_value;
+    ast_node* expression;
 
-#line 113 "parser/parser.h"
+#line 115 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

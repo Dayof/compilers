@@ -542,8 +542,10 @@ char *yytext;
 /* tokens mapping */
 #line 4 "lexer/c7.lex"
 	#include <stdio.h>
+	#include <string.h>
 	#include "main.h"
 	#include "sym_tab.h"
+	#include "ast.h"
 	#include "parser.h"
 
 	enum TOKENS {
@@ -593,11 +595,11 @@ char *yytext;
 		ID_TOK,
 		EOF_TOK
 	};
-#line 597 "lexer/lexer.c"
+#line 599 "lexer/lexer.c"
 #define YY_NO_INPUT 1
-#line 62 "lexer/c7.lex"
+#line 64 "lexer/c7.lex"
 	/* regex and token definition */
-#line 601 "lexer/lexer.c"
+#line 603 "lexer/lexer.c"
 
 #define INITIAL 0
 
@@ -812,12 +814,12 @@ YY_DECL
 		}
 
 	{
-#line 111 "lexer/c7.lex"
+#line 113 "lexer/c7.lex"
 
 
 	/* reserved keywords */
 
-#line 821 "lexer/lexer.c"
+#line 823 "lexer/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -886,240 +888,240 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 115 "lexer/c7.lex"
+#line 117 "lexer/c7.lex"
 { handle_token(TYPE_TOK); return TYPE; };
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 116 "lexer/c7.lex"
+#line 118 "lexer/c7.lex"
 { handle_token(IF_TOK); return IF; };
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 117 "lexer/c7.lex"
+#line 119 "lexer/c7.lex"
 { handle_token(ELSE_TOK); return ELSE; };
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 118 "lexer/c7.lex"
-{ handle_token(FOR_TOK); };
+#line 120 "lexer/c7.lex"
+{ handle_token(FOR_TOK); return FOR; };
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 119 "lexer/c7.lex"
+#line 121 "lexer/c7.lex"
 { handle_token(FORALL_TOK); return FORALL; };
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 120 "lexer/c7.lex"
+#line 122 "lexer/c7.lex"
 { handle_token(RETURN_TOK); return RETURN; };
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 121 "lexer/c7.lex"
+#line 123 "lexer/c7.lex"
 { handle_token(READ_TOK); return READ; };
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 122 "lexer/c7.lex"
+#line 124 "lexer/c7.lex"
 { handle_token(WRITE_TOK); return WRITE; };
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 123 "lexer/c7.lex"
+#line 125 "lexer/c7.lex"
 { handle_token(WRITELN_TOK); return WRITELN; };
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 124 "lexer/c7.lex"
+#line 126 "lexer/c7.lex"
 { handle_token(IN_TOK); return IN; };
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 125 "lexer/c7.lex"
+#line 127 "lexer/c7.lex"
 { handle_token(IS_SET_TOK); return IS_SET; };
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 126 "lexer/c7.lex"
+#line 128 "lexer/c7.lex"
 { handle_token(ADD_SET_TOK); return ADD_SET; };
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 127 "lexer/c7.lex"
+#line 129 "lexer/c7.lex"
 { handle_token(REMOVE_TOK); return REMOVE; };
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 128 "lexer/c7.lex"
+#line 130 "lexer/c7.lex"
 { handle_token(EXISTS_TOK); return EXISTS; };
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 129 "lexer/c7.lex"
+#line 131 "lexer/c7.lex"
 { handle_token(EMPTY_TOK); return EMPTY; };
 	YY_BREAK
 /* conditional and booleans expressions */
 case 16:
 YY_RULE_SETUP
-#line 133 "lexer/c7.lex"
+#line 135 "lexer/c7.lex"
 { handle_token(EQ_OP_TOK); return EQ_OP; };
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 134 "lexer/c7.lex"
+#line 136 "lexer/c7.lex"
 { handle_token(NOT_OP_TOK); return NOT_OP; };
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 135 "lexer/c7.lex"
+#line 137 "lexer/c7.lex"
 { handle_token(GE_OP_TOK); return GE_OP; };
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 136 "lexer/c7.lex"
+#line 138 "lexer/c7.lex"
 { handle_token(LE_OP_TOK); return LE_OP; };
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 137 "lexer/c7.lex"
+#line 139 "lexer/c7.lex"
 { handle_token(NE_OP_TOK); return NE_OP; };
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 138 "lexer/c7.lex"
+#line 140 "lexer/c7.lex"
 { handle_token(G_OP_TOK); return G_OP; };
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 139 "lexer/c7.lex"
+#line 141 "lexer/c7.lex"
 { handle_token(L_OP_TOK); return L_OP; };
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 140 "lexer/c7.lex"
-{ handle_token(OR_OP_TOK); };
+#line 142 "lexer/c7.lex"
+{ handle_token(OR_OP_TOK); return OR_OP; };
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 141 "lexer/c7.lex"
-{ handle_token(AND_OP_TOK); };
+#line 143 "lexer/c7.lex"
+{ handle_token(AND_OP_TOK); return AND_OP; };
 	YY_BREAK
 /* arithmetic expressions */
 case 25:
 YY_RULE_SETUP
-#line 145 "lexer/c7.lex"
+#line 147 "lexer/c7.lex"
 { handle_token(FLOAT_TOK); return FLOAT; };
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 146 "lexer/c7.lex"
+#line 148 "lexer/c7.lex"
 { handle_token(INTEGER_TOK); return INTEGER; };
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 147 "lexer/c7.lex"
+#line 149 "lexer/c7.lex"
 { handle_token(ADD_TOK); return ADD; };
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 148 "lexer/c7.lex"
+#line 150 "lexer/c7.lex"
 { handle_token(SUB_TOK); return SUB; };
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 149 "lexer/c7.lex"
+#line 151 "lexer/c7.lex"
 { handle_token(MULT_TOK); return MULT; };
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 150 "lexer/c7.lex"
+#line 152 "lexer/c7.lex"
 { handle_token(DIV_TOK); return DIV; };
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 151 "lexer/c7.lex"
+#line 153 "lexer/c7.lex"
 { handle_token(ASSIGN_TOK); return ASSIGN; };
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 152 "lexer/c7.lex"
+#line 154 "lexer/c7.lex"
 { handle_token(PARENT_LEFT_TOK); return PARENT_LEFT; };
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 153 "lexer/c7.lex"
+#line 155 "lexer/c7.lex"
 { handle_token(PARENT_RIGHT_TOK); return PARENT_RIGHT; };
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 154 "lexer/c7.lex"
+#line 156 "lexer/c7.lex"
 { handle_token(BRACK_LEFT_TOK); return BRACK_LEFT; };
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 155 "lexer/c7.lex"
+#line 157 "lexer/c7.lex"
 { handle_token(BRACK_RIGHT_TOK); return BRACK_RIGHT; };
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 156 "lexer/c7.lex"
+#line 158 "lexer/c7.lex"
 { handle_token(SEMICOLON_TOK); return SEMICOLON; };
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 157 "lexer/c7.lex"
+#line 159 "lexer/c7.lex"
 { handle_token(COMMA_TOK); return COMMA; };
 	YY_BREAK
 /* structure helpers */
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 161 "lexer/c7.lex"
+#line 163 "lexer/c7.lex"
 { handle_token(COMMENT_TOK); };														;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 162 "lexer/c7.lex"
+#line 164 "lexer/c7.lex"
 { handle_token(STRING_TOK); return STRING; };
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 163 "lexer/c7.lex"
+#line 165 "lexer/c7.lex"
 { handle_token(CHAR_TOK); return CHAR; };
 	YY_BREAK
 /* general */
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 167 "lexer/c7.lex"
+#line 169 "lexer/c7.lex"
 { handle_token(NEWLINE_TOK); };
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 168 "lexer/c7.lex"
+#line 170 "lexer/c7.lex"
 { lex_column += strlen(yytext); }													;
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 169 "lexer/c7.lex"
+#line 171 "lexer/c7.lex"
 { handle_token(ID_TOK); return ID; };
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 170 "lexer/c7.lex"
+#line 172 "lexer/c7.lex"
 { handle_token(EOF_TOK); yyterminate(); };
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 171 "lexer/c7.lex"
+#line 173 "lexer/c7.lex"
 { handle_token(ERROR_TOK); };  /* any character but newline */
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 173 "lexer/c7.lex"
+#line 175 "lexer/c7.lex"
 ECHO;
 	YY_BREAK
-#line 1123 "lexer/lexer.c"
+#line 1125 "lexer/lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2093,7 +2095,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 173 "lexer/c7.lex"
+#line 175 "lexer/c7.lex"
 
 
 /*
@@ -2103,11 +2105,14 @@ void yyfree (void * ptr )
 */
 
 void handle_token(int token) {
+	int keylen;
 	switch (token) {
 		case STRING_TOK:
 			if (LEX_VERBOSE) printf("<string, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256);
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
@@ -2115,76 +2120,108 @@ void handle_token(int token) {
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256);
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case IF_TOK:
 			if (LEX_VERBOSE) printf("<if> ");
-			yylval.str_value = (char*) malloc(256);
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case ELSE_TOK:
 			if (LEX_VERBOSE) printf("<else> ");
-			yylval.str_value = (char*) malloc(256);
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case FOR_TOK:
 			if (LEX_VERBOSE) printf("<for> ");
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
+			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case FORALL_TOK:
 			if (LEX_VERBOSE) printf("<forall> ");
-			yylval.str_value = (char*) malloc(256);
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case RETURN_TOK:
 			if (LEX_VERBOSE) printf("<return> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case READ_TOK:
 			if (LEX_VERBOSE) printf("<read> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case WRITE_TOK:
 			if (LEX_VERBOSE) printf("<write> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case WRITELN_TOK:
 			if (LEX_VERBOSE) printf("<writeln> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case IN_TOK:
 			if (LEX_VERBOSE) printf("<in> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case IS_SET_TOK:
 			if (LEX_VERBOSE) printf("<is_set> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case ADD_SET_TOK:
 			if (LEX_VERBOSE) printf("<add> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case REMOVE_TOK:
 			if (LEX_VERBOSE) printf("<remove> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case EXISTS_TOK:
 			if (LEX_VERBOSE) printf("<exists> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case EMPTY_TOK:
 			if (LEX_VERBOSE) printf("<EMPTY> ");
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case FLOAT_TOK:
 			if (LEX_VERBOSE) printf("<float, '%s'> ", yytext);
@@ -2240,48 +2277,66 @@ void handle_token(int token) {
 			break;
 		case OR_OP_TOK:
 			if (LEX_VERBOSE) printf("<or_op, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case AND_OP_TOK:
 			if (LEX_VERBOSE) printf("<and_op, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case NOT_OP_TOK:
 			if (LEX_VERBOSE) printf("<not_op>, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case EQ_OP_TOK:
 			if (LEX_VERBOSE) printf("<eq_op>, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case GE_OP_TOK:
 			if (LEX_VERBOSE) printf("<ge_op>, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case LE_OP_TOK:
 			if (LEX_VERBOSE) printf("<le_op>, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case NE_OP_TOK:
 			if (LEX_VERBOSE) printf("<ne_op>, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case G_OP_TOK:
 			if (LEX_VERBOSE) printf("<g_op>, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case L_OP_TOK:
 			if (LEX_VERBOSE) printf("<l_op>, '%s'> ", yytext);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case COMMENT_TOK:
 			lex_line += 1;
@@ -2292,10 +2347,14 @@ void handle_token(int token) {
 			}
 			break;
 		case ID_TOK:;
-			int idx = add_word(len_st(), strdup(yytext));
+			char *yytext_p = strdup(yytext);
+			int idx = add_word(len_st(), yytext_p);
+			free(yytext_p);
 			if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
-			yylval.str_value = (char*) malloc(256); 
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
+			free(yylval.str_value);
 			break;
 		case NEWLINE_TOK:
 			newline_counter += 1;

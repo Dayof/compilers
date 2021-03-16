@@ -30,4 +30,6 @@ int test_if_else () {
     else {
        int el;
     }
+
+    if (a && b || c) return d;
 }

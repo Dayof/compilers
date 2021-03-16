@@ -19,7 +19,6 @@
     char* str_value;
     int int_value;
     float float_value;
-    ast_node* expression;
 }
 
 %token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR COMMA ASSIGN
@@ -36,7 +35,7 @@
 
 %%
 
-program : stmts         { create_empy_ast(); }
+program : stmts
         ;
 
 stmts   : stmts stmt
