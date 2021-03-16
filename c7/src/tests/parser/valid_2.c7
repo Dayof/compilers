@@ -25,7 +25,7 @@ float test_set_func_calls () {
 }
 
 int test_if_else () {
-    if(target) return ans;
+    if(target == cur_sum) return ans;
     else if (s) return EMPTY;
     else {
        int el;

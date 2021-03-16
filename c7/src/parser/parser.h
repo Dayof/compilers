@@ -82,9 +82,18 @@ extern int yydebug;
     EXISTS = 283,                  /* EXISTS  */
     IF = 284,                      /* IF  */
     ELSE = 285,                    /* ELSE  */
-    INTEGER = 286,                 /* INTEGER  */
-    FLOAT = 287,                   /* FLOAT  */
-    THEN = 288                     /* THEN  */
+    NOT_OP = 286,                  /* NOT_OP  */
+    L_OP = 287,                    /* L_OP  */
+    G_OP = 288,                    /* G_OP  */
+    EQ_OP = 289,                   /* EQ_OP  */
+    NE_OP = 290,                   /* NE_OP  */
+    LE_OP = 291,                   /* LE_OP  */
+    GE_OP = 292,                   /* GE_OP  */
+    OR_OP = 293,                   /* OR_OP  */
+    AND_OP = 294,                  /* AND_OP  */
+    INTEGER = 295,                 /* INTEGER  */
+    FLOAT = 296,                   /* FLOAT  */
+    THEN = 297                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -100,7 +109,7 @@ union YYSTYPE
     int int_value;
     float float_value;
 
-#line 104 "parser/parser.h"
+#line 113 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

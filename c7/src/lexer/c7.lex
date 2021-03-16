@@ -42,7 +42,12 @@
 		OR_OP_TOK,
 		AND_OP_TOK,
 		NOT_OP_TOK,
-		BOOLEAN_OP_TOK,
+		EQ_OP_TOK,
+		GE_OP_TOK,
+		LE_OP_TOK,
+		NE_OP_TOK,
+		G_OP_TOK,
+		L_OP_TOK,
 		NEWLINE_TOK,
 		WHITESPACE_TOK,
 		ID_TOK,
@@ -64,7 +69,6 @@ ADD				("+")
 SUB				("-")
 MULT			("*")
 DIV				("/")
-OPERATOR		({ADD}|{SUB}|{MULT}|{DIV})
 ASSIGN			("=")
 PARENT_LEFT		("(")
 PARENT_RIGHT	(")")
@@ -75,13 +79,17 @@ COMMA			(",")
 OR_OP			("||")
 AND_OP			("&&")
 NOT_OP			("!")
-BOOLEAN_OP		("=="|">="|"<="|"!="|">"|"<"|"<>"|"~")
+EQ_OP			("==")
+GE_OP			(">=")
+LE_OP			("<=")
+NE_OP			("!=")
+G_OP			(">")
+L_OP			("<")
 ID				({LETTER}|"_")({LETTER}|{DIGIT}|"_")*
 STRING			(\".*\")
 CHAR			(\'.?\')
 INTEGER			({NDIGIT}{DIGIT}*|"0")
 FLOAT			({DIGIT}+\.{DIGIT}+)
-NUMBER			({INTEGER}|{FLOAT})
 TYPE			("int"|"float"|"elem"|"set")
 IF				("if")
 ELSE			("else")
@@ -119,6 +127,18 @@ COMMENT			("//".*)
 {EXISTS}		{ handle_token(EXISTS_TOK); return EXISTS; };
 {EMPTY}			{ handle_token(EMPTY_TOK); return EMPTY; };
 
+	/* conditional and booleans expressions */
+
+{EQ_OP}			{ handle_token(EQ_OP_TOK); return EQ_OP; };
+{NOT_OP}		{ handle_token(NOT_OP_TOK); return NOT_OP; };
+{GE_OP}			{ handle_token(GE_OP_TOK); return GE_OP; };
+{LE_OP}			{ handle_token(LE_OP_TOK); return LE_OP; };
+{NE_OP}			{ handle_token(NE_OP_TOK); return NE_OP; };
+{G_OP}			{ handle_token(G_OP_TOK); return G_OP; };
+{L_OP}			{ handle_token(L_OP_TOK); return L_OP; };
+{OR_OP}			{ handle_token(OR_OP_TOK); };
+{AND_OP}		{ handle_token(AND_OP_TOK); };
+
 	/* arithmetic expressions */
 
 {FLOAT}			{ handle_token(FLOAT_TOK); return FLOAT; };
@@ -134,12 +154,6 @@ COMMENT			("//".*)
 {BRACK_RIGHT}	{ handle_token(BRACK_RIGHT_TOK); return BRACK_RIGHT; };
 {SEMICOLON}		{ handle_token(SEMICOLON_TOK); return SEMICOLON; };
 {COMMA}			{ handle_token(COMMA_TOK); return COMMA; };
-{OR_OP}			{ handle_token(OR_OP_TOK); };
-{AND_OP}		{ handle_token(AND_OP_TOK); };
-
-	/* conditional and booleans expressions */
-
-{BOOLEAN_OP}	{ handle_token(BOOLEAN_OP_TOK); };
 
 	/* structure helpers */
 
@@ -301,12 +315,48 @@ void handle_token(int token) {
 			break;
 		case OR_OP_TOK:
 			if (LEX_VERBOSE) printf("<or_op, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case AND_OP_TOK:
 			if (LEX_VERBOSE) printf("<and_op, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
-		case BOOLEAN_OP_TOK:
-			if (LEX_VERBOSE) printf("<boolean_op, '%s'> ", yytext);
+		case NOT_OP_TOK:
+			if (LEX_VERBOSE) printf("<not_op>, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case EQ_OP_TOK:
+			if (LEX_VERBOSE) printf("<eq_op>, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case GE_OP_TOK:
+			if (LEX_VERBOSE) printf("<ge_op>, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case LE_OP_TOK:
+			if (LEX_VERBOSE) printf("<le_op>, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case NE_OP_TOK:
+			if (LEX_VERBOSE) printf("<ne_op>, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case G_OP_TOK:
+			if (LEX_VERBOSE) printf("<g_op>, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
+			break;
+		case L_OP_TOK:
+			if (LEX_VERBOSE) printf("<l_op>, '%s'> ", yytext);
+			yylval.str_value = (char*) malloc(256); 
+			strcpy(yylval.str_value, yytext);
 			break;
 		case COMMENT_TOK:
 			lex_line += 1;

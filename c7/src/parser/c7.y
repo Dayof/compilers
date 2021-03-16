@@ -22,10 +22,11 @@
 }
 
 %token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR COMMA ASSIGN
-%token <str_value>      READ WRITE WRITELN TYPE ID EMPTY STRING RETURN FORALL IN IS_SET ADD_SET REMOVE EXISTS IF ELSE
+%token <str_value>      READ WRITE WRITELN TYPE ID EMPTY STRING RETURN FORALL IN IS_SET ADD_SET REMOVE EXISTS IF ELSE NOT_OP L_OP G_OP EQ_OP NE_OP LE_OP GE_OP OR_OP AND_OP
 %token <int_value>      INTEGER
 %token <float_value>    FLOAT
 
+%left                   L_OP G_OP EQ_OP NE_OP LE_OP GE_OP
 %left                   ADD SUB
 %left                   MULT DIV
 
@@ -84,15 +85,45 @@ block_stmt  : var_decl_stmt
             | RETURN simple_expr SEMICOLON
             ;
 
-flow_control    : IF PARENT_LEFT cond_expr PARENT_RIGHT flex_block_struct   %prec THEN
-                | IF PARENT_LEFT cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
-                | IF PARENT_LEFT cond_expr PARENT_RIGHT flex_block_struct ELSE IF flex_block_struct ELSE flex_block_struct
+flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct   %prec THEN
+                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE IF flex_block_struct ELSE flex_block_struct
                 | FORALL[O] PARENT_LEFT[L] set_expr PARENT_RIGHT[R] flex_block_struct
                 ;
 
-cond_expr   : ID
+or_cond_expr    : or_cond_expr OR_OP and_cond_expr
+                | and_cond_expr
+                ;
+
+and_cond_expr   : and_cond_expr AND_OP unary_cond_expr
+                | unary_cond_expr
+                ;
+
+unary_cond_expr : NOT_OP unary_cond_expr
+                | eq_cond_expr
+                ;
+
+eq_cond_expr    : eq_cond_expr equal_ops rel_cond_expr
+                | rel_cond_expr
+                ;
+
+equal_ops   : EQ_OP
+            | NE_OP
             ;
 
+rel_cond_expr   : rel_cond_expr rel_ops arith_expr
+                | arith_expr
+                | EMPTY
+                | func_expr
+                ;
+
+ rel_ops    : L_OP
+            | G_OP
+            | LE_OP
+            | GE_OP
+            | IN
+            ;           
+    
 set_expr    : simple_expr IN simple_expr
             ;   
 
@@ -112,7 +143,10 @@ simple_expr : arith_expr
 func_cte_expr   : EMPTY
                 | STRING
                 | CHAR
-                | func_call
+                | func_expr
+                ;
+
+func_expr       : func_call
                 | set_func_call
                 | PARENT_LEFT func_cte_expr PARENT_RIGHT
                 ;
