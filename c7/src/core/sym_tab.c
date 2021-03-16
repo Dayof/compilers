@@ -49,7 +49,7 @@ void print_st() {
     word* cur_word, *tmp;
     cur_word = tmp = NULL;
     HASH_ITER(hh, symbol_table, cur_word, tmp) {
-        printf("KEY: %d, NAME: %s, TYPE: ", cur_word->key, cur_word->name);
+        printf("KEY: %d, NAME: %s", cur_word->key, cur_word->name);
         if (cur_word->type == ST_INT) printf("INT");
         else if (cur_word->type == ST_FLOAT) printf("FLOAT");
         else if (cur_word->type == ST_BOOL) printf("BOOL");

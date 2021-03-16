@@ -3,6 +3,7 @@
 ## Requirements
 
 - Flex 2.6.4
+- Bison 3.7.5
 - GCC 9.3.0
 - Make 4.2.1
 - [Optional] Valgrind 3.15.0

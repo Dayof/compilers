@@ -104,8 +104,8 @@ COMMENT			("//".*)
 	/* reserved keywords */
 
 {TYPE}			{ handle_token(TYPE_TOK); return TYPE; };
-{IF}			{ handle_token(IF_TOK); };
-{ELSE}			{ handle_token(ELSE_TOK); };
+{IF}			{ handle_token(IF_TOK); return IF; };
+{ELSE}			{ handle_token(ELSE_TOK); return ELSE; };
 {FOR}			{ handle_token(FOR_TOK); };
 {FORALL}		{ handle_token(FORALL_TOK); return FORALL; };
 {RETURN}		{ handle_token(RETURN_TOK); return RETURN; };
@@ -181,9 +181,13 @@ void handle_token(int token) {
 			break;
 		case IF_TOK:
 			if (LEX_VERBOSE) printf("<if> ");
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case ELSE_TOK:
 			if (LEX_VERBOSE) printf("<else> ");
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case FOR_TOK:
 			if (LEX_VERBOSE) printf("<for> ");

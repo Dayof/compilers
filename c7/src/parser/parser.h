@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.7.5.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_PARSER_PARSER_H_INCLUDED
 # define YY_YY_PARSER_PARSER_H_INCLUDED
@@ -44,40 +45,48 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    BRACK_LEFT = 258,
-    BRACK_RIGHT = 259,
-    PARENT_LEFT = 260,
-    PARENT_RIGHT = 261,
-    SEMICOLON = 262,
-    ADD = 263,
-    SUB = 264,
-    MULT = 265,
-    DIV = 266,
-    CHAR = 267,
-    COMMA = 268,
-    ASSIGN = 269,
-    READ = 270,
-    WRITE = 271,
-    WRITELN = 272,
-    TYPE = 273,
-    ID = 274,
-    EMPTY = 275,
-    STRING = 276,
-    RETURN = 277,
-    FORALL = 278,
-    IN = 279,
-    IS_SET = 280,
-    ADD_SET = 281,
-    REMOVE = 282,
-    EXISTS = 283,
-    INTEGER = 284,
-    FLOAT = 285
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    BRACK_LEFT = 258,              /* BRACK_LEFT  */
+    BRACK_RIGHT = 259,             /* BRACK_RIGHT  */
+    PARENT_LEFT = 260,             /* PARENT_LEFT  */
+    PARENT_RIGHT = 261,            /* PARENT_RIGHT  */
+    SEMICOLON = 262,               /* SEMICOLON  */
+    ADD = 263,                     /* ADD  */
+    SUB = 264,                     /* SUB  */
+    MULT = 265,                    /* MULT  */
+    DIV = 266,                     /* DIV  */
+    CHAR = 267,                    /* CHAR  */
+    COMMA = 268,                   /* COMMA  */
+    ASSIGN = 269,                  /* ASSIGN  */
+    READ = 270,                    /* READ  */
+    WRITE = 271,                   /* WRITE  */
+    WRITELN = 272,                 /* WRITELN  */
+    TYPE = 273,                    /* TYPE  */
+    ID = 274,                      /* ID  */
+    EMPTY = 275,                   /* EMPTY  */
+    STRING = 276,                  /* STRING  */
+    RETURN = 277,                  /* RETURN  */
+    FORALL = 278,                  /* FORALL  */
+    IN = 279,                      /* IN  */
+    IS_SET = 280,                  /* IS_SET  */
+    ADD_SET = 281,                 /* ADD_SET  */
+    REMOVE = 282,                  /* REMOVE  */
+    EXISTS = 283,                  /* EXISTS  */
+    IF = 284,                      /* IF  */
+    ELSE = 285,                    /* ELSE  */
+    INTEGER = 286,                 /* INTEGER  */
+    FLOAT = 287,                   /* FLOAT  */
+    THEN = 288                     /* THEN  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -91,7 +100,7 @@ union YYSTYPE
     int int_value;
     float float_value;
 
-#line 95 "parser/parser.h"
+#line 104 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

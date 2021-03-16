@@ -891,12 +891,12 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 108 "lexer/c7.lex"
-{ handle_token(IF_TOK); };
+{ handle_token(IF_TOK); return IF; };
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 109 "lexer/c7.lex"
-{ handle_token(ELSE_TOK); };
+{ handle_token(ELSE_TOK); return ELSE; };
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
@@ -2089,9 +2089,13 @@ void handle_token(int token) {
 			break;
 		case IF_TOK:
 			if (LEX_VERBOSE) printf("<if> ");
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case ELSE_TOK:
 			if (LEX_VERBOSE) printf("<else> ");
+			yylval.str_value = (char*) malloc(256);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case FOR_TOK:
 			if (LEX_VERBOSE) printf("<for> ");
