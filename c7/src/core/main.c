@@ -31,7 +31,7 @@ int main (int argc, char* argv[]) {
     printf("\nLexer and parser finished.\n\n");
 
     printf("\n## Symbol Table ##\n");
-    // print_st();
+    print_st();
 
     if (!(syntax_error || lex_error)) {
         printf("\n\n## Abstract Syntax Trees ##");
