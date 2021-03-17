@@ -2109,10 +2109,19 @@ void handle_token(int token) {
 	switch (token) {
 		case STRING_TOK:
 			if (LEX_VERBOSE) printf("<string, '%s'> ", yytext);
-			keylen = strlen(yytext) + 1;
+			int str_len = strlen(yytext);
+			int str_idx;
+			keylen = str_len + 1 - 2;
+			char* dst = (char*) malloc(keylen * sizeof(char*));
+			for (str_idx = 0; str_idx != str_len; ++str_idx) {
+				if (str_idx == 0 || str_idx == (str_len - 1)) continue;
+				dst[str_idx-1] = yytext[str_idx];
+			}
+			dst[str_idx-1] = '\0';
+			keylen = strlen(dst) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
-			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
+			strcpy(yylval.str_value, dst);
+			free(dst);
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
@@ -2123,105 +2132,90 @@ void handle_token(int token) {
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case IF_TOK:
 			if (LEX_VERBOSE) printf("<if> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case ELSE_TOK:
 			if (LEX_VERBOSE) printf("<else> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case FOR_TOK:
 			if (LEX_VERBOSE) printf("<for> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case FORALL_TOK:
 			if (LEX_VERBOSE) printf("<forall> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case RETURN_TOK:
 			if (LEX_VERBOSE) printf("<return> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case READ_TOK:
 			if (LEX_VERBOSE) printf("<read> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case WRITE_TOK:
 			if (LEX_VERBOSE) printf("<write> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case WRITELN_TOK:
 			if (LEX_VERBOSE) printf("<writeln> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case IN_TOK:
 			if (LEX_VERBOSE) printf("<in> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case IS_SET_TOK:
 			if (LEX_VERBOSE) printf("<is_set> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case ADD_SET_TOK:
 			if (LEX_VERBOSE) printf("<add> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case REMOVE_TOK:
 			if (LEX_VERBOSE) printf("<remove> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case EXISTS_TOK:
 			if (LEX_VERBOSE) printf("<exists> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case EMPTY_TOK:
 			if (LEX_VERBOSE) printf("<EMPTY> ");
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case FLOAT_TOK:
 			if (LEX_VERBOSE) printf("<float, '%s'> ", yytext);
@@ -2280,63 +2274,54 @@ void handle_token(int token) {
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case AND_OP_TOK:
 			if (LEX_VERBOSE) printf("<and_op, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case NOT_OP_TOK:
 			if (LEX_VERBOSE) printf("<not_op>, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case EQ_OP_TOK:
 			if (LEX_VERBOSE) printf("<eq_op>, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case GE_OP_TOK:
 			if (LEX_VERBOSE) printf("<ge_op>, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case LE_OP_TOK:
 			if (LEX_VERBOSE) printf("<le_op>, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case NE_OP_TOK:
 			if (LEX_VERBOSE) printf("<ne_op>, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case G_OP_TOK:
 			if (LEX_VERBOSE) printf("<g_op>, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case L_OP_TOK:
 			if (LEX_VERBOSE) printf("<l_op>, '%s'> ", yytext);
 			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
 			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
 			break;
 		case COMMENT_TOK:
 			lex_line += 1;
@@ -2351,10 +2336,7 @@ void handle_token(int token) {
 			int idx = add_word(len_st(), yytext_p);
 			free(yytext_p);
 			if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
-			keylen = strlen(yytext) + 1;
-			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
-			strcpy(yylval.str_value, yytext);
-			free(yylval.str_value);
+			yylval.int_value = idx;
 			break;
 		case NEWLINE_TOK:
 			newline_counter += 1;
