@@ -7,9 +7,9 @@
 
 
 void init_vars() {
-    LEX_VERBOSE = 1;
-    PARSER_VERBOSE = 1;
-    MAIN_VERBOSE = 1;
+    LEX_VERBOSE = 0;
+    PARSER_VERBOSE = 0;
+    MAIN_VERBOSE = 0;
     newline_counter = -1;
     symbol_table = NULL;
 }
@@ -34,7 +34,7 @@ int main (int argc, char* argv[]) {
     print_st();
 
     if (!(syntax_error || lex_error)) {
-        printf("\n\n## Abstract Syntax Trees ##");
+        printf("\n\n## Abstract Syntax Tree ##");
         print_asts(ast_root);
     }
 

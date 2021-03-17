@@ -160,9 +160,12 @@ void print_asts(ast_list* root) {
     ast_list* cur_ast = root;
     int ast_idx = 0;
 
+    if (PARSER_VERBOSE) printf("LVL: 0\n");
+    printf("\n\nROOT:");
     while (cur_ast != NULL) {
-        printf("\n\n---- AST: %d\n\n", ast_idx + 1);
-        print_ast(cur_ast->elem, 0);
+        if (PARSER_VERBOSE) printf("\n\n---- AST: %d", ast_idx + 1);
+        printf("\n\n");
+        print_ast(cur_ast->elem, 1);
         cur_ast = cur_ast->next;
         ast_idx += 1;
     }
