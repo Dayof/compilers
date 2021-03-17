@@ -37,7 +37,7 @@
 %nonassoc THEN
 %nonassoc ELSE
 
-%type  <expression>     stmt func_stmt param_list compound_block_stmt var_decl_stmt
+%type  <expression>     func_stmt param_list compound_block_stmt var_decl_stmt
 %type  <expression>     block_stmts block_stmt simple_expr arith_expr term factor
 %type  <expression>     func_cte_expr func_expr func_call simple_param_list
 %type  <expression>     set_func_call set_expr flow_control flex_block_struct
@@ -172,7 +172,7 @@ equal_ops   : EQ_OP[U] { $$ = create_str_expr($U); }
 
 rel_cond_expr   : rel_cond_expr rel_ops arith_expr
                 | arith_expr[U] { $$ = $U; }
-                | EMPTY
+                | EMPTY[U] { $$ = create_str_expr($U); }
                 | func_expr
                 ;
 

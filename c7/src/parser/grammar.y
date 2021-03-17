@@ -87,7 +87,6 @@ block_stmt  : var_decl_stmt
 
 flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct   %prec THEN
                 | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
-                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE IF flex_block_struct ELSE flex_block_struct
                 | FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
                 | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
                 | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct

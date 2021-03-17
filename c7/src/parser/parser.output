@@ -175,7 +175,7 @@ Nonterminals, with rules where they appear
     stmts (46)
         on left: 2 3
         on right: 1 2
-    stmt <expression> (47)
+    stmt (47)
         on left: 4 5
         on right: 2 3
     func_stmt <expression> (48)
