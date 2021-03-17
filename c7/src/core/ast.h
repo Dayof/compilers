@@ -14,6 +14,7 @@ enum TAG {
     UNARY_TYPE,
     BINARY_TYPE,
     TERNARY_TYPE,
+    QUINARY_TYPE,
     FUNC_TYPE
 };
 
@@ -44,6 +45,13 @@ typedef struct exp {
             struct exp* params;
             struct exp* stmt_expr;
         } func_expr;
+        struct { 
+            struct exp* type;
+            struct exp* first_expr;
+            struct exp* second_expr;
+            struct exp* third_expr;
+            struct exp* fourth_expr;
+        } quinary_expr;
     } op;
 } ast_node;
 
@@ -57,7 +65,6 @@ ast_list* ast_root;
 int len_st();
 void print_asts(ast_list* root);
 void print_ast(ast_node* node, int lvl);
-ast_node* print_exp(ast_node* node);
 
 void create_empy_ast();
 ast_node* create_empty_expr();
@@ -72,8 +79,8 @@ ast_node* create_bin_expr(ast_node* left, ast_node* right);
 ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right);
 ast_node* create_func_expr(ast_node* type, ast_node* name,
                            ast_node* params, ast_node* stmt_expr);
-
-void assign_var_type(ast_node* var, ast_node* expr);
-int find_type(ast_node* expr, int type);
+ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
+                          ast_node* second_expr, ast_node* third_expr,
+                          ast_node* fourth_expr);
 
 #endif // __AST_H__

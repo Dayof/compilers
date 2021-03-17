@@ -6,6 +6,12 @@
 #include "parser.h"
 
 
+char* conc_strings(char* str1, char* str2) {
+    char* res = strcat(str1, " ");
+    res = strcat(res, str2);
+    return res;
+}
+
 void init_vars() {
     LEX_VERBOSE = 1;
     PARSER_VERBOSE = 1;

@@ -40,7 +40,9 @@
 %type  <expression>     stmt func_stmt param_list compound_block_stmt var_decl_stmt
 %type  <expression>     block_stmts block_stmt simple_expr arith_expr term factor
 %type  <expression>     func_cte_expr func_expr func_call simple_param_list
-%type  <expression>     set_func_call set_expr
+%type  <expression>     set_func_call set_expr flow_control flex_block_struct
+%type  <expression>     or_cond_expr and_cond_expr unary_cond_expr eq_cond_expr
+%type  <expression>     equal_ops rel_cond_expr
 
 %%
 
@@ -81,8 +83,8 @@ simple_param_list   : simple_param_list[E] COMMA ID[N] {
                     | /* empty */
                     ;
 
-flex_block_struct   : compound_block_stmt
-                    | block_stmt
+flex_block_struct   : compound_block_stmt[U] { $$ = $U; }
+                    | block_stmt[U] { $$ = $U; }
                     ;
 
 compound_block_stmt : BRACK_LEFT block_stmts[U] BRACK_RIGHT { $$ = $U; }
@@ -98,7 +100,7 @@ block_stmts : block_stmts[F] block_stmt[S] {
 block_stmt  : var_decl_stmt
             | func_call SEMICOLON
             | set_func_call[U] SEMICOLON { $$ = $U; }
-            | flow_control
+            | flow_control[U] { $$ = $U; }
             | READ[T] PARENT_LEFT ID[N] PARENT_RIGHT SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
             }
@@ -116,10 +118,15 @@ block_stmt  : var_decl_stmt
             }
             ;
 
-flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct   %prec THEN
-                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
-                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE IF flex_block_struct ELSE flex_block_struct
-                | FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
+flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_struct[E2] %prec THEN {
+                    $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
+                }
+                | IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_struct[E2] ELSE[E3] flex_block_struct[E4] {
+                    $$ = create_qui_expr(create_str_expr($T), $E1, $E2, create_str_expr($E3), $E4); 
+                }
+                | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT flex_block_struct[E2] {
+                    $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
+                }
                 | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
                 | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
                 ;
@@ -137,28 +144,34 @@ decl_or_cond_expr   : or_cond_expr
                     | ID ASSIGN simple_expr
                     ;
 
-or_cond_expr    : or_cond_expr OR_OP and_cond_expr
-                | and_cond_expr
+or_cond_expr    : or_cond_expr[E1] OR_OP[OP] and_cond_expr[E2] {
+                    $$ = create_ter_expr($E1, create_str_expr($OP), $E2); 
+                }
+                | and_cond_expr[U] { $$ = $U; }
                 ;
 
-and_cond_expr   : and_cond_expr AND_OP unary_cond_expr
-                | unary_cond_expr
+and_cond_expr   : and_cond_expr[E1] AND_OP[OP] unary_cond_expr[E2] {
+                    $$ = create_ter_expr($E1, create_str_expr($OP), $E2); 
+                }
+                | unary_cond_expr[U] { $$ = $U; }
                 ;
 
 unary_cond_expr : NOT_OP unary_cond_expr
-                | eq_cond_expr
+                | eq_cond_expr[U] { $$ = $U; }
                 ;
 
-eq_cond_expr    : eq_cond_expr equal_ops rel_cond_expr
-                | rel_cond_expr
+eq_cond_expr    : eq_cond_expr[E1] equal_ops[M] rel_cond_expr[E2] {
+                    $$ = create_ter_expr($E1, $M, $E2);
+                }
+                | rel_cond_expr[U] { $$ = $U; }
                 ;
 
-equal_ops   : EQ_OP
+equal_ops   : EQ_OP[U] { $$ = create_str_expr($U); }
             | NE_OP
             ;
 
 rel_cond_expr   : rel_cond_expr rel_ops arith_expr
-                | arith_expr
+                | arith_expr[U] { $$ = $U; }
                 | EMPTY
                 | func_expr
                 ;
@@ -180,12 +193,18 @@ func_call   : ID[N] PARENT_LEFT simple_param_list[E] PARENT_RIGHT {
             }
             ;
 
-set_func_call   : IS_SET PARENT_LEFT ID PARENT_RIGHT
+set_func_call   : IS_SET[T] PARENT_LEFT ID[V] PARENT_RIGHT {
+                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($V)); 
+                }
                 | ADD_SET[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
                     $$ = create_bin_expr(create_str_expr($T), $E); 
                 }
-                | REMOVE PARENT_LEFT set_expr PARENT_RIGHT
-                | EXISTS PARENT_LEFT set_expr PARENT_RIGHT
+                | REMOVE[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
+                    $$ = create_bin_expr(create_str_expr($T), $E); 
+                }
+                | EXISTS[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
+                    $$ = create_bin_expr(create_str_expr($T), $E); 
+                }
                 ;
 
 simple_expr : arith_expr[U] { $$ = $U; }
@@ -200,23 +219,31 @@ func_cte_expr   : EMPTY[U] { $$ = create_str_expr($U); }
 
 func_expr       : func_call[U] { $$ = $U; }
                 | set_func_call
-                | PARENT_LEFT func_cte_expr PARENT_RIGHT
+                | PARENT_LEFT func_cte_expr[U] PARENT_RIGHT { $$ = $U; }
                 ;
 
-arith_expr  : arith_expr[L] ADD[M] term[R] { $$ = create_ter_expr($L, create_char_expr($M), $R); }
-            | arith_expr[L] SUB[M] term[R] { $$ = create_ter_expr($L, create_char_expr($M), $R); }
+arith_expr  : arith_expr[L] ADD[M] term[R] {
+                $$ = create_ter_expr($L, create_char_expr($M), $R);
+            }
+            | arith_expr[L] SUB[M] term[R] {
+                $$ = create_ter_expr($L, create_char_expr($M), $R);
+            }
             | term[U]  { $$ = $U; }
             ;
 
-term    : term[L] MULT[M] factor[R] { $$ = create_ter_expr($L, create_char_expr($M), $R); }
-        | term[L] DIV[M] factor[R] { $$ = create_ter_expr($L, create_char_expr($M), $R); }
+term    : term[L] MULT[M] factor[R] {
+            $$ = create_ter_expr($L, create_char_expr($M), $R);
+        }
+        | term[L] DIV[M] factor[R] {
+            $$ = create_ter_expr($L, create_char_expr($M), $R);
+        }
         | factor[U] { $$ = $U; }
         ;
 
 factor  : INTEGER[U] { $$ = create_int_expr($U); }
         | FLOAT[U] { $$ = create_float_expr($U); }
         | ID[U] { $$ = create_var_expr($U); }
-        | PARENT_LEFT arith_expr PARENT_RIGHT
+        | PARENT_LEFT arith_expr[U] PARENT_RIGHT { $$ = $U; }
         ;
 
 %%

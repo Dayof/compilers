@@ -26,6 +26,20 @@ ast_node* create_un_expr(char* type, char* name) {
     return expr;
 }
 
+ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
+                          ast_node* second_expr, ast_node* third_expr,
+                          ast_node* fourth_expr) {
+    if (PARSER_VERBOSE) printf("\nCreating quinary expression node\n");
+    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
+    expr->tag = QUINARY_TYPE;
+    expr->op.quinary_expr.type = type;
+    expr->op.quinary_expr.first_expr = first_expr; 
+    expr->op.quinary_expr.second_expr = second_expr;
+    expr->op.quinary_expr.third_expr = third_expr;
+    expr->op.quinary_expr.fourth_expr = fourth_expr;
+    return expr;
+}
+
 ast_node* create_func_expr(ast_node* type, ast_node* name, ast_node* params,
                            ast_node* stmt_expr) {
     if (PARSER_VERBOSE) printf("\nCreating function expression node\n");
@@ -125,41 +139,6 @@ void create_empy_ast() {
     return;
 }
 
-void assign_var_type(ast_node* var, ast_node* expr) {
-    word* var_word = find_word(var->op.variable_expr);
-    if (PARSER_VERBOSE) printf("VAR: %d, %s\n", var_word->key, var_word->name);
-
-    if (find_type(expr, STR_TYPE)) {
-        if (PARSER_VERBOSE) printf("FOUND STR TYPE\n");
-        var_word->type = ST_STR;
-        return;
-    }
-    
-    if (find_type(expr, FLOAT_TYPE)) {
-        if (PARSER_VERBOSE) printf("FOUND FLOAT TYPE\n");
-        var_word->type = ST_FLOAT;
-        return;
-    }
-    
-    if (find_type(expr, INTEGER_TYPE)) {
-        if (PARSER_VERBOSE) printf("FOUND INT TYPE\n");
-        var_word->type = ST_INT;
-        return;
-    }
-    
-    if (PARSER_VERBOSE) printf("Error. Type not found.\n");
-
-    return;
-}
-
-ast_node* print_exp(ast_node* node) {
-    if (PARSER_VERBOSE) {
-        if (node == NULL) printf("Empty expression.\n");
-        else printf("TAG: %d\n", node->tag);
-    }
-    return node;
-}
-
 void print_asts(ast_list* root) {
     if (root == NULL) {
         printf("\nEmpty AST.\n");
@@ -239,6 +218,15 @@ void print_ast(ast_node* node, int lvl) {
         print_ast(node->op.ternary_expr.mid, lvl+1);
         print_ast(node->op.ternary_expr.right, lvl+1);
     // non terminal node
+    } else if (node->tag == QUINARY_TYPE) {
+        for (int i=0; i < lvl; ++i) printf("  ");
+        printf("QUINARY TYPE -----\n");
+        print_ast(node->op.quinary_expr.type, lvl+1);
+        print_ast(node->op.quinary_expr.first_expr, lvl+1);
+        print_ast(node->op.quinary_expr.second_expr, lvl+1);
+        print_ast(node->op.quinary_expr.third_expr, lvl+1);
+        print_ast(node->op.quinary_expr.fourth_expr, lvl+1);
+    // non terminal node
     } else if (node->tag == FUNC_TYPE) {
         for (int i=0; i < lvl; ++i) printf("  ");
         printf("FUNCTION TYPE -----\n");
@@ -258,13 +246,4 @@ void print_ast(ast_node* node, int lvl) {
         printf("Print AST unknown error.\n");
         return;
     }
-}
-
-int find_type(ast_node* expr, int type) {
-    if (expr->tag == type) return 1;
-    else if (expr->tag == BINARY_TYPE) {
-        if (find_type(expr->op.binary_expr.left, type)) return 1;
-        if (find_type(expr->op.binary_expr.right, type)) return 1;
-    }
-    return 0;
 }
