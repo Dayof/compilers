@@ -23,9 +23,9 @@
 }
 
 %token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON
-%token <op>             ADD SUB MULT DIV CHAR COMMA ASSIGN
+%token <op>             ADD SUB MULT DIV CHAR COMMA ASSIGN NOT_OP L_OP G_OP
 %token <str_value>      READ WRITE WRITELN TYPE EMPTY STRING RETURN FORALL FOR
-%token <str_value>      IN IS_SET ADD_SET REMOVE EXISTS IF ELSE NOT_OP L_OP G_OP
+%token <str_value>      IN IS_SET ADD_SET REMOVE EXISTS IF ELSE
 %token <str_value>      EQ_OP NE_OP LE_OP GE_OP OR_OP AND_OP
 %token <int_value>      INTEGER ID
 %token <float_value>    FLOAT
@@ -42,7 +42,8 @@
 %type  <expression>     func_cte_expr func_expr func_call simple_param_list
 %type  <expression>     set_func_call set_expr flow_control flex_block_struct
 %type  <expression>     or_cond_expr and_cond_expr unary_cond_expr eq_cond_expr
-%type  <expression>     equal_ops rel_cond_expr
+%type  <expression>     equal_ops rel_cond_expr opt_param for_expression
+%type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt
 
 %%
 
@@ -80,7 +81,7 @@ simple_param_list   : simple_param_list[E] COMMA ID[N] {
                         $$ = create_bin_expr($E, create_var_expr($N));
                     }
                     | ID[N] { $$ = create_var_expr($N); }
-                    | /* empty */
+                    | /* empty */ { $$ = create_empty_expr(); }
                     ;
 
 flex_block_struct   : compound_block_stmt[U] { $$ = $U; }
@@ -97,8 +98,8 @@ block_stmts : block_stmts[F] block_stmt[S] {
             | block_stmt[U] { $$ = $U; }
             ;
     
-block_stmt  : var_decl_stmt
-            | func_call SEMICOLON
+block_stmt  : var_decl_stmt[U] { $$ = $U; }
+            | func_call[U] SEMICOLON { $$ = $U; }
             | set_func_call[U] SEMICOLON { $$ = $U; }
             | flow_control[U] { $$ = $U; }
             | READ[T] PARENT_LEFT ID[N] PARENT_RIGHT SEMICOLON {
@@ -110,8 +111,8 @@ block_stmt  : var_decl_stmt
             | WRITELN[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
             }
-            | ID[N] ASSIGN simple_expr[E] SEMICOLON {
-                $$ = create_bin_expr(create_var_expr($N), $E); 
+            | ID[N] ASSIGN[A] simple_expr[E] SEMICOLON {
+                $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E); 
             }
             | RETURN[T] simple_expr[E] SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
@@ -127,21 +128,32 @@ flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_str
                 | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT flex_block_struct[E2] {
                     $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
                 }
-                | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
-                | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
+                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] PARENT_RIGHT flex_block_struct[E3] {
+                    $$ = create_qua_expr(create_str_expr($T), $E1, $E2, $E3); 
+                }
+                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] for_expression[E3] PARENT_RIGHT flex_block_struct[E4] {
+                    $$ = create_qui_expr(create_str_expr($T), $E1, $E2, $E3, $E4); 
+                }
                 ;
 
-opt_param   : SEMICOLON
-            | for_expression SEMICOLON
+opt_param   : SEMICOLON { $$ = create_empty_expr(); }
+            | for_expression[U] SEMICOLON { $$ = $U; }
             ;
 
-for_expression  : decl_or_cond_expr
-                | for_expression COMMA decl_or_cond_expr
+for_expression  : decl_or_cond_expr[U] { $$ = $U; }
+                | for_expression[E1] COMMA decl_or_cond_expr[E2] {
+                    $$ = create_bin_expr($E1, $E2); 
+                }
                 ; 
 
-decl_or_cond_expr   : or_cond_expr
-                    | TYPE ID ASSIGN simple_expr
-                    | ID ASSIGN simple_expr
+decl_or_cond_expr   : or_cond_expr[U] { $$ = $U; }
+                    | TYPE[T] ID[N] ASSIGN[A] simple_expr[E] {
+                        $$ = create_qua_expr(create_str_expr($T), create_var_expr($N),
+                                             create_char_expr($A), $E); 
+                    }
+                    | ID[N] ASSIGN[A] simple_expr[E] {
+                        $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E); 
+                    }
                     ;
 
 or_cond_expr    : or_cond_expr[E1] OR_OP[OP] and_cond_expr[E2] {
@@ -156,7 +168,9 @@ and_cond_expr   : and_cond_expr[E1] AND_OP[OP] unary_cond_expr[E2] {
                 | unary_cond_expr[U] { $$ = $U; }
                 ;
 
-unary_cond_expr : NOT_OP unary_cond_expr
+unary_cond_expr : NOT_OP[O] unary_cond_expr[E] {
+                    $$ = create_bin_expr(create_char_expr($O), $E); 
+                }
                 | eq_cond_expr[U] { $$ = $U; }
                 ;
 
@@ -167,20 +181,25 @@ eq_cond_expr    : eq_cond_expr[E1] equal_ops[M] rel_cond_expr[E2] {
                 ;
 
 equal_ops   : EQ_OP[U] { $$ = create_str_expr($U); }
-            | NE_OP
+            | NE_OP[U] { $$ = create_str_expr($U); }
             ;
 
-rel_cond_expr   : rel_cond_expr rel_ops arith_expr
-                | arith_expr[U] { $$ = $U; }
-                | EMPTY[U] { $$ = create_str_expr($U); }
-                | func_expr
+rel_cond_expr   : rel_cond_expr[E1] rel_ops[OP] rel_cond_stmt[E2] {
+                    $$ = create_ter_expr($E1, $OP, $E2);
+                }
+                | rel_cond_stmt[U] { $$ = $U; }
                 ;
 
-rel_ops : L_OP
-        | G_OP
-        | LE_OP
-        | GE_OP
-        | IN
+rel_cond_stmt   : arith_expr[U] { $$ = $U; }
+                | EMPTY[U] { $$ = create_str_expr($U); }
+                | func_expr[U] { $$ = $U; }
+                ;
+
+rel_ops : L_OP[U] { $$ = create_char_expr($U); }
+        | G_OP[U] { $$ = create_char_expr($U); }
+        | LE_OP[U] { $$ = create_str_expr($U); }
+        | GE_OP[U] { $$ = create_str_expr($U); }
+        | IN[U] { $$ = create_str_expr($U); }
         ;           
     
 set_expr    : simple_expr[E1] IN[M] simple_expr[E2] {
@@ -218,7 +237,7 @@ func_cte_expr   : EMPTY[U] { $$ = create_str_expr($U); }
                 ;
 
 func_expr       : func_call[U] { $$ = $U; }
-                | set_func_call
+                | set_func_call[U] { $$ = $U; }
                 | PARENT_LEFT func_cte_expr[U] PARENT_RIGHT { $$ = $U; }
                 ;
 
@@ -228,7 +247,7 @@ arith_expr  : arith_expr[L] ADD[M] term[R] {
             | arith_expr[L] SUB[M] term[R] {
                 $$ = create_ter_expr($L, create_char_expr($M), $R);
             }
-            | term[U]  { $$ = $U; }
+            | term[U] { $$ = $U; }
             ;
 
 term    : term[L] MULT[M] factor[R] {

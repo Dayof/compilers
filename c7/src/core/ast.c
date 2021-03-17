@@ -26,6 +26,18 @@ ast_node* create_un_expr(char* type, char* name) {
     return expr;
 }
 
+ast_node* create_qua_expr(ast_node* type, ast_node* first_expr,
+                          ast_node* second_expr, ast_node* third_expr) {
+    if (PARSER_VERBOSE) printf("\nCreating quartenary expression node\n");
+    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
+    expr->tag = QUARTENARY_TYPE;
+    expr->op.quinary_expr.type = type;
+    expr->op.quinary_expr.first_expr = first_expr; 
+    expr->op.quinary_expr.second_expr = second_expr;
+    expr->op.quinary_expr.third_expr = third_expr;
+    return expr;
+}
+
 ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
                           ast_node* second_expr, ast_node* third_expr,
                           ast_node* fourth_expr) {
@@ -40,15 +52,15 @@ ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
     return expr;
 }
 
-ast_node* create_func_expr(ast_node* type, ast_node* name, ast_node* params,
-                           ast_node* stmt_expr) {
+ast_node* create_func_expr(ast_node* type, ast_node* first_expr,
+                           ast_node* second_expr, ast_node* third_expr) {
     if (PARSER_VERBOSE) printf("\nCreating function expression node\n");
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = FUNC_TYPE;
-    expr->op.func_expr.type = type;
-    expr->op.func_expr.name = name; 
-    expr->op.func_expr.params = params;
-    expr->op.func_expr.stmt_expr = stmt_expr;
+    expr->op.quartenary_expr.type = type;
+    expr->op.quartenary_expr.first_expr = first_expr; 
+    expr->op.quartenary_expr.second_expr = second_expr;
+    expr->op.quartenary_expr.third_expr = third_expr;
     return expr;
 }
 
@@ -218,6 +230,14 @@ void print_ast(ast_node* node, int lvl) {
         print_ast(node->op.ternary_expr.mid, lvl+1);
         print_ast(node->op.ternary_expr.right, lvl+1);
     // non terminal node
+    } else if (node->tag == QUARTENARY_TYPE) {
+        for (int i=0; i < lvl; ++i) printf("  ");
+        printf("QUARTENARY TYPE -----\n");
+        print_ast(node->op.quartenary_expr.type, lvl+1);
+        print_ast(node->op.quartenary_expr.first_expr, lvl+1);
+        print_ast(node->op.quartenary_expr.second_expr, lvl+1);
+        print_ast(node->op.quartenary_expr.third_expr, lvl+1);
+    // non terminal node
     } else if (node->tag == QUINARY_TYPE) {
         for (int i=0; i < lvl; ++i) printf("  ");
         printf("QUINARY TYPE -----\n");
@@ -232,16 +252,16 @@ void print_ast(ast_node* node, int lvl) {
         printf("FUNCTION TYPE -----\n");
         for (int i=0; i < lvl; ++i) printf("  ");
         printf("TYPE:\n");
-        print_ast(node->op.func_expr.type, lvl+1);
+        print_ast(node->op.quartenary_expr.type, lvl+1);
         for (int i=0; i < lvl; ++i) printf("  ");
         printf("NAME:\n");
-        print_ast(node->op.func_expr.name, lvl+1);
+        print_ast(node->op.quartenary_expr.first_expr, lvl+1);
         for (int i=0; i < lvl; ++i) printf("  ");
         printf("PARAMS:\n");
-        print_ast(node->op.func_expr.params, lvl+1);
+        print_ast(node->op.quartenary_expr.second_expr, lvl+1);
         for (int i=0; i < lvl; ++i) printf("  ");
         printf("STMT EXPR:\n");
-        print_ast(node->op.func_expr.stmt_expr, lvl+1);
+        print_ast(node->op.quartenary_expr.third_expr, lvl+1);
     } else {
         printf("Print AST unknown error.\n");
         return;

@@ -85,7 +85,7 @@ block_stmt  : var_decl_stmt
             | RETURN simple_expr SEMICOLON
             ;
 
-flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct   %prec THEN
+flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct %prec THEN
                 | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
                 | FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
                 | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
@@ -125,18 +125,21 @@ equal_ops   : EQ_OP
             | NE_OP
             ;
 
-rel_cond_expr   : rel_cond_expr rel_ops arith_expr
-                | arith_expr
+rel_cond_expr   : rel_cond_expr rel_ops rel_cond_stmt
+                | rel_cond_stmt
+                ;
+
+rel_cond_stmt   : arith_expr
                 | EMPTY
                 | func_expr
                 ;
 
- rel_ops    : L_OP
-            | G_OP
-            | LE_OP
-            | GE_OP
-            | IN
-            ;           
+rel_ops : L_OP
+        | G_OP
+        | LE_OP
+        | GE_OP
+        | IN
+        ;           
     
 set_expr    : simple_expr IN simple_expr
             ;   

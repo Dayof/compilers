@@ -2283,9 +2283,7 @@ void handle_token(int token) {
 			break;
 		case NOT_OP_TOK:
 			if (LEX_VERBOSE) printf("<not_op>, '%s'> ", yytext);
-			keylen = strlen(yytext) + 1;
-			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
-			strcpy(yylval.str_value, yytext);
+			yylval.op = yytext[0];
 			break;
 		case EQ_OP_TOK:
 			if (LEX_VERBOSE) printf("<eq_op>, '%s'> ", yytext);
@@ -2313,15 +2311,11 @@ void handle_token(int token) {
 			break;
 		case G_OP_TOK:
 			if (LEX_VERBOSE) printf("<g_op>, '%s'> ", yytext);
-			keylen = strlen(yytext) + 1;
-			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
-			strcpy(yylval.str_value, yytext);
+			yylval.op = yytext[0];
 			break;
 		case L_OP_TOK:
 			if (LEX_VERBOSE) printf("<l_op>, '%s'> ", yytext);
-			keylen = strlen(yytext) + 1;
-			yylval.str_value = (char*) malloc(keylen * sizeof(char*)); 
-			strcpy(yylval.str_value, yytext);
+			yylval.op = yytext[0];
 			break;
 		case COMMENT_TOK:
 			lex_line += 1;

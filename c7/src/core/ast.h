@@ -14,6 +14,7 @@ enum TAG {
     UNARY_TYPE,
     BINARY_TYPE,
     TERNARY_TYPE,
+    QUARTENARY_TYPE,
     QUINARY_TYPE,
     FUNC_TYPE
 };
@@ -41,10 +42,10 @@ typedef struct exp {
         } ternary_expr;
         struct { 
             struct exp* type;
-            struct exp* name;
-            struct exp* params;
-            struct exp* stmt_expr;
-        } func_expr;
+            struct exp* first_expr;
+            struct exp* second_expr;
+            struct exp* third_expr;
+        } quartenary_expr;
         struct { 
             struct exp* type;
             struct exp* first_expr;
@@ -77,8 +78,10 @@ ast_node* create_str_expr(char* value);
 ast_node* create_un_expr(char* type, char* name);
 ast_node* create_bin_expr(ast_node* left, ast_node* right);
 ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right);
-ast_node* create_func_expr(ast_node* type, ast_node* name,
-                           ast_node* params, ast_node* stmt_expr);
+ast_node* create_func_expr(ast_node* type, ast_node* first_expr,
+                           ast_node* second_expr, ast_node* third_expr);
+ast_node* create_qua_expr(ast_node* type, ast_node* first_expr,
+                          ast_node* second_expr, ast_node* third_expr);
 ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
                           ast_node* second_expr, ast_node* third_expr,
                           ast_node* fourth_expr);
