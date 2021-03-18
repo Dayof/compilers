@@ -1,5 +1,7 @@
 int main() {
     set zero=;
-    int var += 1
+    int var;
+    var = var + 1;
+    var += 1;
     func(],[)
 }

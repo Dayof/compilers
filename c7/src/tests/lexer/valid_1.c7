@@ -1,5 +1,7 @@
 int main() {
-    int var_int = 1
-    float var_float = 1.3
+    int var_int;
+    var_int = 1;
+    float var_float;
+    var_float = 1.3;
     return 0;
 }

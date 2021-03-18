@@ -1,0 +1,9 @@
+int main () {
+    func();
+    int a;
+    for(count = 1; count_2 = 2; count <= num; count) return ans;
+    for(i=1; count!=num; count=count+1) return ans;
+    for (b();num>c();) return (ans_2));
+    for (b();d()>=c();) return ans_2;
+    if (13 in possibleSums) writeln('y'); else writeln('n');
+}

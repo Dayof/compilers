@@ -7,9 +7,10 @@
 
 
 void init_vars() {
-    LEX_VERBOSE = 1;
-    PARSER_VERBOSE = 1;
-    MAIN_VERBOSE = 1;
+    int verbose = 0;
+    LEX_VERBOSE = verbose;
+    PARSER_VERBOSE = verbose;
+    MAIN_VERBOSE = verbose;
     newline_counter = -1;
     symbol_table = NULL;
 }
@@ -33,10 +34,8 @@ int main (int argc, char* argv[]) {
     printf("\n## Symbol Table ##\n");
     print_st();
 
-    if (!(syntax_error || lex_error)) {
-        printf("\n\n## Abstract Syntax Tree ##");
-        print_asts(ast_root);
-    }
+    printf("\n\n## Abstract Syntax Tree ##");
+    print_asts(ast_root);
 
     // clean memory
     delete_all_st();

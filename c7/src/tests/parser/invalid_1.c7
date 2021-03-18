@@ -1,0 +1,18 @@
+int main() {
+    set s;
+    s = EMPTY
+
+    add(8 in s);
+
+    set possibleSums;
+    possibleSums = {1, 4};
+    int x;
+    
+    forall (x in a) {
+        set sumsWithX;   
+        sumsWithX = EMPTY;
+        int val;
+        forall (val in possibleSums) add((x + val) in sumsWithX);
+        if (13 in possibleSums) else if else if writeln('y'); else writeln('n');
+    }
+}

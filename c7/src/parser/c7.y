@@ -43,7 +43,7 @@
 %type  <expression>     set_func_call set_expr flow_control flex_block_struct
 %type  <expression>     or_cond_expr and_cond_expr unary_cond_expr eq_cond_expr
 %type  <expression>     equal_ops rel_cond_expr opt_param for_expression
-%type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt
+%type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt error
 
 %%
 
@@ -51,6 +51,7 @@ program : stmts
         ;
 
 stmts   : stmts stmt
+        | stmts error
         | stmt
         ;
 
@@ -147,6 +148,7 @@ flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_str
                     $$ = create_qui_expr(create_str_expr($T), $E1, $E2, $E3, $E4); 
                     free($T);
                 }
+                | error { $$ = create_empty_expr(); }
                 ;
 
 opt_param   : SEMICOLON { $$ = create_empty_expr(); }

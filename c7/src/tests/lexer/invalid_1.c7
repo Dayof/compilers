@@ -1,5 +1,7 @@
 int main() {
-    int var_int = @
-    float var_float = 7^
+    int var_int;
+    var_int = 4@;
+    float var_float;
+    var_float = 7^;
     return 'dasda;
 }
