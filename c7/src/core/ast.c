@@ -11,21 +11,6 @@ ast_node* create_empty_expr() {
     return expr;
 }
 
-ast_node* create_un_expr(char* type, char* name) {
-    if (PARSER_VERBOSE) printf("\nCreating unary expression node: .%s. .%s.\n",
-                               type, name);
-    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
-    expr->tag = UNARY_TYPE;
-    int keylen;
-    keylen = strlen(type) + 1;
-    expr->op.unary_expr.type = (char*) malloc(keylen * sizeof(char*));
-    strcpy(expr->op.unary_expr.type, type); 
-    keylen = strlen(name) + 1;
-    expr->op.unary_expr.name = (char*) malloc(keylen * sizeof(char*)); 
-    strcpy(expr->op.unary_expr.name, name); 
-    return expr;
-}
-
 ast_node* create_qua_expr(ast_node* type, ast_node* first_expr,
                           ast_node* second_expr, ast_node* third_expr) {
     if (PARSER_VERBOSE) printf("\nCreating quartenary expression node\n");
@@ -100,7 +85,7 @@ ast_node* create_float_expr(float value) {
 }
 
 ast_node* create_char_expr(char value) {
-    if (PARSER_VERBOSE) printf("\n\nCreating char expression node: %c\n", value);
+    if (PARSER_VERBOSE) printf("\n\nCreating char expression node: .%c.\n", value);
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = CHAR_TYPE;
     expr->op.char_expr = value;
@@ -108,13 +93,13 @@ ast_node* create_char_expr(char value) {
 }
 
 ast_node* create_str_expr(char* value) {
-    if (PARSER_VERBOSE) printf("\n\nCreating string expression node: %s\n", value);
+    if (PARSER_VERBOSE) printf("\n\nCreating string expression node: .%s.\n", value);
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = STR_TYPE;
     int keylen;
     keylen = strlen(value) + 1;
     expr->op.str_expr = (char*) malloc(keylen * sizeof(char*));
-    strcpy(expr->op.str_expr, value); 
+    strcpy(expr->op.str_expr, value);
     return expr;
 }
 
@@ -145,6 +130,45 @@ void add_ast(ast_node* expression) {
     return;
 }
 
+void delete_all_ast() {
+    ast_list* cur_ast = ast_root;
+    while (cur_ast) {
+        ast_list* tmp_cur_ast = cur_ast;
+        deallocate_node(tmp_cur_ast->elem);
+        cur_ast = tmp_cur_ast->next;
+        free(tmp_cur_ast);
+    }
+    free(cur_ast);
+}
+
+void deallocate_node(ast_node* elem) {
+    if (elem == NULL) return;
+
+    if (elem->tag == STR_TYPE) {
+        free(elem->op.str_expr);
+    } else if (elem->tag == BINARY_TYPE) {
+        deallocate_node(elem->op.binary_expr.left);
+        deallocate_node(elem->op.binary_expr.right);
+    } else if (elem->tag == TERNARY_TYPE) {
+        deallocate_node(elem->op.ternary_expr.left);
+        deallocate_node(elem->op.ternary_expr.mid);
+        deallocate_node(elem->op.ternary_expr.right);
+    } else if (elem->tag == QUINARY_TYPE) {
+        deallocate_node(elem->op.quinary_expr.type);
+        deallocate_node(elem->op.quinary_expr.first_expr);
+        deallocate_node(elem->op.quinary_expr.second_expr);
+        deallocate_node(elem->op.quinary_expr.third_expr);
+        deallocate_node(elem->op.quinary_expr.fourth_expr);
+    } else if (elem->tag == FUNC_TYPE || elem->tag == QUARTENARY_TYPE) {
+        deallocate_node(elem->op.quartenary_expr.type);
+        deallocate_node(elem->op.quartenary_expr.first_expr);
+        deallocate_node(elem->op.quartenary_expr.second_expr);
+        deallocate_node(elem->op.quartenary_expr.third_expr);
+    }
+
+    free(elem);
+}
+
 void create_empy_ast() {
     if (PARSER_VERBOSE) printf("\nCreating empty AST.\n");
     ast_root = NULL;
@@ -169,6 +193,8 @@ void print_asts(ast_list* root) {
         cur_ast = cur_ast->next;
         ast_idx += 1;
     }
+
+    free(cur_ast);
 }
 
 void print_ast(ast_node* node, int lvl) {
@@ -211,14 +237,6 @@ void print_ast(ast_node* node, int lvl) {
         for (int i=0; i < lvl; ++i) printf("  ");
         printf("VAR: %s\n", var_word->name);
         return;
-    // non terminal node
-    } else if (node->tag == UNARY_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("UNARY TYPE -----\n");
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("TYPE: %s\n", node->op.unary_expr.type);
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("NAME: %s\n", node->op.unary_expr.name);
     // non terminal node
     } else if (node->tag == BINARY_TYPE) {
         for (int i=0; i < lvl; ++i) printf("  ");

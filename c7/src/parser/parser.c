@@ -564,15 +564,15 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    50,    50,    53,    54,    57,    58,    61,    66,    71,
-      74,    77,    80,    83,    84,    87,    88,    91,    92,    95,
-      98,   101,   102,   103,   104,   105,   108,   111,   114,   117,
-     122,   125,   128,   131,   134,   139,   140,   143,   144,   149,
-     150,   154,   159,   162,   165,   168,   171,   174,   177,   180,
-     183,   184,   187,   190,   193,   194,   195,   198,   199,   200,
-     201,   202,   205,   210,   215,   218,   221,   224,   229,   230,
-     233,   234,   235,   236,   239,   240,   241,   244,   247,   250,
-     253,   256,   259,   262,   263,   264,   265
+       0,    50,    50,    53,    54,    57,    58,    61,    67,    73,
+      77,    81,    84,    87,    88,    91,    92,    95,    96,    99,
+     102,   105,   106,   107,   108,   109,   113,   117,   121,   124,
+     130,   134,   138,   142,   146,   152,   153,   156,   157,   162,
+     163,   168,   173,   177,   180,   184,   187,   190,   193,   196,
+     199,   203,   209,   212,   215,   216,   220,   223,   224,   225,
+     229,   233,   239,   245,   250,   254,   258,   262,   268,   269,
+     272,   276,   280,   281,   284,   285,   286,   289,   292,   295,
+     298,   301,   304,   307,   308,   309,   310
 };
 #endif
 
@@ -2507,554 +2507,599 @@ yyreduce:
   case 7: /* func_stmt: TYPE ID PARENT_LEFT param_list PARENT_RIGHT compound_block_stmt  */
 #line 61 "parser/c7.y"
                                                                                           {
-                (yyval.expression) = create_func_expr(create_str_expr((yyvsp[-5].str_value)), create_var_expr((yyvsp[-4].int_value)), (yyvsp[-2].expression), (yyvsp[0].expression)); 
+                (yyval.expression) = create_func_expr(create_str_expr((yyvsp[-5].str_value)), create_var_expr((yyvsp[-4].int_value)), (yyvsp[-2].expression), (yyvsp[0].expression));
+                free((yyvsp[-5].str_value));
             }
-#line 2513 "parser/parser.c"
+#line 2514 "parser/parser.c"
     break;
 
   case 8: /* var_decl_stmt: TYPE ID SEMICOLON  */
-#line 66 "parser/c7.y"
+#line 67 "parser/c7.y"
                                           {
                     (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-2].str_value)), create_var_expr((yyvsp[-1].int_value))); 
+                    free((yyvsp[-2].str_value));
                 }
-#line 2521 "parser/parser.c"
+#line 2523 "parser/parser.c"
     break;
 
   case 9: /* param_list: param_list COMMA TYPE ID  */
-#line 71 "parser/c7.y"
+#line 73 "parser/c7.y"
                                                 {
                 (yyval.expression) = create_ter_expr((yyvsp[-3].expression), create_str_expr((yyvsp[-1].str_value)), create_var_expr((yyvsp[0].int_value)));
+                free((yyvsp[-1].str_value));
             }
-#line 2529 "parser/parser.c"
+#line 2532 "parser/parser.c"
     break;
 
   case 10: /* param_list: TYPE ID  */
-#line 74 "parser/c7.y"
+#line 77 "parser/c7.y"
                             {
                 (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-1].str_value)), create_var_expr((yyvsp[0].int_value)));
+                free((yyvsp[-1].str_value));
             }
-#line 2537 "parser/parser.c"
+#line 2541 "parser/parser.c"
     break;
 
   case 11: /* param_list: %empty  */
-#line 77 "parser/c7.y"
+#line 81 "parser/c7.y"
                           { (yyval.expression) = create_empty_expr(); }
-#line 2543 "parser/parser.c"
+#line 2547 "parser/parser.c"
     break;
 
   case 12: /* simple_param_list: simple_param_list COMMA ID  */
-#line 80 "parser/c7.y"
+#line 84 "parser/c7.y"
                                                        {
                         (yyval.expression) = create_bin_expr((yyvsp[-2].expression), create_var_expr((yyvsp[0].int_value)));
                     }
-#line 2551 "parser/parser.c"
+#line 2555 "parser/parser.c"
     break;
 
   case 13: /* simple_param_list: ID  */
-#line 83 "parser/c7.y"
+#line 87 "parser/c7.y"
                             { (yyval.expression) = create_var_expr((yyvsp[0].int_value)); }
-#line 2557 "parser/parser.c"
+#line 2561 "parser/parser.c"
     break;
 
   case 14: /* simple_param_list: %empty  */
-#line 84 "parser/c7.y"
+#line 88 "parser/c7.y"
                                   { (yyval.expression) = create_empty_expr(); }
-#line 2563 "parser/parser.c"
+#line 2567 "parser/parser.c"
     break;
 
   case 15: /* flex_block_struct: compound_block_stmt  */
-#line 87 "parser/c7.y"
+#line 91 "parser/c7.y"
                                              { (yyval.expression) = (yyvsp[0].expression); }
-#line 2569 "parser/parser.c"
+#line 2573 "parser/parser.c"
     break;
 
   case 16: /* flex_block_struct: block_stmt  */
-#line 88 "parser/c7.y"
+#line 92 "parser/c7.y"
                                     { (yyval.expression) = (yyvsp[0].expression); }
-#line 2575 "parser/parser.c"
+#line 2579 "parser/parser.c"
     break;
 
   case 17: /* compound_block_stmt: BRACK_LEFT block_stmts BRACK_RIGHT  */
-#line 91 "parser/c7.y"
+#line 95 "parser/c7.y"
                                                             { (yyval.expression) = (yyvsp[-1].expression); }
-#line 2581 "parser/parser.c"
+#line 2585 "parser/parser.c"
     break;
 
   case 18: /* compound_block_stmt: BRACK_LEFT BRACK_RIGHT  */
-#line 92 "parser/c7.y"
+#line 96 "parser/c7.y"
                                               { (yyval.expression) = create_empty_expr(); }
-#line 2587 "parser/parser.c"
+#line 2591 "parser/parser.c"
     break;
 
   case 19: /* block_stmts: block_stmts block_stmt  */
-#line 95 "parser/c7.y"
+#line 99 "parser/c7.y"
                                            {
                 (yyval.expression) = create_bin_expr((yyvsp[-1].expression), (yyvsp[0].expression)); 
             }
-#line 2595 "parser/parser.c"
+#line 2599 "parser/parser.c"
     break;
 
   case 20: /* block_stmts: block_stmt  */
-#line 98 "parser/c7.y"
+#line 102 "parser/c7.y"
                             { (yyval.expression) = (yyvsp[0].expression); }
-#line 2601 "parser/parser.c"
+#line 2605 "parser/parser.c"
     break;
 
   case 21: /* block_stmt: var_decl_stmt  */
-#line 101 "parser/c7.y"
+#line 105 "parser/c7.y"
                                { (yyval.expression) = (yyvsp[0].expression); }
-#line 2607 "parser/parser.c"
+#line 2611 "parser/parser.c"
     break;
 
   case 22: /* block_stmt: func_call SEMICOLON  */
-#line 102 "parser/c7.y"
+#line 106 "parser/c7.y"
                                      { (yyval.expression) = (yyvsp[-1].expression); }
-#line 2613 "parser/parser.c"
+#line 2617 "parser/parser.c"
     break;
 
   case 23: /* block_stmt: set_func_call SEMICOLON  */
-#line 103 "parser/c7.y"
+#line 107 "parser/c7.y"
                                          { (yyval.expression) = (yyvsp[-1].expression); }
-#line 2619 "parser/parser.c"
+#line 2623 "parser/parser.c"
     break;
 
   case 24: /* block_stmt: flow_control  */
-#line 104 "parser/c7.y"
+#line 108 "parser/c7.y"
                               { (yyval.expression) = (yyvsp[0].expression); }
-#line 2625 "parser/parser.c"
+#line 2629 "parser/parser.c"
     break;
 
   case 25: /* block_stmt: READ PARENT_LEFT ID PARENT_RIGHT SEMICOLON  */
-#line 105 "parser/c7.y"
+#line 109 "parser/c7.y"
                                                                {
                 (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-4].str_value)), create_var_expr((yyvsp[-2].int_value))); 
+                free((yyvsp[-4].str_value));
             }
-#line 2633 "parser/parser.c"
+#line 2638 "parser/parser.c"
     break;
 
   case 26: /* block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON  */
-#line 108 "parser/c7.y"
+#line 113 "parser/c7.y"
                                                                          {
                 (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-4].str_value)), (yyvsp[-2].expression)); 
+                free((yyvsp[-4].str_value));
             }
-#line 2641 "parser/parser.c"
+#line 2647 "parser/parser.c"
     break;
 
   case 27: /* block_stmt: WRITELN PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON  */
-#line 111 "parser/c7.y"
+#line 117 "parser/c7.y"
                                                                            {
                 (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-4].str_value)), (yyvsp[-2].expression)); 
+                free((yyvsp[-4].str_value));
             }
-#line 2649 "parser/parser.c"
+#line 2656 "parser/parser.c"
     break;
 
   case 28: /* block_stmt: ID ASSIGN simple_expr SEMICOLON  */
-#line 114 "parser/c7.y"
+#line 121 "parser/c7.y"
                                                        {
                 (yyval.expression) = create_ter_expr(create_var_expr((yyvsp[-3].int_value)), create_char_expr((yyvsp[-2].op)), (yyvsp[-1].expression)); 
             }
-#line 2657 "parser/parser.c"
+#line 2664 "parser/parser.c"
     break;
 
   case 29: /* block_stmt: RETURN simple_expr SEMICOLON  */
-#line 117 "parser/c7.y"
+#line 124 "parser/c7.y"
                                                  {
                 (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-2].str_value)), (yyvsp[-1].expression)); 
+                free((yyvsp[-2].str_value));
             }
-#line 2665 "parser/parser.c"
-    break;
-
-  case 30: /* flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct  */
-#line 122 "parser/c7.y"
-                                                                                                   {
-                    (yyval.expression) = create_ter_expr(create_str_expr((yyvsp[-4].str_value)), (yyvsp[-2].expression), (yyvsp[0].expression)); 
-                }
 #line 2673 "parser/parser.c"
     break;
 
-  case 31: /* flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct  */
-#line 125 "parser/c7.y"
-                                                                                                                       {
-                    (yyval.expression) = create_qui_expr(create_str_expr((yyvsp[-6].str_value)), (yyvsp[-4].expression), (yyvsp[-2].expression), create_str_expr((yyvsp[-1].str_value)), (yyvsp[0].expression)); 
+  case 30: /* flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct  */
+#line 130 "parser/c7.y"
+                                                                                                   {
+                    (yyval.expression) = create_ter_expr(create_str_expr((yyvsp[-4].str_value)), (yyvsp[-2].expression), (yyvsp[0].expression)); 
+                    free((yyvsp[-4].str_value));
                 }
-#line 2681 "parser/parser.c"
+#line 2682 "parser/parser.c"
+    break;
+
+  case 31: /* flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct  */
+#line 134 "parser/c7.y"
+                                                                                                                       {
+                    (yyval.expression) = create_qui_expr(create_str_expr((yyvsp[-6].str_value)), (yyvsp[-4].expression), (yyvsp[-2].expression), create_str_expr((yyvsp[-1].str_value)), (yyvsp[0].expression));
+                    free((yyvsp[-6].str_value)); free((yyvsp[-1].str_value));
+                }
+#line 2691 "parser/parser.c"
     break;
 
   case 32: /* flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct  */
-#line 128 "parser/c7.y"
+#line 138 "parser/c7.y"
                                                                                         {
                     (yyval.expression) = create_ter_expr(create_str_expr((yyvsp[-4].str_value)), (yyvsp[-2].expression), (yyvsp[0].expression)); 
+                    free((yyvsp[-4].str_value));
                 }
-#line 2689 "parser/parser.c"
+#line 2700 "parser/parser.c"
     break;
 
   case 33: /* flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct  */
-#line 131 "parser/c7.y"
+#line 142 "parser/c7.y"
                                                                                                     {
                     (yyval.expression) = create_qua_expr(create_str_expr((yyvsp[-5].str_value)), (yyvsp[-3].expression), (yyvsp[-2].expression), (yyvsp[0].expression)); 
+                    free((yyvsp[-5].str_value));
                 }
-#line 2697 "parser/parser.c"
+#line 2709 "parser/parser.c"
     break;
 
   case 34: /* flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct  */
-#line 134 "parser/c7.y"
+#line 146 "parser/c7.y"
                                                                                                                        {
                     (yyval.expression) = create_qui_expr(create_str_expr((yyvsp[-6].str_value)), (yyvsp[-4].expression), (yyvsp[-3].expression), (yyvsp[-2].expression), (yyvsp[0].expression)); 
+                    free((yyvsp[-6].str_value));
                 }
-#line 2705 "parser/parser.c"
+#line 2718 "parser/parser.c"
     break;
 
   case 35: /* opt_param: SEMICOLON  */
-#line 139 "parser/c7.y"
+#line 152 "parser/c7.y"
                         { (yyval.expression) = create_empty_expr(); }
-#line 2711 "parser/parser.c"
+#line 2724 "parser/parser.c"
     break;
 
   case 36: /* opt_param: for_expression SEMICOLON  */
-#line 140 "parser/c7.y"
+#line 153 "parser/c7.y"
                                           { (yyval.expression) = (yyvsp[-1].expression); }
-#line 2717 "parser/parser.c"
+#line 2730 "parser/parser.c"
     break;
 
   case 37: /* for_expression: decl_or_cond_expr  */
-#line 143 "parser/c7.y"
+#line 156 "parser/c7.y"
                                        { (yyval.expression) = (yyvsp[0].expression); }
-#line 2723 "parser/parser.c"
+#line 2736 "parser/parser.c"
     break;
 
   case 38: /* for_expression: for_expression COMMA decl_or_cond_expr  */
-#line 144 "parser/c7.y"
+#line 157 "parser/c7.y"
                                                                  {
                     (yyval.expression) = create_bin_expr((yyvsp[-2].expression), (yyvsp[0].expression)); 
                 }
-#line 2731 "parser/parser.c"
+#line 2744 "parser/parser.c"
     break;
 
   case 39: /* decl_or_cond_expr: or_cond_expr  */
-#line 149 "parser/c7.y"
+#line 162 "parser/c7.y"
                                       { (yyval.expression) = (yyvsp[0].expression); }
-#line 2737 "parser/parser.c"
+#line 2750 "parser/parser.c"
     break;
 
   case 40: /* decl_or_cond_expr: TYPE ID ASSIGN simple_expr  */
-#line 150 "parser/c7.y"
+#line 163 "parser/c7.y"
                                                              {
                         (yyval.expression) = create_qua_expr(create_str_expr((yyvsp[-3].str_value)), create_var_expr((yyvsp[-2].int_value)),
                                              create_char_expr((yyvsp[-1].op)), (yyvsp[0].expression)); 
+                        free((yyvsp[-3].str_value));
                     }
-#line 2746 "parser/parser.c"
+#line 2760 "parser/parser.c"
     break;
 
   case 41: /* decl_or_cond_expr: ID ASSIGN simple_expr  */
-#line 154 "parser/c7.y"
+#line 168 "parser/c7.y"
                                                      {
                         (yyval.expression) = create_ter_expr(create_var_expr((yyvsp[-2].int_value)), create_char_expr((yyvsp[-1].op)), (yyvsp[0].expression)); 
                     }
-#line 2754 "parser/parser.c"
-    break;
-
-  case 42: /* or_cond_expr: or_cond_expr OR_OP and_cond_expr  */
-#line 159 "parser/c7.y"
-                                                               {
-                    (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_str_expr((yyvsp[-1].str_value)), (yyvsp[0].expression)); 
-                }
-#line 2762 "parser/parser.c"
-    break;
-
-  case 43: /* or_cond_expr: and_cond_expr  */
-#line 162 "parser/c7.y"
-                                   { (yyval.expression) = (yyvsp[0].expression); }
 #line 2768 "parser/parser.c"
     break;
 
+  case 42: /* or_cond_expr: or_cond_expr OR_OP and_cond_expr  */
+#line 173 "parser/c7.y"
+                                                               {
+                    (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_str_expr((yyvsp[-1].str_value)), (yyvsp[0].expression)); 
+                    free((yyvsp[-1].str_value));
+                }
+#line 2777 "parser/parser.c"
+    break;
+
+  case 43: /* or_cond_expr: and_cond_expr  */
+#line 177 "parser/c7.y"
+                                   { (yyval.expression) = (yyvsp[0].expression); }
+#line 2783 "parser/parser.c"
+    break;
+
   case 44: /* and_cond_expr: and_cond_expr AND_OP unary_cond_expr  */
-#line 165 "parser/c7.y"
+#line 180 "parser/c7.y"
                                                                    {
                     (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_str_expr((yyvsp[-1].str_value)), (yyvsp[0].expression)); 
+                    free((yyvsp[-1].str_value));
                 }
-#line 2776 "parser/parser.c"
+#line 2792 "parser/parser.c"
     break;
 
   case 45: /* and_cond_expr: unary_cond_expr  */
-#line 168 "parser/c7.y"
+#line 184 "parser/c7.y"
                                      { (yyval.expression) = (yyvsp[0].expression); }
-#line 2782 "parser/parser.c"
+#line 2798 "parser/parser.c"
     break;
 
   case 46: /* unary_cond_expr: NOT_OP unary_cond_expr  */
-#line 171 "parser/c7.y"
+#line 187 "parser/c7.y"
                                                {
                     (yyval.expression) = create_bin_expr(create_char_expr((yyvsp[-1].op)), (yyvsp[0].expression)); 
                 }
-#line 2790 "parser/parser.c"
+#line 2806 "parser/parser.c"
     break;
 
   case 47: /* unary_cond_expr: eq_cond_expr  */
-#line 174 "parser/c7.y"
+#line 190 "parser/c7.y"
                                   { (yyval.expression) = (yyvsp[0].expression); }
-#line 2796 "parser/parser.c"
+#line 2812 "parser/parser.c"
     break;
 
   case 48: /* eq_cond_expr: eq_cond_expr equal_ops rel_cond_expr  */
-#line 177 "parser/c7.y"
+#line 193 "parser/c7.y"
                                                                   {
                     (yyval.expression) = create_ter_expr((yyvsp[-2].expression), (yyvsp[-1].expression), (yyvsp[0].expression));
                 }
-#line 2804 "parser/parser.c"
+#line 2820 "parser/parser.c"
     break;
 
   case 49: /* eq_cond_expr: rel_cond_expr  */
-#line 180 "parser/c7.y"
+#line 196 "parser/c7.y"
                                    { (yyval.expression) = (yyvsp[0].expression); }
-#line 2810 "parser/parser.c"
+#line 2826 "parser/parser.c"
     break;
 
   case 50: /* equal_ops: EQ_OP  */
-#line 183 "parser/c7.y"
-                       { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2816 "parser/parser.c"
+#line 199 "parser/c7.y"
+                       {
+                (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+                free((yyvsp[0].str_value));
+            }
+#line 2835 "parser/parser.c"
     break;
 
   case 51: /* equal_ops: NE_OP  */
-#line 184 "parser/c7.y"
-                       { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2822 "parser/parser.c"
+#line 203 "parser/c7.y"
+                       {
+                (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+                free((yyvsp[0].str_value));
+            }
+#line 2844 "parser/parser.c"
     break;
 
   case 52: /* rel_cond_expr: rel_cond_expr rel_ops rel_cond_stmt  */
-#line 187 "parser/c7.y"
+#line 209 "parser/c7.y"
                                                                   {
                     (yyval.expression) = create_ter_expr((yyvsp[-2].expression), (yyvsp[-1].expression), (yyvsp[0].expression));
                 }
-#line 2830 "parser/parser.c"
+#line 2852 "parser/parser.c"
     break;
 
   case 53: /* rel_cond_expr: rel_cond_stmt  */
-#line 190 "parser/c7.y"
+#line 212 "parser/c7.y"
                                    { (yyval.expression) = (yyvsp[0].expression); }
-#line 2836 "parser/parser.c"
+#line 2858 "parser/parser.c"
     break;
 
   case 54: /* rel_cond_stmt: arith_expr  */
-#line 193 "parser/c7.y"
+#line 215 "parser/c7.y"
                                 { (yyval.expression) = (yyvsp[0].expression); }
-#line 2842 "parser/parser.c"
+#line 2864 "parser/parser.c"
     break;
 
   case 55: /* rel_cond_stmt: EMPTY  */
-#line 194 "parser/c7.y"
-                           { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2848 "parser/parser.c"
+#line 216 "parser/c7.y"
+                           {
+                    (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+                    free((yyvsp[0].str_value));
+                }
+#line 2873 "parser/parser.c"
     break;
 
   case 56: /* rel_cond_stmt: func_expr  */
-#line 195 "parser/c7.y"
+#line 220 "parser/c7.y"
                                { (yyval.expression) = (yyvsp[0].expression); }
-#line 2854 "parser/parser.c"
+#line 2879 "parser/parser.c"
     break;
 
   case 57: /* rel_ops: L_OP  */
-#line 198 "parser/c7.y"
+#line 223 "parser/c7.y"
                   { (yyval.expression) = create_char_expr((yyvsp[0].op)); }
-#line 2860 "parser/parser.c"
+#line 2885 "parser/parser.c"
     break;
 
   case 58: /* rel_ops: G_OP  */
-#line 199 "parser/c7.y"
+#line 224 "parser/c7.y"
                   { (yyval.expression) = create_char_expr((yyvsp[0].op)); }
-#line 2866 "parser/parser.c"
+#line 2891 "parser/parser.c"
     break;
 
   case 59: /* rel_ops: LE_OP  */
-#line 200 "parser/c7.y"
-                   { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2872 "parser/parser.c"
-    break;
-
-  case 60: /* rel_ops: GE_OP  */
-#line 201 "parser/c7.y"
-                   { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2878 "parser/parser.c"
-    break;
-
-  case 61: /* rel_ops: IN  */
-#line 202 "parser/c7.y"
-                { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2884 "parser/parser.c"
-    break;
-
-  case 62: /* set_expr: simple_expr IN simple_expr  */
-#line 205 "parser/c7.y"
-                                                    {
-                (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_str_expr((yyvsp[-1].str_value)), (yyvsp[0].expression)); 
-            }
-#line 2892 "parser/parser.c"
-    break;
-
-  case 63: /* func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT  */
-#line 210 "parser/c7.y"
-                                                                  {
-                (yyval.expression) = create_bin_expr(create_var_expr((yyvsp[-3].int_value)), (yyvsp[-1].expression)); 
-            }
+#line 225 "parser/c7.y"
+                   {
+            (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+            free((yyvsp[0].str_value));
+        }
 #line 2900 "parser/parser.c"
     break;
 
+  case 60: /* rel_ops: GE_OP  */
+#line 229 "parser/c7.y"
+                   { 
+            (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+            free((yyvsp[0].str_value));
+        }
+#line 2909 "parser/parser.c"
+    break;
+
+  case 61: /* rel_ops: IN  */
+#line 233 "parser/c7.y"
+                {
+            (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+            free((yyvsp[0].str_value));
+        }
+#line 2918 "parser/parser.c"
+    break;
+
+  case 62: /* set_expr: simple_expr IN simple_expr  */
+#line 239 "parser/c7.y"
+                                                    {
+                (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_str_expr((yyvsp[-1].str_value)), (yyvsp[0].expression)); 
+                free((yyvsp[-1].str_value));
+            }
+#line 2927 "parser/parser.c"
+    break;
+
+  case 63: /* func_call: ID PARENT_LEFT simple_param_list PARENT_RIGHT  */
+#line 245 "parser/c7.y"
+                                                                  {
+                (yyval.expression) = create_bin_expr(create_var_expr((yyvsp[-3].int_value)), (yyvsp[-1].expression)); 
+            }
+#line 2935 "parser/parser.c"
+    break;
+
   case 64: /* set_func_call: IS_SET PARENT_LEFT ID PARENT_RIGHT  */
-#line 215 "parser/c7.y"
+#line 250 "parser/c7.y"
                                                            {
                     (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-3].str_value)), create_var_expr((yyvsp[-1].int_value))); 
+                    free((yyvsp[-3].str_value));
                 }
-#line 2908 "parser/parser.c"
-    break;
-
-  case 65: /* set_func_call: ADD_SET PARENT_LEFT set_expr PARENT_RIGHT  */
-#line 218 "parser/c7.y"
-                                                                  {
-                    (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-3].str_value)), (yyvsp[-1].expression)); 
-                }
-#line 2916 "parser/parser.c"
-    break;
-
-  case 66: /* set_func_call: REMOVE PARENT_LEFT set_expr PARENT_RIGHT  */
-#line 221 "parser/c7.y"
-                                                                 {
-                    (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-3].str_value)), (yyvsp[-1].expression)); 
-                }
-#line 2924 "parser/parser.c"
-    break;
-
-  case 67: /* set_func_call: EXISTS PARENT_LEFT set_expr PARENT_RIGHT  */
-#line 224 "parser/c7.y"
-                                                                 {
-                    (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-3].str_value)), (yyvsp[-1].expression)); 
-                }
-#line 2932 "parser/parser.c"
-    break;
-
-  case 68: /* simple_expr: arith_expr  */
-#line 229 "parser/c7.y"
-                            { (yyval.expression) = (yyvsp[0].expression); }
-#line 2938 "parser/parser.c"
-    break;
-
-  case 69: /* simple_expr: func_cte_expr  */
-#line 230 "parser/c7.y"
-                               { (yyval.expression) = (yyvsp[0].expression); }
 #line 2944 "parser/parser.c"
     break;
 
-  case 70: /* func_cte_expr: EMPTY  */
-#line 233 "parser/c7.y"
-                           { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2950 "parser/parser.c"
+  case 65: /* set_func_call: ADD_SET PARENT_LEFT set_expr PARENT_RIGHT  */
+#line 254 "parser/c7.y"
+                                                                  {
+                    (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-3].str_value)), (yyvsp[-1].expression)); 
+                    free((yyvsp[-3].str_value));
+                }
+#line 2953 "parser/parser.c"
     break;
 
-  case 71: /* func_cte_expr: STRING  */
-#line 234 "parser/c7.y"
-                            { (yyval.expression) = create_str_expr((yyvsp[0].str_value)); }
-#line 2956 "parser/parser.c"
-    break;
-
-  case 72: /* func_cte_expr: CHAR  */
-#line 235 "parser/c7.y"
-                          { (yyval.expression) = create_char_expr((yyvsp[0].op)); }
+  case 66: /* set_func_call: REMOVE PARENT_LEFT set_expr PARENT_RIGHT  */
+#line 258 "parser/c7.y"
+                                                                 {
+                    (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-3].str_value)), (yyvsp[-1].expression)); 
+                    free((yyvsp[-3].str_value));
+                }
 #line 2962 "parser/parser.c"
     break;
 
-  case 73: /* func_cte_expr: func_expr  */
-#line 236 "parser/c7.y"
+  case 67: /* set_func_call: EXISTS PARENT_LEFT set_expr PARENT_RIGHT  */
+#line 262 "parser/c7.y"
+                                                                 {
+                    (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-3].str_value)), (yyvsp[-1].expression));
+                    free((yyvsp[-3].str_value)); 
+                }
+#line 2971 "parser/parser.c"
+    break;
+
+  case 68: /* simple_expr: arith_expr  */
+#line 268 "parser/c7.y"
+                            { (yyval.expression) = (yyvsp[0].expression); }
+#line 2977 "parser/parser.c"
+    break;
+
+  case 69: /* simple_expr: func_cte_expr  */
+#line 269 "parser/c7.y"
                                { (yyval.expression) = (yyvsp[0].expression); }
-#line 2968 "parser/parser.c"
+#line 2983 "parser/parser.c"
+    break;
+
+  case 70: /* func_cte_expr: EMPTY  */
+#line 272 "parser/c7.y"
+                           {
+                    (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+                    free((yyvsp[0].str_value));
+                }
+#line 2992 "parser/parser.c"
+    break;
+
+  case 71: /* func_cte_expr: STRING  */
+#line 276 "parser/c7.y"
+                            {
+                    (yyval.expression) = create_str_expr((yyvsp[0].str_value));
+                    free((yyvsp[0].str_value));
+                }
+#line 3001 "parser/parser.c"
+    break;
+
+  case 72: /* func_cte_expr: CHAR  */
+#line 280 "parser/c7.y"
+                          { (yyval.expression) = create_char_expr((yyvsp[0].op)); }
+#line 3007 "parser/parser.c"
+    break;
+
+  case 73: /* func_cte_expr: func_expr  */
+#line 281 "parser/c7.y"
+                               { (yyval.expression) = (yyvsp[0].expression); }
+#line 3013 "parser/parser.c"
     break;
 
   case 74: /* func_expr: func_call  */
-#line 239 "parser/c7.y"
+#line 284 "parser/c7.y"
                                { (yyval.expression) = (yyvsp[0].expression); }
-#line 2974 "parser/parser.c"
+#line 3019 "parser/parser.c"
     break;
 
   case 75: /* func_expr: set_func_call  */
-#line 240 "parser/c7.y"
+#line 285 "parser/c7.y"
                                    { (yyval.expression) = (yyvsp[0].expression); }
-#line 2980 "parser/parser.c"
+#line 3025 "parser/parser.c"
     break;
 
   case 76: /* func_expr: PARENT_LEFT func_cte_expr PARENT_RIGHT  */
-#line 241 "parser/c7.y"
+#line 286 "parser/c7.y"
                                                             { (yyval.expression) = (yyvsp[-1].expression); }
-#line 2986 "parser/parser.c"
+#line 3031 "parser/parser.c"
     break;
 
   case 77: /* arith_expr: arith_expr ADD term  */
-#line 244 "parser/c7.y"
+#line 289 "parser/c7.y"
                                            {
                 (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_char_expr((yyvsp[-1].op)), (yyvsp[0].expression));
             }
-#line 2994 "parser/parser.c"
+#line 3039 "parser/parser.c"
     break;
 
   case 78: /* arith_expr: arith_expr SUB term  */
-#line 247 "parser/c7.y"
+#line 292 "parser/c7.y"
                                            {
                 (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_char_expr((yyvsp[-1].op)), (yyvsp[0].expression));
             }
-#line 3002 "parser/parser.c"
+#line 3047 "parser/parser.c"
     break;
 
   case 79: /* arith_expr: term  */
-#line 250 "parser/c7.y"
+#line 295 "parser/c7.y"
                       { (yyval.expression) = (yyvsp[0].expression); }
-#line 3008 "parser/parser.c"
+#line 3053 "parser/parser.c"
     break;
 
   case 80: /* term: term MULT factor  */
-#line 253 "parser/c7.y"
+#line 298 "parser/c7.y"
                                     {
             (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_char_expr((yyvsp[-1].op)), (yyvsp[0].expression));
         }
-#line 3016 "parser/parser.c"
+#line 3061 "parser/parser.c"
     break;
 
   case 81: /* term: term DIV factor  */
-#line 256 "parser/c7.y"
+#line 301 "parser/c7.y"
                                    {
             (yyval.expression) = create_ter_expr((yyvsp[-2].expression), create_char_expr((yyvsp[-1].op)), (yyvsp[0].expression));
         }
-#line 3024 "parser/parser.c"
+#line 3069 "parser/parser.c"
     break;
 
   case 82: /* term: factor  */
-#line 259 "parser/c7.y"
+#line 304 "parser/c7.y"
                     { (yyval.expression) = (yyvsp[0].expression); }
-#line 3030 "parser/parser.c"
+#line 3075 "parser/parser.c"
     break;
 
   case 83: /* factor: INTEGER  */
-#line 262 "parser/c7.y"
+#line 307 "parser/c7.y"
                      { (yyval.expression) = create_int_expr((yyvsp[0].int_value)); }
-#line 3036 "parser/parser.c"
+#line 3081 "parser/parser.c"
     break;
 
   case 84: /* factor: FLOAT  */
-#line 263 "parser/c7.y"
+#line 308 "parser/c7.y"
                    { (yyval.expression) = create_float_expr((yyvsp[0].float_value)); }
-#line 3042 "parser/parser.c"
+#line 3087 "parser/parser.c"
     break;
 
   case 85: /* factor: ID  */
-#line 264 "parser/c7.y"
+#line 309 "parser/c7.y"
                 { (yyval.expression) = create_var_expr((yyvsp[0].int_value)); }
-#line 3048 "parser/parser.c"
+#line 3093 "parser/parser.c"
     break;
 
   case 86: /* factor: PARENT_LEFT arith_expr PARENT_RIGHT  */
-#line 265 "parser/c7.y"
+#line 310 "parser/c7.y"
                                                  { (yyval.expression) = (yyvsp[-1].expression); }
-#line 3054 "parser/parser.c"
+#line 3099 "parser/parser.c"
     break;
 
 
-#line 3058 "parser/parser.c"
+#line 3103 "parser/parser.c"
 
       default: break;
     }
@@ -3279,7 +3324,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 268 "parser/c7.y"
+#line 313 "parser/c7.y"
 
 
 void yyerror(const char *s) {

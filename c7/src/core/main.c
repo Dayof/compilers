@@ -7,9 +7,9 @@
 
 
 void init_vars() {
-    LEX_VERBOSE = 0;
-    PARSER_VERBOSE = 0;
-    MAIN_VERBOSE = 0;
+    LEX_VERBOSE = 1;
+    PARSER_VERBOSE = 1;
+    MAIN_VERBOSE = 1;
     newline_counter = -1;
     symbol_table = NULL;
 }
@@ -40,7 +40,11 @@ int main (int argc, char* argv[]) {
 
     // clean memory
     delete_all_st();
+    if (MAIN_VERBOSE) printf("symbol table cleaned\n");
+    delete_all_ast();
+    if (MAIN_VERBOSE) printf("asts cleaned\n");
     yylex_destroy();
+    if (MAIN_VERBOSE) printf("yylex cleaned\n");
 	
     return 0;
 }

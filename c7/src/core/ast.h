@@ -11,7 +11,6 @@ enum TAG {
     CHAR_TYPE,
     STR_TYPE,
     VAR_TYPE,
-    UNARY_TYPE,
     BINARY_TYPE,
     TERNARY_TYPE,
     QUARTENARY_TYPE,
@@ -27,10 +26,6 @@ typedef struct exp {
         float float_expr;
         char char_expr;
         char* str_expr;
-        struct { 
-            char* type;
-            char* name;
-        } unary_expr;
         struct { 
             struct exp* left;
             struct exp* right;
@@ -70,12 +65,13 @@ void print_ast(ast_node* node, int lvl);
 void create_empy_ast();
 ast_node* create_empty_expr();
 void add_ast(ast_node* expression);
+void delete_all_ast();
+void deallocate_node(ast_node* elem);
 ast_node* create_int_expr(int value);
 ast_node* create_float_expr(float value);
 ast_node* create_var_expr(int st_ref);
 ast_node* create_char_expr(char value);
 ast_node* create_str_expr(char* value);
-ast_node* create_un_expr(char* type, char* name);
 ast_node* create_bin_expr(ast_node* left, ast_node* right);
 ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right);
 ast_node* create_func_expr(ast_node* type, ast_node* first_expr,

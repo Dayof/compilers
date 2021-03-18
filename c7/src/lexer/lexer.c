@@ -2109,19 +2109,9 @@ void handle_token(int token) {
 	switch (token) {
 		case STRING_TOK:
 			if (LEX_VERBOSE) printf("<string, '%s'> ", yytext);
-			int str_len = strlen(yytext);
-			int str_idx;
-			keylen = str_len + 1 - 2;
-			char* dst = (char*) malloc(keylen * sizeof(char*));
-			for (str_idx = 0; str_idx != str_len; ++str_idx) {
-				if (str_idx == 0 || str_idx == (str_len - 1)) continue;
-				dst[str_idx-1] = yytext[str_idx];
-			}
-			dst[str_idx-1] = '\0';
-			keylen = strlen(dst) + 1;
+			keylen = strlen(yytext) + 1;
 			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
-			strcpy(yylval.str_value, dst);
-			free(dst);
+			strcpy(yylval.str_value, yytext);
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);

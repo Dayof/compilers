@@ -59,20 +59,24 @@ stmt    : func_stmt[U] { add_ast($U); }
         ;
 
 func_stmt   : TYPE[T] ID[N] PARENT_LEFT param_list[P] PARENT_RIGHT compound_block_stmt[E] {
-                $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E); 
+                $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
+                free($T);
             }
             ;
 
 var_decl_stmt   : TYPE[T] ID[N] SEMICOLON {
                     $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
+                    free($T);
                 }
                 ; 
 
 param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
+                free($T);
             }
             | TYPE[T] ID[N] {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                free($T);
             }
             | /* empty */ { $$ = create_empty_expr(); }
             ;
@@ -104,35 +108,44 @@ block_stmt  : var_decl_stmt[U] { $$ = $U; }
             | flow_control[U] { $$ = $U; }
             | READ[T] PARENT_LEFT ID[N] PARENT_RIGHT SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
+                free($T);
             }
             | WRITE[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
+                free($T);
             }
             | WRITELN[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
+                free($T);
             }
             | ID[N] ASSIGN[A] simple_expr[E] SEMICOLON {
                 $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E); 
             }
             | RETURN[T] simple_expr[E] SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
+                free($T);
             }
             ;
 
 flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_struct[E2] %prec THEN {
                     $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
+                    free($T);
                 }
                 | IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_struct[E2] ELSE[E3] flex_block_struct[E4] {
-                    $$ = create_qui_expr(create_str_expr($T), $E1, $E2, create_str_expr($E3), $E4); 
+                    $$ = create_qui_expr(create_str_expr($T), $E1, $E2, create_str_expr($E3), $E4);
+                    free($T); free($E3);
                 }
                 | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT flex_block_struct[E2] {
                     $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
+                    free($T);
                 }
                 | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] PARENT_RIGHT flex_block_struct[E3] {
                     $$ = create_qua_expr(create_str_expr($T), $E1, $E2, $E3); 
+                    free($T);
                 }
                 | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] for_expression[E3] PARENT_RIGHT flex_block_struct[E4] {
                     $$ = create_qui_expr(create_str_expr($T), $E1, $E2, $E3, $E4); 
+                    free($T);
                 }
                 ;
 
@@ -150,6 +163,7 @@ decl_or_cond_expr   : or_cond_expr[U] { $$ = $U; }
                     | TYPE[T] ID[N] ASSIGN[A] simple_expr[E] {
                         $$ = create_qua_expr(create_str_expr($T), create_var_expr($N),
                                              create_char_expr($A), $E); 
+                        free($T);
                     }
                     | ID[N] ASSIGN[A] simple_expr[E] {
                         $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E); 
@@ -158,12 +172,14 @@ decl_or_cond_expr   : or_cond_expr[U] { $$ = $U; }
 
 or_cond_expr    : or_cond_expr[E1] OR_OP[OP] and_cond_expr[E2] {
                     $$ = create_ter_expr($E1, create_str_expr($OP), $E2); 
+                    free($OP);
                 }
                 | and_cond_expr[U] { $$ = $U; }
                 ;
 
 and_cond_expr   : and_cond_expr[E1] AND_OP[OP] unary_cond_expr[E2] {
                     $$ = create_ter_expr($E1, create_str_expr($OP), $E2); 
+                    free($OP);
                 }
                 | unary_cond_expr[U] { $$ = $U; }
                 ;
@@ -180,8 +196,14 @@ eq_cond_expr    : eq_cond_expr[E1] equal_ops[M] rel_cond_expr[E2] {
                 | rel_cond_expr[U] { $$ = $U; }
                 ;
 
-equal_ops   : EQ_OP[U] { $$ = create_str_expr($U); }
-            | NE_OP[U] { $$ = create_str_expr($U); }
+equal_ops   : EQ_OP[U] {
+                $$ = create_str_expr($U);
+                free($U);
+            }
+            | NE_OP[U] {
+                $$ = create_str_expr($U);
+                free($U);
+            }
             ;
 
 rel_cond_expr   : rel_cond_expr[E1] rel_ops[OP] rel_cond_stmt[E2] {
@@ -191,19 +213,32 @@ rel_cond_expr   : rel_cond_expr[E1] rel_ops[OP] rel_cond_stmt[E2] {
                 ;
 
 rel_cond_stmt   : arith_expr[U] { $$ = $U; }
-                | EMPTY[U] { $$ = create_str_expr($U); }
+                | EMPTY[U] {
+                    $$ = create_str_expr($U);
+                    free($U);
+                }
                 | func_expr[U] { $$ = $U; }
                 ;
 
 rel_ops : L_OP[U] { $$ = create_char_expr($U); }
         | G_OP[U] { $$ = create_char_expr($U); }
-        | LE_OP[U] { $$ = create_str_expr($U); }
-        | GE_OP[U] { $$ = create_str_expr($U); }
-        | IN[U] { $$ = create_str_expr($U); }
+        | LE_OP[U] {
+            $$ = create_str_expr($U);
+            free($U);
+        }
+        | GE_OP[U] { 
+            $$ = create_str_expr($U);
+            free($U);
+        }
+        | IN[U] {
+            $$ = create_str_expr($U);
+            free($U);
+        }
         ;           
     
 set_expr    : simple_expr[E1] IN[M] simple_expr[E2] {
                 $$ = create_ter_expr($E1, create_str_expr($M), $E2); 
+                free($M);
             }
             ;   
 
@@ -214,15 +249,19 @@ func_call   : ID[N] PARENT_LEFT simple_param_list[E] PARENT_RIGHT {
 
 set_func_call   : IS_SET[T] PARENT_LEFT ID[V] PARENT_RIGHT {
                     $$ = create_bin_expr(create_str_expr($T), create_var_expr($V)); 
+                    free($T);
                 }
                 | ADD_SET[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
                     $$ = create_bin_expr(create_str_expr($T), $E); 
+                    free($T);
                 }
                 | REMOVE[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
                     $$ = create_bin_expr(create_str_expr($T), $E); 
+                    free($T);
                 }
                 | EXISTS[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
-                    $$ = create_bin_expr(create_str_expr($T), $E); 
+                    $$ = create_bin_expr(create_str_expr($T), $E);
+                    free($T); 
                 }
                 ;
 
@@ -230,8 +269,14 @@ simple_expr : arith_expr[U] { $$ = $U; }
             | func_cte_expr[U] { $$ = $U; }
             ;
 
-func_cte_expr   : EMPTY[U] { $$ = create_str_expr($U); }
-                | STRING[U] { $$ = create_str_expr($U); }
+func_cte_expr   : EMPTY[U] {
+                    $$ = create_str_expr($U);
+                    free($U);
+                }
+                | STRING[U] {
+                    $$ = create_str_expr($U);
+                    free($U);
+                }
                 | CHAR[U] { $$ = create_char_expr($U); }
                 | func_expr[U] { $$ = $U; }
                 ;

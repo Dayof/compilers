@@ -14,7 +14,7 @@ enum TYPES {
 };
 
 typedef struct word_pos {
-    int key, type;
+    int key;
     char name[50];
     UT_hash_handle hh; /* makes this structure hashable */
 } word;
