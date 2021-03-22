@@ -6,4 +6,5 @@ int main () {
     for (b();num>c();) return ans_2;
     for (b();d()>=c();) return ans_2;
     if (13 in possibleSums) writeln('y'); else writeln('n');
+    if (13 in possibleSums) writeln("test_str"); else writeln("test_str");
 }

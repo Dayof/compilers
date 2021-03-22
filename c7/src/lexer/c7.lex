@@ -88,7 +88,7 @@ NE_OP			("!=")
 G_OP			(">")
 L_OP			("<")
 ID				({LETTER}|"_")({LETTER}|{DIGIT}|"_")*
-STRING			(\".*\")
+STRING			(\"([^(\"\')])*\")
 CHAR			(\'.?\')
 INTEGER			({NDIGIT}{DIGIT}*|"0")
 FLOAT			({DIGIT}+\.{DIGIT}+)
