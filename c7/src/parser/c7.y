@@ -23,9 +23,9 @@
 }
 
 %token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON
-%token <op>             ADD SUB MULT DIV CHAR COMMA ASSIGN NOT_OP L_OP G_OP
+%token <op>             ADD SUB MULT DIV COMMA ASSIGN NOT_OP L_OP G_OP
 %token <str_value>      READ WRITE WRITELN TYPE EMPTY STRING RETURN FORALL FOR
-%token <str_value>      IN IS_SET ADD_SET REMOVE EXISTS IF ELSE
+%token <str_value>      IN IS_SET ADD_SET REMOVE EXISTS IF ELSE CHAR
 %token <str_value>      EQ_OP NE_OP LE_OP GE_OP OR_OP AND_OP
 %token <int_value>      INTEGER ID
 %token <float_value>    FLOAT
@@ -280,7 +280,7 @@ func_cte_expr   : EMPTY[U] {
                     $$ = create_str_expr($U);
                     free($U);
                 }
-                | CHAR[U] { $$ = create_char_expr($U); }
+                | CHAR[U] { $$ = create_str_expr($U); }
                 | func_expr[U] { $$ = $U; }
                 ;
 

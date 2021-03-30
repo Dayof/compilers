@@ -136,28 +136,28 @@ Terminals, with rules where they appear
     SUB <op> (264) 79 84
     MULT <op> (265) 81
     DIV <op> (266) 82
-    CHAR <op> (267) 73
-    COMMA <op> (268) 9 12 39
-    ASSIGN <op> (269) 28 41 42
-    NOT_OP <op> (270) 47
-    L_OP <op> (271) 58
-    G_OP <op> (272) 59
-    READ <str_value> (273) 25
-    WRITE <str_value> (274) 26
-    WRITELN <str_value> (275) 27
-    TYPE <str_value> (276) 7 8 9 10 41
-    EMPTY <str_value> (277) 56 71
-    STRING <str_value> (278) 72
-    RETURN <str_value> (279) 29
-    FORALL <str_value> (280) 32
-    FOR <str_value> (281) 33 34
-    IN <str_value> (282) 62 63
-    IS_SET <str_value> (283) 65
-    ADD_SET <str_value> (284) 66
-    REMOVE <str_value> (285) 67
-    EXISTS <str_value> (286) 68
-    IF <str_value> (287) 30 31
-    ELSE <str_value> (288) 31
+    COMMA <op> (267) 9 12 39
+    ASSIGN <op> (268) 28 41 42
+    NOT_OP <op> (269) 47
+    L_OP <op> (270) 58
+    G_OP <op> (271) 59
+    READ <str_value> (272) 25
+    WRITE <str_value> (273) 26
+    WRITELN <str_value> (274) 27
+    TYPE <str_value> (275) 7 8 9 10 41
+    EMPTY <str_value> (276) 56 71
+    STRING <str_value> (277) 72
+    RETURN <str_value> (278) 29
+    FORALL <str_value> (279) 32
+    FOR <str_value> (280) 33 34
+    IN <str_value> (281) 62 63
+    IS_SET <str_value> (282) 65
+    ADD_SET <str_value> (283) 66
+    REMOVE <str_value> (284) 67
+    EXISTS <str_value> (285) 68
+    IF <str_value> (286) 30 31
+    ELSE <str_value> (287) 31
+    CHAR <str_value> (288) 73
     EQ_OP <str_value> (289) 51
     NE_OP <str_value> (290) 52
     LE_OP <str_value> (291) 60
@@ -548,13 +548,13 @@ State 27
 
     PARENT_LEFT  shift, and go to state 47
     SUB          shift, and go to state 48
-    CHAR         shift, and go to state 49
-    EMPTY        shift, and go to state 50
-    STRING       shift, and go to state 51
+    EMPTY        shift, and go to state 49
+    STRING       shift, and go to state 50
     IS_SET       shift, and go to state 30
     ADD_SET      shift, and go to state 31
     REMOVE       shift, and go to state 32
     EXISTS       shift, and go to state 33
+    CHAR         shift, and go to state 51
     INTEGER      shift, and go to state 52
     ID           shift, and go to state 53
     FLOAT        shift, and go to state 54
@@ -755,13 +755,13 @@ State 44
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -782,13 +782,13 @@ State 45
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -817,13 +817,13 @@ State 47
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -851,23 +851,23 @@ State 48
 
 State 49
 
-   73 func_cte_expr: CHAR •
-
-    SEMICOLON  reduce using rule 73 (func_cte_expr)
-
-
-State 50
-
    71 func_cte_expr: EMPTY •
 
     SEMICOLON  reduce using rule 71 (func_cte_expr)
 
 
-State 51
+State 50
 
    72 func_cte_expr: STRING •
 
     SEMICOLON  reduce using rule 72 (func_cte_expr)
+
+
+State 51
+
+   73 func_cte_expr: CHAR •
+
+    SEMICOLON  reduce using rule 73 (func_cte_expr)
 
 
 State 52
@@ -984,13 +984,13 @@ State 63
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -1055,13 +1055,13 @@ State 66
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -1083,13 +1083,13 @@ State 67
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -1111,13 +1111,13 @@ State 68
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -1182,13 +1182,13 @@ State 71
 
     PARENT_LEFT  shift, and go to state 47
     SUB          shift, and go to state 48
-    CHAR         shift, and go to state 49
-    EMPTY        shift, and go to state 50
-    STRING       shift, and go to state 51
+    EMPTY        shift, and go to state 49
+    STRING       shift, and go to state 50
     IS_SET       shift, and go to state 30
     ADD_SET      shift, and go to state 31
     REMOVE       shift, and go to state 32
     EXISTS       shift, and go to state 33
+    CHAR         shift, and go to state 51
     INTEGER      shift, and go to state 52
     ID           shift, and go to state 53
     FLOAT        shift, and go to state 54
@@ -1900,13 +1900,13 @@ State 125
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -1944,13 +1944,13 @@ State 128
 
     PARENT_LEFT  shift, and go to state 260
     SUB          shift, and go to state 261
-    CHAR         shift, and go to state 262
-    EMPTY        shift, and go to state 263
-    STRING       shift, and go to state 264
-    IS_SET       shift, and go to state 265
-    ADD_SET      shift, and go to state 266
-    REMOVE       shift, and go to state 267
-    EXISTS       shift, and go to state 268
+    EMPTY        shift, and go to state 262
+    STRING       shift, and go to state 263
+    IS_SET       shift, and go to state 264
+    ADD_SET      shift, and go to state 265
+    REMOVE       shift, and go to state 266
+    EXISTS       shift, and go to state 267
+    CHAR         shift, and go to state 268
     INTEGER      shift, and go to state 269
     ID           shift, and go to state 270
     FLOAT        shift, and go to state 271
@@ -2501,13 +2501,13 @@ State 158
 
     PARENT_LEFT  shift, and go to state 260
     SUB          shift, and go to state 261
-    CHAR         shift, and go to state 262
-    EMPTY        shift, and go to state 263
-    STRING       shift, and go to state 264
-    IS_SET       shift, and go to state 265
-    ADD_SET      shift, and go to state 266
-    REMOVE       shift, and go to state 267
-    EXISTS       shift, and go to state 268
+    EMPTY        shift, and go to state 262
+    STRING       shift, and go to state 263
+    IS_SET       shift, and go to state 264
+    ADD_SET      shift, and go to state 265
+    REMOVE       shift, and go to state 266
+    EXISTS       shift, and go to state 267
+    CHAR         shift, and go to state 268
     INTEGER      shift, and go to state 269
     ID           shift, and go to state 270
     FLOAT        shift, and go to state 271
@@ -2804,13 +2804,13 @@ State 175
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -2838,51 +2838,51 @@ State 176
 
 State 177
 
-   73 func_cte_expr: CHAR •
-
-    PARENT_RIGHT  reduce using rule 73 (func_cte_expr)
-
-
-State 178
-
    71 func_cte_expr: EMPTY •
 
     PARENT_RIGHT  reduce using rule 71 (func_cte_expr)
 
 
-State 179
+State 178
 
    72 func_cte_expr: STRING •
 
     PARENT_RIGHT  reduce using rule 72 (func_cte_expr)
 
 
-State 180
+State 179
 
    65 set_func_call: IS_SET • PARENT_LEFT ID PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 325
 
 
-State 181
+State 180
 
    66 set_func_call: ADD_SET • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 326
 
 
-State 182
+State 181
 
    67 set_func_call: REMOVE • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 327
 
 
-State 183
+State 182
 
    68 set_func_call: EXISTS • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 328
+
+
+State 183
+
+   73 func_cte_expr: CHAR •
+
+    PARENT_RIGHT  reduce using rule 73 (func_cte_expr)
 
 
 State 184
@@ -3014,13 +3014,13 @@ State 195
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -3048,51 +3048,51 @@ State 196
 
 State 197
 
-   73 func_cte_expr: CHAR •
-
-    IN  reduce using rule 73 (func_cte_expr)
-
-
-State 198
-
    71 func_cte_expr: EMPTY •
 
     IN  reduce using rule 71 (func_cte_expr)
 
 
-State 199
+State 198
 
    72 func_cte_expr: STRING •
 
     IN  reduce using rule 72 (func_cte_expr)
 
 
-State 200
+State 199
 
    65 set_func_call: IS_SET • PARENT_LEFT ID PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 337
 
 
-State 201
+State 200
 
    66 set_func_call: ADD_SET • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 338
 
 
-State 202
+State 201
 
    67 set_func_call: REMOVE • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 339
 
 
-State 203
+State 202
 
    68 set_func_call: EXISTS • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 340
+
+
+State 203
+
+   73 func_cte_expr: CHAR •
+
+    IN  reduce using rule 73 (func_cte_expr)
 
 
 State 204
@@ -3203,13 +3203,13 @@ State 214
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -3391,13 +3391,13 @@ State 226
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -3952,13 +3952,13 @@ State 260
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -3986,21 +3986,13 @@ State 261
 
 State 262
 
-   73 func_cte_expr: CHAR •
-
-    SEMICOLON  reduce using rule 73 (func_cte_expr)
-    COMMA      reduce using rule 73 (func_cte_expr)
-
-
-State 263
-
    71 func_cte_expr: EMPTY •
 
     SEMICOLON  reduce using rule 71 (func_cte_expr)
     COMMA      reduce using rule 71 (func_cte_expr)
 
 
-State 264
+State 263
 
    72 func_cte_expr: STRING •
 
@@ -4008,32 +4000,40 @@ State 264
     COMMA      reduce using rule 72 (func_cte_expr)
 
 
-State 265
+State 264
 
    65 set_func_call: IS_SET • PARENT_LEFT ID PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 389
 
 
-State 266
+State 265
 
    66 set_func_call: ADD_SET • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 390
 
 
-State 267
+State 266
 
    67 set_func_call: REMOVE • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 391
 
 
-State 268
+State 267
 
    68 set_func_call: EXISTS • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 392
+
+
+State 268
+
+   73 func_cte_expr: CHAR •
+
+    SEMICOLON  reduce using rule 73 (func_cte_expr)
+    COMMA      reduce using rule 73 (func_cte_expr)
 
 
 State 269
@@ -4154,13 +4154,13 @@ State 279
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -4632,13 +4632,13 @@ State 310
 
     PARENT_LEFT  shift, and go to state 47
     SUB          shift, and go to state 48
-    CHAR         shift, and go to state 49
-    EMPTY        shift, and go to state 50
-    STRING       shift, and go to state 51
+    EMPTY        shift, and go to state 49
+    STRING       shift, and go to state 50
     IS_SET       shift, and go to state 30
     ADD_SET      shift, and go to state 31
     REMOVE       shift, and go to state 32
     EXISTS       shift, and go to state 33
+    CHAR         shift, and go to state 51
     INTEGER      shift, and go to state 52
     ID           shift, and go to state 53
     FLOAT        shift, and go to state 54
@@ -4861,13 +4861,13 @@ State 326
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -4889,13 +4889,13 @@ State 327
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -4917,13 +4917,13 @@ State 328
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5043,13 +5043,13 @@ State 338
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5071,13 +5071,13 @@ State 339
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5099,13 +5099,13 @@ State 340
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5273,13 +5273,13 @@ State 352
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5301,13 +5301,13 @@ State 353
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5329,13 +5329,13 @@ State 354
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5470,13 +5470,13 @@ State 364
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5498,13 +5498,13 @@ State 365
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5526,13 +5526,13 @@ State 366
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5923,13 +5923,13 @@ State 390
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5951,13 +5951,13 @@ State 391
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -5979,13 +5979,13 @@ State 392
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -6194,13 +6194,13 @@ State 407
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -6222,13 +6222,13 @@ State 408
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -6250,13 +6250,13 @@ State 409
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -6290,13 +6290,13 @@ State 411
 
     PARENT_LEFT  shift, and go to state 497
     SUB          shift, and go to state 498
-    CHAR         shift, and go to state 499
-    EMPTY        shift, and go to state 500
-    STRING       shift, and go to state 501
-    IS_SET       shift, and go to state 502
-    ADD_SET      shift, and go to state 503
-    REMOVE       shift, and go to state 504
-    EXISTS       shift, and go to state 505
+    EMPTY        shift, and go to state 499
+    STRING       shift, and go to state 500
+    IS_SET       shift, and go to state 501
+    ADD_SET      shift, and go to state 502
+    REMOVE       shift, and go to state 503
+    EXISTS       shift, and go to state 504
+    CHAR         shift, and go to state 505
     INTEGER      shift, and go to state 506
     ID           shift, and go to state 507
     FLOAT        shift, and go to state 508
@@ -6532,13 +6532,13 @@ State 423
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -6559,13 +6559,13 @@ State 424
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -6600,13 +6600,13 @@ State 427
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -6695,13 +6695,13 @@ State 430
 
     PARENT_LEFT  shift, and go to state 47
     SUB          shift, and go to state 48
-    CHAR         shift, and go to state 49
-    EMPTY        shift, and go to state 50
-    STRING       shift, and go to state 51
+    EMPTY        shift, and go to state 49
+    STRING       shift, and go to state 50
     IS_SET       shift, and go to state 30
     ADD_SET      shift, and go to state 31
     REMOVE       shift, and go to state 32
     EXISTS       shift, and go to state 33
+    CHAR         shift, and go to state 51
     INTEGER      shift, and go to state 52
     ID           shift, and go to state 53
     FLOAT        shift, and go to state 54
@@ -7455,13 +7455,13 @@ State 491
 
     PARENT_LEFT  shift, and go to state 497
     SUB          shift, and go to state 498
-    CHAR         shift, and go to state 499
-    EMPTY        shift, and go to state 500
-    STRING       shift, and go to state 501
-    IS_SET       shift, and go to state 502
-    ADD_SET      shift, and go to state 503
-    REMOVE       shift, and go to state 504
-    EXISTS       shift, and go to state 505
+    EMPTY        shift, and go to state 499
+    STRING       shift, and go to state 500
+    IS_SET       shift, and go to state 501
+    ADD_SET      shift, and go to state 502
+    REMOVE       shift, and go to state 503
+    EXISTS       shift, and go to state 504
+    CHAR         shift, and go to state 505
     INTEGER      shift, and go to state 506
     ID           shift, and go to state 507
     FLOAT        shift, and go to state 508
@@ -7520,13 +7520,13 @@ State 497
 
     PARENT_LEFT  shift, and go to state 175
     SUB          shift, and go to state 176
-    CHAR         shift, and go to state 177
-    EMPTY        shift, and go to state 178
-    STRING       shift, and go to state 179
-    IS_SET       shift, and go to state 180
-    ADD_SET      shift, and go to state 181
-    REMOVE       shift, and go to state 182
-    EXISTS       shift, and go to state 183
+    EMPTY        shift, and go to state 177
+    STRING       shift, and go to state 178
+    IS_SET       shift, and go to state 179
+    ADD_SET      shift, and go to state 180
+    REMOVE       shift, and go to state 181
+    EXISTS       shift, and go to state 182
+    CHAR         shift, and go to state 183
     INTEGER      shift, and go to state 184
     ID           shift, and go to state 185
     FLOAT        shift, and go to state 186
@@ -7554,21 +7554,13 @@ State 498
 
 State 499
 
-   73 func_cte_expr: CHAR •
-
-    PARENT_RIGHT  reduce using rule 73 (func_cte_expr)
-    COMMA         reduce using rule 73 (func_cte_expr)
-
-
-State 500
-
    71 func_cte_expr: EMPTY •
 
     PARENT_RIGHT  reduce using rule 71 (func_cte_expr)
     COMMA         reduce using rule 71 (func_cte_expr)
 
 
-State 501
+State 500
 
    72 func_cte_expr: STRING •
 
@@ -7576,32 +7568,40 @@ State 501
     COMMA         reduce using rule 72 (func_cte_expr)
 
 
-State 502
+State 501
 
    65 set_func_call: IS_SET • PARENT_LEFT ID PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 570
 
 
-State 503
+State 502
 
    66 set_func_call: ADD_SET • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 571
 
 
-State 504
+State 503
 
    67 set_func_call: REMOVE • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 572
 
 
-State 505
+State 504
 
    68 set_func_call: EXISTS • PARENT_LEFT set_expr PARENT_RIGHT
 
     PARENT_LEFT  shift, and go to state 573
+
+
+State 505
+
+   73 func_cte_expr: CHAR •
+
+    PARENT_RIGHT  reduce using rule 73 (func_cte_expr)
+    COMMA         reduce using rule 73 (func_cte_expr)
 
 
 State 506
@@ -8441,13 +8441,13 @@ State 571
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -8469,13 +8469,13 @@ State 572
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206
@@ -8497,13 +8497,13 @@ State 573
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
-    CHAR         shift, and go to state 197
-    EMPTY        shift, and go to state 198
-    STRING       shift, and go to state 199
-    IS_SET       shift, and go to state 200
-    ADD_SET      shift, and go to state 201
-    REMOVE       shift, and go to state 202
-    EXISTS       shift, and go to state 203
+    EMPTY        shift, and go to state 197
+    STRING       shift, and go to state 198
+    IS_SET       shift, and go to state 199
+    ADD_SET      shift, and go to state 200
+    REMOVE       shift, and go to state 201
+    EXISTS       shift, and go to state 202
+    CHAR         shift, and go to state 203
     INTEGER      shift, and go to state 204
     ID           shift, and go to state 205
     FLOAT        shift, and go to state 206

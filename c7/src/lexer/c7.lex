@@ -89,7 +89,7 @@ G_OP			(">")
 L_OP			("<")
 ID				({LETTER}|"_")({LETTER}|{DIGIT}|"_")*
 STRING			(\"([^(\"\')])*\")
-CHAR			(\'.?\')
+CHAR			(\'([^(\"\')])+\')
 INTEGER			({NDIGIT}{DIGIT}*|"0")
 FLOAT			({DIGIT}+\.{DIGIT}+)
 TYPE			("int"|"float"|"elem"|"set")
@@ -190,7 +190,9 @@ void handle_token(int token) {
 			break;
 		case CHAR_TOK:
 			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
-			yylval.op = yytext[1];
+			keylen = strlen(yytext) + 1;
+			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
+			strcpy(yylval.str_value, yytext);
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);

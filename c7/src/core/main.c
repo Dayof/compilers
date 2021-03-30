@@ -34,8 +34,10 @@ int main (int argc, char* argv[]) {
     printf("\n## Symbol Table ##\n");
     print_st();
 
-    printf("\n\n## Abstract Syntax Tree ##");
-    print_asts(ast_root);
+    if (!(syntax_error || lex_error)) {
+        printf("\n\n## Abstract Syntax Tree ##");
+        print_asts(ast_root);
+    }
 
     // clean memory
     delete_all_st();
