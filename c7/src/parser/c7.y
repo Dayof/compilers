@@ -33,6 +33,7 @@
 %left                   L_OP G_OP EQ_OP NE_OP LE_OP GE_OP
 %left                   ADD SUB
 %left                   MULT DIV
+%left                   UMINUS
 
 %nonassoc THEN
 %nonassoc ELSE
@@ -304,6 +305,9 @@ term    : term[L] MULT[M] factor[R] {
             $$ = create_ter_expr($L, create_char_expr($M), $R);
         }
         | factor[U] { $$ = $U; }
+        | SUB[T] factor[U] %prec UMINUS { 
+            $$ = create_bin_expr(create_char_expr($T), $U); 
+        }
         ;
 
 factor  : INTEGER[U] { $$ = create_int_expr($U); }

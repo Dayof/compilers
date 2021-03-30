@@ -94,7 +94,8 @@ extern int yydebug;
     INTEGER = 295,                 /* INTEGER  */
     ID = 296,                      /* ID  */
     FLOAT = 297,                   /* FLOAT  */
-    THEN = 298                     /* THEN  */
+    UMINUS = 298,                  /* UMINUS  */
+    THEN = 299                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -111,7 +112,7 @@ union YYSTYPE
     float float_value;
     ast_node* expression;
 
-#line 115 "parser/parser.h"
+#line 116 "parser/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
