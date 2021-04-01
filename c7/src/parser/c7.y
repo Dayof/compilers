@@ -1,6 +1,7 @@
 %{
     #include <stdlib.h>
     #include <stdio.h>
+    #include "sym_tab.h"
     #include "ast.h"
 
     int yylex();
@@ -62,22 +63,26 @@ stmt    : func_stmt[U] { add_ast($U); }
 
 func_stmt   : TYPE[T] ID[N] PARENT_LEFT param_list[P] PARENT_RIGHT compound_block_stmt[E] {
                 $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
+                set_id_type($N, ST_ID_FUNC);
                 free($T);
             }
             ;
 
 var_decl_stmt   : TYPE[T] ID[N] SEMICOLON {
-                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
+                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                    set_id_type($N, ST_ID_VAR); 
                     free($T);
                 }
                 ; 
 
 param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
+                set_id_type($N, ST_ID_VAR);
                 free($T);
             }
             | TYPE[T] ID[N] {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                set_id_type($N, ST_ID_VAR);
                 free($T);
             }
             | /* empty */ { $$ = create_empty_expr(); }
@@ -85,8 +90,12 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
 
 simple_param_list   : simple_param_list[E] COMMA ID[N] {
                         $$ = create_bin_expr($E, create_var_expr($N));
+                        set_id_type($N, ST_ID_VAR);
                     }
-                    | ID[N] { $$ = create_var_expr($N); }
+                    | ID[N] { 
+                        $$ = create_var_expr($N);
+                        set_id_type($N, ST_ID_VAR);
+                    }
                     | /* empty */ { $$ = create_empty_expr(); }
                     ;
 
@@ -110,6 +119,7 @@ block_stmt  : var_decl_stmt[U] { $$ = $U; }
             | flow_control[U] { $$ = $U; }
             | READ[T] PARENT_LEFT ID[N] PARENT_RIGHT SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
+                set_id_type($N, ST_ID_VAR);
                 free($T);
             }
             | WRITE[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {
@@ -121,7 +131,8 @@ block_stmt  : var_decl_stmt[U] { $$ = $U; }
                 free($T);
             }
             | ID[N] ASSIGN[A] simple_expr[E] SEMICOLON {
-                $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E); 
+                $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
+                set_id_type($N, ST_ID_VAR); 
             }
             | RETURN[T] simple_expr[E] SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
@@ -169,10 +180,12 @@ decl_or_cond_expr   : or_cond_expr[U] { $$ = $U; }
                     | TYPE[T] ID[N] ASSIGN[A] simple_expr[E] {
                         $$ = create_qua_expr(create_str_expr($T), create_var_expr($N),
                                              create_char_expr($A), $E); 
+                        set_id_type($N, ST_ID_VAR);
                         free($T);
                     }
                     | ID[N] ASSIGN[A] simple_expr[E] {
-                        $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E); 
+                        $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
+                        set_id_type($N, ST_ID_VAR); 
                     }
                     ;
 
@@ -250,11 +263,13 @@ set_expr    : simple_expr[E1] IN[M] simple_expr[E2] {
 
 func_call   : ID[N] PARENT_LEFT simple_param_list[E] PARENT_RIGHT {
                 $$ = create_bin_expr(create_var_expr($N), $E); 
+                set_id_type($N, ST_ID_FUNC);
             }
             ;
 
-set_func_call   : IS_SET[T] PARENT_LEFT ID[V] PARENT_RIGHT {
-                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($V)); 
+set_func_call   : IS_SET[T] PARENT_LEFT ID[N] PARENT_RIGHT {
+                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
+                    set_id_type($N, ST_ID_VAR);
                     free($T);
                 }
                 | ADD_SET[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
@@ -315,7 +330,10 @@ term    : term[L] MULT[M] factor[R] {
 
 factor  : INTEGER[U] { $$ = create_int_expr($U); }
         | FLOAT[U] { $$ = create_float_expr($U); }
-        | ID[U] { $$ = create_var_expr($U); }
+        | ID[N] {
+            $$ = create_var_expr($N);
+            set_id_type($N, ST_ID_VAR);
+        }
         | PARENT_LEFT arith_expr[U] PARENT_RIGHT { $$ = $U; }
         ;
 

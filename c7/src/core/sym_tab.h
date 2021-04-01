@@ -3,16 +3,15 @@
 
 #include "uthash.h"
 
-enum TYPES {
-    ST_NONE=0,
-    ST_INT,
-    ST_FLOAT,
-    ST_BOOL,
-    ST_STR
+
+enum ID_TYPES {
+    ST_ID_FUNC=0,
+    ST_ID_VAR
 };
 
 typedef struct word_pos {
     int key;
+    int id_type;
     char name[50];
     UT_hash_handle hh; /* makes this structure hashable */
 } word;
@@ -26,5 +25,6 @@ int add_word(int key, char *name);
 word* find_word(int word_key);
 void delete_word(word* s);
 void delete_all_st();
+void set_id_type(int key, int id_type);
 
 #endif // __SYM_TAB_H__

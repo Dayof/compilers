@@ -2,6 +2,11 @@
 #include "sym_tab.h"
 
 
+void set_id_type(int key, int id_type) {
+    word *s = find_word(key);
+    s->id_type = id_type;
+}
+
 int add_word(int key, char* name) {
     word *s = find_word(key);
     if (s == NULL) {
@@ -43,11 +48,8 @@ void print_st() {
     }
 
     for (word* cur_word = symbol_table; cur_word != NULL; cur_word = cur_word->hh.next) {
-        printf("KEY: %d, NAME: %s", cur_word->key, cur_word->name);
-        // if (cur_word->type == ST_INT) printf("INT");
-        // else if (cur_word->type == ST_FLOAT) printf("FLOAT");
-        // else if (cur_word->type == ST_BOOL) printf("BOOL");
-        // else if (cur_word->type == ST_STR) printf("STRING");
+        printf("KEY: %d, NAME: %s, ID TYPE: %s",
+                cur_word->key, cur_word->name, cur_word->id_type ? "VAR" : "FUNC");
         printf("\n");
     }
 }

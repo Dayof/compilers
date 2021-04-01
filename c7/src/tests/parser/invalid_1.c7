@@ -13,6 +13,6 @@ int main() {
         sumsWithX = EMPTY;
         int val;
         forall (val in possibleSums) add((x + val) in sumsWithX);
-        if (13 in possibleSums) else if else if writeln('y'); else writeln('n');
+        if (13 in possibleSums) else if else writeln('y');
     }
 }

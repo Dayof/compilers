@@ -1,3 +1,7 @@
+void test () {
+    int test;
+}
+
 int main() {
     char test_char = 'a';
     char test_char_4;
