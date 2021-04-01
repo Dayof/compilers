@@ -41,13 +41,13 @@ Grammar
    27           | WRITELN PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON
    28           | ID ASSIGN simple_expr SEMICOLON
    29           | RETURN simple_expr SEMICOLON
+   30           | error
 
-   30 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct
-   31             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
-   32             | FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
-   33             | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
-   34             | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
-   35             | error
+   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct
+   32             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+   33             | FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
+   34             | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
+   35             | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
 
    36 opt_param: SEMICOLON
    37          | for_expression SEMICOLON
@@ -126,11 +126,11 @@ Grammar
 Terminals, with rules where they appear
 
     $end (0) 0
-    error <expression> (256) 3 35
+    error <expression> (256) 3 30
     BRACK_LEFT <op> (258) 17 18
     BRACK_RIGHT <op> (259) 17 18
-    PARENT_LEFT <op> (260) 7 25 26 27 30 31 32 33 34 64 65 66 67 68 77 88
-    PARENT_RIGHT <op> (261) 7 25 26 27 30 31 32 33 34 64 65 66 67 68 77 88
+    PARENT_LEFT <op> (260) 7 25 26 27 31 32 33 34 35 64 65 66 67 68 77 88
+    PARENT_RIGHT <op> (261) 7 25 26 27 31 32 33 34 35 64 65 66 67 68 77 88
     SEMICOLON <op> (262) 8 22 23 25 26 27 28 29 36 37
     ADD <op> (263) 78
     SUB <op> (264) 79 84
@@ -148,15 +148,15 @@ Terminals, with rules where they appear
     EMPTY <str_value> (276) 56 71
     STRING <str_value> (277) 72
     RETURN <str_value> (278) 29
-    FORALL <str_value> (279) 32
-    FOR <str_value> (280) 33 34
+    FORALL <str_value> (279) 33
+    FOR <str_value> (280) 34 35
     IN <str_value> (281) 62 63
     IS_SET <str_value> (282) 65
     ADD_SET <str_value> (283) 66
     REMOVE <str_value> (284) 67
     EXISTS <str_value> (285) 68
-    IF <str_value> (286) 30 31
-    ELSE <str_value> (287) 31
+    IF <str_value> (286) 31 32
+    ELSE <str_value> (287) 32
     CHAR <str_value> (288) 73
     EQ_OP <str_value> (289) 51
     NE_OP <str_value> (290) 52
@@ -198,7 +198,7 @@ Nonterminals, with rules where they appear
         on right: 12 64
     flex_block_struct <expression> (53)
         on left: 15 16
-        on right: 30 31 32 33 34
+        on right: 31 32 33 34 35
     compound_block_stmt <expression> (54)
         on left: 17 18
         on right: 7 15
@@ -206,23 +206,23 @@ Nonterminals, with rules where they appear
         on left: 19 20
         on right: 17 19
     block_stmt <expression> (56)
-        on left: 21 22 23 24 25 26 27 28 29
+        on left: 21 22 23 24 25 26 27 28 29 30
         on right: 16 19 20
     flow_control <expression> (57)
-        on left: 30 31 32 33 34 35
+        on left: 31 32 33 34 35
         on right: 24
     opt_param <expression> (58)
         on left: 36 37
-        on right: 33 34
+        on right: 34 35
     for_expression <expression> (59)
         on left: 38 39
-        on right: 34 37 39
+        on right: 35 37 39
     decl_or_cond_expr <expression> (60)
         on left: 40 41 42
         on right: 38 39
     or_cond_expr <expression> (61)
         on left: 43 44
-        on right: 30 31 40 43
+        on right: 31 32 40 43
     and_cond_expr <expression> (62)
         on left: 45 46
         on right: 43 44 45
@@ -246,7 +246,7 @@ Nonterminals, with rules where they appear
         on right: 53
     set_expr <expression> (69)
         on left: 63
-        on right: 32 66 67 68
+        on right: 33 66 67 68
     func_call <expression> (70)
         on left: 64
         on right: 22 75
@@ -486,23 +486,23 @@ State 20
 
 State 21
 
-   35 flow_control: error •
+   30 block_stmt: error •
 
-    error        reduce using rule 35 (flow_control)
-    BRACK_RIGHT  reduce using rule 35 (flow_control)
-    READ         reduce using rule 35 (flow_control)
-    WRITE        reduce using rule 35 (flow_control)
-    WRITELN      reduce using rule 35 (flow_control)
-    TYPE         reduce using rule 35 (flow_control)
-    RETURN       reduce using rule 35 (flow_control)
-    FORALL       reduce using rule 35 (flow_control)
-    FOR          reduce using rule 35 (flow_control)
-    IS_SET       reduce using rule 35 (flow_control)
-    ADD_SET      reduce using rule 35 (flow_control)
-    REMOVE       reduce using rule 35 (flow_control)
-    EXISTS       reduce using rule 35 (flow_control)
-    IF           reduce using rule 35 (flow_control)
-    ID           reduce using rule 35 (flow_control)
+    error        reduce using rule 30 (block_stmt)
+    BRACK_RIGHT  reduce using rule 30 (block_stmt)
+    READ         reduce using rule 30 (block_stmt)
+    WRITE        reduce using rule 30 (block_stmt)
+    WRITELN      reduce using rule 30 (block_stmt)
+    TYPE         reduce using rule 30 (block_stmt)
+    RETURN       reduce using rule 30 (block_stmt)
+    FORALL       reduce using rule 30 (block_stmt)
+    FOR          reduce using rule 30 (block_stmt)
+    IS_SET       reduce using rule 30 (block_stmt)
+    ADD_SET      reduce using rule 30 (block_stmt)
+    REMOVE       reduce using rule 30 (block_stmt)
+    EXISTS       reduce using rule 30 (block_stmt)
+    IF           reduce using rule 30 (block_stmt)
+    ID           reduce using rule 30 (block_stmt)
 
 
 State 22
@@ -571,15 +571,15 @@ State 27
 
 State 28
 
-   32 flow_control: FORALL • PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
+   33 flow_control: FORALL • PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 63
 
 
 State 29
 
-   33 flow_control: FOR • PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
-   34             | FOR • PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR • PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
+   35             | FOR • PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 64
 
@@ -614,8 +614,8 @@ State 33
 
 State 34
 
-   30 flow_control: IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct
-   31             | IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct
+   32             | IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
 
     PARENT_LEFT  shift, and go to state 69
 
@@ -980,7 +980,7 @@ State 62
 
 State 63
 
-   32 flow_control: FORALL PARENT_LEFT • set_expr PARENT_RIGHT flex_block_struct
+   33 flow_control: FORALL PARENT_LEFT • set_expr PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
@@ -1008,8 +1008,8 @@ State 63
 
 State 64
 
-   33 flow_control: FOR PARENT_LEFT • opt_param opt_param PARENT_RIGHT flex_block_struct
-   34             | FOR PARENT_LEFT • opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR PARENT_LEFT • opt_param opt_param PARENT_RIGHT flex_block_struct
+   35             | FOR PARENT_LEFT • opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 214
     SEMICOLON    shift, and go to state 91
@@ -1135,8 +1135,8 @@ State 68
 
 State 69
 
-   30 flow_control: IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct
-   31             | IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct
+   32             | IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
 
     PARENT_LEFT  shift, and go to state 226
     SUB          shift, and go to state 227
@@ -1426,7 +1426,7 @@ State 88
 
 State 89
 
-   32 flow_control: FORALL PARENT_LEFT set_expr • PARENT_RIGHT flex_block_struct
+   33 flow_control: FORALL PARENT_LEFT set_expr • PARENT_RIGHT flex_block_struct
 
     PARENT_RIGHT  shift, and go to state 124
 
@@ -1537,8 +1537,8 @@ State 95
 
 State 96
 
-   33 flow_control: FOR PARENT_LEFT opt_param • opt_param PARENT_RIGHT flex_block_struct
-   34             | FOR PARENT_LEFT opt_param • opt_param for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR PARENT_LEFT opt_param • opt_param PARENT_RIGHT flex_block_struct
+   35             | FOR PARENT_LEFT opt_param • opt_param for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 214
     SEMICOLON    shift, and go to state 254
@@ -1744,8 +1744,8 @@ State 110
 
 State 111
 
-   30 flow_control: IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct
-   31             | IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct
+   32             | IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct ELSE flex_block_struct
    43 or_cond_expr: or_cond_expr • OR_OP and_cond_expr
 
     PARENT_RIGHT  shift, and go to state 147
@@ -1867,7 +1867,7 @@ State 123
 
 State 124
 
-   32 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT • flex_block_struct
+   33 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT • flex_block_struct
 
     error       shift, and go to state 21
     BRACK_LEFT  shift, and go to state 259
@@ -1967,8 +1967,8 @@ State 128
 
 State 129
 
-   33 flow_control: FOR PARENT_LEFT opt_param opt_param • PARENT_RIGHT flex_block_struct
-   34             | FOR PARENT_LEFT opt_param opt_param • for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR PARENT_LEFT opt_param opt_param • PARENT_RIGHT flex_block_struct
+   35             | FOR PARENT_LEFT opt_param opt_param • for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT   shift, and go to state 279
     PARENT_RIGHT  shift, and go to state 160
@@ -2299,8 +2299,8 @@ State 146
 
 State 147
 
-   30 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct
-   31             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct
+   32             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct ELSE flex_block_struct
 
     error       shift, and go to state 304
     BRACK_LEFT  shift, and go to state 305
@@ -2427,23 +2427,23 @@ State 153
 
 State 154
 
-   32 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct •
+   33 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct •
 
-    error        reduce using rule 32 (flow_control)
-    BRACK_RIGHT  reduce using rule 32 (flow_control)
-    READ         reduce using rule 32 (flow_control)
-    WRITE        reduce using rule 32 (flow_control)
-    WRITELN      reduce using rule 32 (flow_control)
-    TYPE         reduce using rule 32 (flow_control)
-    RETURN       reduce using rule 32 (flow_control)
-    FORALL       reduce using rule 32 (flow_control)
-    FOR          reduce using rule 32 (flow_control)
-    IS_SET       reduce using rule 32 (flow_control)
-    ADD_SET      reduce using rule 32 (flow_control)
-    REMOVE       reduce using rule 32 (flow_control)
-    EXISTS       reduce using rule 32 (flow_control)
-    IF           reduce using rule 32 (flow_control)
-    ID           reduce using rule 32 (flow_control)
+    error        reduce using rule 33 (flow_control)
+    BRACK_RIGHT  reduce using rule 33 (flow_control)
+    READ         reduce using rule 33 (flow_control)
+    WRITE        reduce using rule 33 (flow_control)
+    WRITELN      reduce using rule 33 (flow_control)
+    TYPE         reduce using rule 33 (flow_control)
+    RETURN       reduce using rule 33 (flow_control)
+    FORALL       reduce using rule 33 (flow_control)
+    FOR          reduce using rule 33 (flow_control)
+    IS_SET       reduce using rule 33 (flow_control)
+    ADD_SET      reduce using rule 33 (flow_control)
+    REMOVE       reduce using rule 33 (flow_control)
+    EXISTS       reduce using rule 33 (flow_control)
+    IF           reduce using rule 33 (flow_control)
+    ID           reduce using rule 33 (flow_control)
 
 
 State 155
@@ -2532,7 +2532,7 @@ State 159
 
 State 160
 
-   33 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT • flex_block_struct
+   34 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT • flex_block_struct
 
     error       shift, and go to state 21
     BRACK_LEFT  shift, and go to state 259
@@ -2561,7 +2561,7 @@ State 160
 
 State 161
 
-   34 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression • PARENT_RIGHT flex_block_struct
+   35 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression • PARENT_RIGHT flex_block_struct
    39 for_expression: for_expression • COMMA decl_or_cond_expr
 
     PARENT_RIGHT  shift, and go to state 171
@@ -2638,26 +2638,26 @@ State 166
 
 State 167
 
-   30 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct •
-   31             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct • ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct •
+   32             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct • ELSE flex_block_struct
 
     ELSE  shift, and go to state 172
 
-    error        reduce using rule 30 (flow_control)
-    BRACK_RIGHT  reduce using rule 30 (flow_control)
-    READ         reduce using rule 30 (flow_control)
-    WRITE        reduce using rule 30 (flow_control)
-    WRITELN      reduce using rule 30 (flow_control)
-    TYPE         reduce using rule 30 (flow_control)
-    RETURN       reduce using rule 30 (flow_control)
-    FORALL       reduce using rule 30 (flow_control)
-    FOR          reduce using rule 30 (flow_control)
-    IS_SET       reduce using rule 30 (flow_control)
-    ADD_SET      reduce using rule 30 (flow_control)
-    REMOVE       reduce using rule 30 (flow_control)
-    EXISTS       reduce using rule 30 (flow_control)
-    IF           reduce using rule 30 (flow_control)
-    ID           reduce using rule 30 (flow_control)
+    error        reduce using rule 31 (flow_control)
+    BRACK_RIGHT  reduce using rule 31 (flow_control)
+    READ         reduce using rule 31 (flow_control)
+    WRITE        reduce using rule 31 (flow_control)
+    WRITELN      reduce using rule 31 (flow_control)
+    TYPE         reduce using rule 31 (flow_control)
+    RETURN       reduce using rule 31 (flow_control)
+    FORALL       reduce using rule 31 (flow_control)
+    FOR          reduce using rule 31 (flow_control)
+    IS_SET       reduce using rule 31 (flow_control)
+    ADD_SET      reduce using rule 31 (flow_control)
+    REMOVE       reduce using rule 31 (flow_control)
+    EXISTS       reduce using rule 31 (flow_control)
+    IF           reduce using rule 31 (flow_control)
+    ID           reduce using rule 31 (flow_control)
 
 
 State 168
@@ -2678,28 +2678,28 @@ State 169
 
 State 170
 
-   33 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct •
+   34 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct •
 
-    error        reduce using rule 33 (flow_control)
-    BRACK_RIGHT  reduce using rule 33 (flow_control)
-    READ         reduce using rule 33 (flow_control)
-    WRITE        reduce using rule 33 (flow_control)
-    WRITELN      reduce using rule 33 (flow_control)
-    TYPE         reduce using rule 33 (flow_control)
-    RETURN       reduce using rule 33 (flow_control)
-    FORALL       reduce using rule 33 (flow_control)
-    FOR          reduce using rule 33 (flow_control)
-    IS_SET       reduce using rule 33 (flow_control)
-    ADD_SET      reduce using rule 33 (flow_control)
-    REMOVE       reduce using rule 33 (flow_control)
-    EXISTS       reduce using rule 33 (flow_control)
-    IF           reduce using rule 33 (flow_control)
-    ID           reduce using rule 33 (flow_control)
+    error        reduce using rule 34 (flow_control)
+    BRACK_RIGHT  reduce using rule 34 (flow_control)
+    READ         reduce using rule 34 (flow_control)
+    WRITE        reduce using rule 34 (flow_control)
+    WRITELN      reduce using rule 34 (flow_control)
+    TYPE         reduce using rule 34 (flow_control)
+    RETURN       reduce using rule 34 (flow_control)
+    FORALL       reduce using rule 34 (flow_control)
+    FOR          reduce using rule 34 (flow_control)
+    IS_SET       reduce using rule 34 (flow_control)
+    ADD_SET      reduce using rule 34 (flow_control)
+    REMOVE       reduce using rule 34 (flow_control)
+    EXISTS       reduce using rule 34 (flow_control)
+    IF           reduce using rule 34 (flow_control)
+    ID           reduce using rule 34 (flow_control)
 
 
 State 171
 
-   34 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT • flex_block_struct
+   35 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT • flex_block_struct
 
     error       shift, and go to state 21
     BRACK_LEFT  shift, and go to state 259
@@ -2728,7 +2728,7 @@ State 171
 
 State 172
 
-   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE • flex_block_struct
+   32 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE • flex_block_struct
 
     error       shift, and go to state 21
     BRACK_LEFT  shift, and go to state 259
@@ -2757,44 +2757,44 @@ State 172
 
 State 173
 
-   34 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct •
+   35 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct •
 
-    error        reduce using rule 34 (flow_control)
-    BRACK_RIGHT  reduce using rule 34 (flow_control)
-    READ         reduce using rule 34 (flow_control)
-    WRITE        reduce using rule 34 (flow_control)
-    WRITELN      reduce using rule 34 (flow_control)
-    TYPE         reduce using rule 34 (flow_control)
-    RETURN       reduce using rule 34 (flow_control)
-    FORALL       reduce using rule 34 (flow_control)
-    FOR          reduce using rule 34 (flow_control)
-    IS_SET       reduce using rule 34 (flow_control)
-    ADD_SET      reduce using rule 34 (flow_control)
-    REMOVE       reduce using rule 34 (flow_control)
-    EXISTS       reduce using rule 34 (flow_control)
-    IF           reduce using rule 34 (flow_control)
-    ID           reduce using rule 34 (flow_control)
+    error        reduce using rule 35 (flow_control)
+    BRACK_RIGHT  reduce using rule 35 (flow_control)
+    READ         reduce using rule 35 (flow_control)
+    WRITE        reduce using rule 35 (flow_control)
+    WRITELN      reduce using rule 35 (flow_control)
+    TYPE         reduce using rule 35 (flow_control)
+    RETURN       reduce using rule 35 (flow_control)
+    FORALL       reduce using rule 35 (flow_control)
+    FOR          reduce using rule 35 (flow_control)
+    IS_SET       reduce using rule 35 (flow_control)
+    ADD_SET      reduce using rule 35 (flow_control)
+    REMOVE       reduce using rule 35 (flow_control)
+    EXISTS       reduce using rule 35 (flow_control)
+    IF           reduce using rule 35 (flow_control)
+    ID           reduce using rule 35 (flow_control)
 
 
 State 174
 
-   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct •
+   32 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct •
 
-    error        reduce using rule 31 (flow_control)
-    BRACK_RIGHT  reduce using rule 31 (flow_control)
-    READ         reduce using rule 31 (flow_control)
-    WRITE        reduce using rule 31 (flow_control)
-    WRITELN      reduce using rule 31 (flow_control)
-    TYPE         reduce using rule 31 (flow_control)
-    RETURN       reduce using rule 31 (flow_control)
-    FORALL       reduce using rule 31 (flow_control)
-    FOR          reduce using rule 31 (flow_control)
-    IS_SET       reduce using rule 31 (flow_control)
-    ADD_SET      reduce using rule 31 (flow_control)
-    REMOVE       reduce using rule 31 (flow_control)
-    EXISTS       reduce using rule 31 (flow_control)
-    IF           reduce using rule 31 (flow_control)
-    ID           reduce using rule 31 (flow_control)
+    error        reduce using rule 32 (flow_control)
+    BRACK_RIGHT  reduce using rule 32 (flow_control)
+    READ         reduce using rule 32 (flow_control)
+    WRITE        reduce using rule 32 (flow_control)
+    WRITELN      reduce using rule 32 (flow_control)
+    TYPE         reduce using rule 32 (flow_control)
+    RETURN       reduce using rule 32 (flow_control)
+    FORALL       reduce using rule 32 (flow_control)
+    FOR          reduce using rule 32 (flow_control)
+    IS_SET       reduce using rule 32 (flow_control)
+    ADD_SET      reduce using rule 32 (flow_control)
+    REMOVE       reduce using rule 32 (flow_control)
+    EXISTS       reduce using rule 32 (flow_control)
+    IF           reduce using rule 32 (flow_control)
+    ID           reduce using rule 32 (flow_control)
 
 
 State 175
@@ -4549,24 +4549,24 @@ State 303
 
 State 304
 
-   35 flow_control: error •
+   30 block_stmt: error •
 
-    error        reduce using rule 35 (flow_control)
-    BRACK_RIGHT  reduce using rule 35 (flow_control)
-    READ         reduce using rule 35 (flow_control)
-    WRITE        reduce using rule 35 (flow_control)
-    WRITELN      reduce using rule 35 (flow_control)
-    TYPE         reduce using rule 35 (flow_control)
-    RETURN       reduce using rule 35 (flow_control)
-    FORALL       reduce using rule 35 (flow_control)
-    FOR          reduce using rule 35 (flow_control)
-    IS_SET       reduce using rule 35 (flow_control)
-    ADD_SET      reduce using rule 35 (flow_control)
-    REMOVE       reduce using rule 35 (flow_control)
-    EXISTS       reduce using rule 35 (flow_control)
-    IF           reduce using rule 35 (flow_control)
-    ELSE         reduce using rule 35 (flow_control)
-    ID           reduce using rule 35 (flow_control)
+    error        reduce using rule 30 (block_stmt)
+    BRACK_RIGHT  reduce using rule 30 (block_stmt)
+    READ         reduce using rule 30 (block_stmt)
+    WRITE        reduce using rule 30 (block_stmt)
+    WRITELN      reduce using rule 30 (block_stmt)
+    TYPE         reduce using rule 30 (block_stmt)
+    RETURN       reduce using rule 30 (block_stmt)
+    FORALL       reduce using rule 30 (block_stmt)
+    FOR          reduce using rule 30 (block_stmt)
+    IS_SET       reduce using rule 30 (block_stmt)
+    ADD_SET      reduce using rule 30 (block_stmt)
+    REMOVE       reduce using rule 30 (block_stmt)
+    EXISTS       reduce using rule 30 (block_stmt)
+    IF           reduce using rule 30 (block_stmt)
+    ELSE         reduce using rule 30 (block_stmt)
+    ID           reduce using rule 30 (block_stmt)
 
 
 State 305
@@ -4655,23 +4655,23 @@ State 310
 
 State 311
 
-   32 flow_control: FORALL • PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
+   33 flow_control: FORALL • PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 427
 
 
 State 312
 
-   33 flow_control: FOR • PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
-   34             | FOR • PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR • PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
+   35             | FOR • PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 428
 
 
 State 313
 
-   30 flow_control: IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct
-   31             | IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct
+   32             | IF • PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
 
     PARENT_LEFT  shift, and go to state 429
 
@@ -6596,7 +6596,7 @@ State 426
 
 State 427
 
-   32 flow_control: FORALL PARENT_LEFT • set_expr PARENT_RIGHT flex_block_struct
+   33 flow_control: FORALL PARENT_LEFT • set_expr PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 195
     SUB          shift, and go to state 196
@@ -6624,8 +6624,8 @@ State 427
 
 State 428
 
-   33 flow_control: FOR PARENT_LEFT • opt_param opt_param PARENT_RIGHT flex_block_struct
-   34             | FOR PARENT_LEFT • opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR PARENT_LEFT • opt_param opt_param PARENT_RIGHT flex_block_struct
+   35             | FOR PARENT_LEFT • opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 214
     SEMICOLON    shift, and go to state 91
@@ -6660,8 +6660,8 @@ State 428
 
 State 429
 
-   30 flow_control: IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct
-   31             | IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct
+   32             | IF PARENT_LEFT • or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
 
     PARENT_LEFT  shift, and go to state 226
     SUB          shift, and go to state 227
@@ -7962,15 +7962,15 @@ State 530
 
 State 531
 
-   32 flow_control: FORALL PARENT_LEFT set_expr • PARENT_RIGHT flex_block_struct
+   33 flow_control: FORALL PARENT_LEFT set_expr • PARENT_RIGHT flex_block_struct
 
     PARENT_RIGHT  shift, and go to state 582
 
 
 State 532
 
-   33 flow_control: FOR PARENT_LEFT opt_param • opt_param PARENT_RIGHT flex_block_struct
-   34             | FOR PARENT_LEFT opt_param • opt_param for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR PARENT_LEFT opt_param • opt_param PARENT_RIGHT flex_block_struct
+   35             | FOR PARENT_LEFT opt_param • opt_param for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT  shift, and go to state 214
     SEMICOLON    shift, and go to state 254
@@ -8005,8 +8005,8 @@ State 532
 
 State 533
 
-   30 flow_control: IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct
-   31             | IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct
+   32             | IF PARENT_LEFT or_cond_expr • PARENT_RIGHT flex_block_struct ELSE flex_block_struct
    43 or_cond_expr: or_cond_expr • OR_OP and_cond_expr
 
     PARENT_RIGHT  shift, and go to state 584
@@ -8606,7 +8606,7 @@ State 581
 
 State 582
 
-   32 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT • flex_block_struct
+   33 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT • flex_block_struct
 
     error       shift, and go to state 304
     BRACK_LEFT  shift, and go to state 305
@@ -8635,8 +8635,8 @@ State 582
 
 State 583
 
-   33 flow_control: FOR PARENT_LEFT opt_param opt_param • PARENT_RIGHT flex_block_struct
-   34             | FOR PARENT_LEFT opt_param opt_param • for_expression PARENT_RIGHT flex_block_struct
+   34 flow_control: FOR PARENT_LEFT opt_param opt_param • PARENT_RIGHT flex_block_struct
+   35             | FOR PARENT_LEFT opt_param opt_param • for_expression PARENT_RIGHT flex_block_struct
 
     PARENT_LEFT   shift, and go to state 279
     PARENT_RIGHT  shift, and go to state 601
@@ -8670,8 +8670,8 @@ State 583
 
 State 584
 
-   30 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct
-   31             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct
+   32             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT • flex_block_struct ELSE flex_block_struct
 
     error       shift, and go to state 304
     BRACK_LEFT  shift, and go to state 305
@@ -8899,29 +8899,29 @@ State 599
 
 State 600
 
-   32 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct •
+   33 flow_control: FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct •
 
-    error        reduce using rule 32 (flow_control)
-    BRACK_RIGHT  reduce using rule 32 (flow_control)
-    READ         reduce using rule 32 (flow_control)
-    WRITE        reduce using rule 32 (flow_control)
-    WRITELN      reduce using rule 32 (flow_control)
-    TYPE         reduce using rule 32 (flow_control)
-    RETURN       reduce using rule 32 (flow_control)
-    FORALL       reduce using rule 32 (flow_control)
-    FOR          reduce using rule 32 (flow_control)
-    IS_SET       reduce using rule 32 (flow_control)
-    ADD_SET      reduce using rule 32 (flow_control)
-    REMOVE       reduce using rule 32 (flow_control)
-    EXISTS       reduce using rule 32 (flow_control)
-    IF           reduce using rule 32 (flow_control)
-    ELSE         reduce using rule 32 (flow_control)
-    ID           reduce using rule 32 (flow_control)
+    error        reduce using rule 33 (flow_control)
+    BRACK_RIGHT  reduce using rule 33 (flow_control)
+    READ         reduce using rule 33 (flow_control)
+    WRITE        reduce using rule 33 (flow_control)
+    WRITELN      reduce using rule 33 (flow_control)
+    TYPE         reduce using rule 33 (flow_control)
+    RETURN       reduce using rule 33 (flow_control)
+    FORALL       reduce using rule 33 (flow_control)
+    FOR          reduce using rule 33 (flow_control)
+    IS_SET       reduce using rule 33 (flow_control)
+    ADD_SET      reduce using rule 33 (flow_control)
+    REMOVE       reduce using rule 33 (flow_control)
+    EXISTS       reduce using rule 33 (flow_control)
+    IF           reduce using rule 33 (flow_control)
+    ELSE         reduce using rule 33 (flow_control)
+    ID           reduce using rule 33 (flow_control)
 
 
 State 601
 
-   33 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT • flex_block_struct
+   34 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT • flex_block_struct
 
     error       shift, and go to state 304
     BRACK_LEFT  shift, and go to state 305
@@ -8950,7 +8950,7 @@ State 601
 
 State 602
 
-   34 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression • PARENT_RIGHT flex_block_struct
+   35 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression • PARENT_RIGHT flex_block_struct
    39 for_expression: for_expression • COMMA decl_or_cond_expr
 
     PARENT_RIGHT  shift, and go to state 610
@@ -8959,26 +8959,26 @@ State 602
 
 State 603
 
-   30 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct •
-   31             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct • ELSE flex_block_struct
+   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct •
+   32             | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct • ELSE flex_block_struct
 
     ELSE  shift, and go to state 611
 
-    error        reduce using rule 30 (flow_control)
-    BRACK_RIGHT  reduce using rule 30 (flow_control)
-    READ         reduce using rule 30 (flow_control)
-    WRITE        reduce using rule 30 (flow_control)
-    WRITELN      reduce using rule 30 (flow_control)
-    TYPE         reduce using rule 30 (flow_control)
-    RETURN       reduce using rule 30 (flow_control)
-    FORALL       reduce using rule 30 (flow_control)
-    FOR          reduce using rule 30 (flow_control)
-    IS_SET       reduce using rule 30 (flow_control)
-    ADD_SET      reduce using rule 30 (flow_control)
-    REMOVE       reduce using rule 30 (flow_control)
-    EXISTS       reduce using rule 30 (flow_control)
-    IF           reduce using rule 30 (flow_control)
-    ID           reduce using rule 30 (flow_control)
+    error        reduce using rule 31 (flow_control)
+    BRACK_RIGHT  reduce using rule 31 (flow_control)
+    READ         reduce using rule 31 (flow_control)
+    WRITE        reduce using rule 31 (flow_control)
+    WRITELN      reduce using rule 31 (flow_control)
+    TYPE         reduce using rule 31 (flow_control)
+    RETURN       reduce using rule 31 (flow_control)
+    FORALL       reduce using rule 31 (flow_control)
+    FOR          reduce using rule 31 (flow_control)
+    IS_SET       reduce using rule 31 (flow_control)
+    ADD_SET      reduce using rule 31 (flow_control)
+    REMOVE       reduce using rule 31 (flow_control)
+    EXISTS       reduce using rule 31 (flow_control)
+    IF           reduce using rule 31 (flow_control)
+    ID           reduce using rule 31 (flow_control)
 
 
 State 604
@@ -9023,29 +9023,29 @@ State 608
 
 State 609
 
-   33 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct •
+   34 flow_control: FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct •
 
-    error        reduce using rule 33 (flow_control)
-    BRACK_RIGHT  reduce using rule 33 (flow_control)
-    READ         reduce using rule 33 (flow_control)
-    WRITE        reduce using rule 33 (flow_control)
-    WRITELN      reduce using rule 33 (flow_control)
-    TYPE         reduce using rule 33 (flow_control)
-    RETURN       reduce using rule 33 (flow_control)
-    FORALL       reduce using rule 33 (flow_control)
-    FOR          reduce using rule 33 (flow_control)
-    IS_SET       reduce using rule 33 (flow_control)
-    ADD_SET      reduce using rule 33 (flow_control)
-    REMOVE       reduce using rule 33 (flow_control)
-    EXISTS       reduce using rule 33 (flow_control)
-    IF           reduce using rule 33 (flow_control)
-    ELSE         reduce using rule 33 (flow_control)
-    ID           reduce using rule 33 (flow_control)
+    error        reduce using rule 34 (flow_control)
+    BRACK_RIGHT  reduce using rule 34 (flow_control)
+    READ         reduce using rule 34 (flow_control)
+    WRITE        reduce using rule 34 (flow_control)
+    WRITELN      reduce using rule 34 (flow_control)
+    TYPE         reduce using rule 34 (flow_control)
+    RETURN       reduce using rule 34 (flow_control)
+    FORALL       reduce using rule 34 (flow_control)
+    FOR          reduce using rule 34 (flow_control)
+    IS_SET       reduce using rule 34 (flow_control)
+    ADD_SET      reduce using rule 34 (flow_control)
+    REMOVE       reduce using rule 34 (flow_control)
+    EXISTS       reduce using rule 34 (flow_control)
+    IF           reduce using rule 34 (flow_control)
+    ELSE         reduce using rule 34 (flow_control)
+    ID           reduce using rule 34 (flow_control)
 
 
 State 610
 
-   34 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT • flex_block_struct
+   35 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT • flex_block_struct
 
     error       shift, and go to state 304
     BRACK_LEFT  shift, and go to state 305
@@ -9074,7 +9074,7 @@ State 610
 
 State 611
 
-   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE • flex_block_struct
+   32 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE • flex_block_struct
 
     error       shift, and go to state 304
     BRACK_LEFT  shift, and go to state 305
@@ -9103,43 +9103,43 @@ State 611
 
 State 612
 
-   34 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct •
+   35 flow_control: FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct •
 
-    error        reduce using rule 34 (flow_control)
-    BRACK_RIGHT  reduce using rule 34 (flow_control)
-    READ         reduce using rule 34 (flow_control)
-    WRITE        reduce using rule 34 (flow_control)
-    WRITELN      reduce using rule 34 (flow_control)
-    TYPE         reduce using rule 34 (flow_control)
-    RETURN       reduce using rule 34 (flow_control)
-    FORALL       reduce using rule 34 (flow_control)
-    FOR          reduce using rule 34 (flow_control)
-    IS_SET       reduce using rule 34 (flow_control)
-    ADD_SET      reduce using rule 34 (flow_control)
-    REMOVE       reduce using rule 34 (flow_control)
-    EXISTS       reduce using rule 34 (flow_control)
-    IF           reduce using rule 34 (flow_control)
-    ELSE         reduce using rule 34 (flow_control)
-    ID           reduce using rule 34 (flow_control)
+    error        reduce using rule 35 (flow_control)
+    BRACK_RIGHT  reduce using rule 35 (flow_control)
+    READ         reduce using rule 35 (flow_control)
+    WRITE        reduce using rule 35 (flow_control)
+    WRITELN      reduce using rule 35 (flow_control)
+    TYPE         reduce using rule 35 (flow_control)
+    RETURN       reduce using rule 35 (flow_control)
+    FORALL       reduce using rule 35 (flow_control)
+    FOR          reduce using rule 35 (flow_control)
+    IS_SET       reduce using rule 35 (flow_control)
+    ADD_SET      reduce using rule 35 (flow_control)
+    REMOVE       reduce using rule 35 (flow_control)
+    EXISTS       reduce using rule 35 (flow_control)
+    IF           reduce using rule 35 (flow_control)
+    ELSE         reduce using rule 35 (flow_control)
+    ID           reduce using rule 35 (flow_control)
 
 
 State 613
 
-   31 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct •
+   32 flow_control: IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct •
 
-    error        reduce using rule 31 (flow_control)
-    BRACK_RIGHT  reduce using rule 31 (flow_control)
-    READ         reduce using rule 31 (flow_control)
-    WRITE        reduce using rule 31 (flow_control)
-    WRITELN      reduce using rule 31 (flow_control)
-    TYPE         reduce using rule 31 (flow_control)
-    RETURN       reduce using rule 31 (flow_control)
-    FORALL       reduce using rule 31 (flow_control)
-    FOR          reduce using rule 31 (flow_control)
-    IS_SET       reduce using rule 31 (flow_control)
-    ADD_SET      reduce using rule 31 (flow_control)
-    REMOVE       reduce using rule 31 (flow_control)
-    EXISTS       reduce using rule 31 (flow_control)
-    IF           reduce using rule 31 (flow_control)
-    ELSE         reduce using rule 31 (flow_control)
-    ID           reduce using rule 31 (flow_control)
+    error        reduce using rule 32 (flow_control)
+    BRACK_RIGHT  reduce using rule 32 (flow_control)
+    READ         reduce using rule 32 (flow_control)
+    WRITE        reduce using rule 32 (flow_control)
+    WRITELN      reduce using rule 32 (flow_control)
+    TYPE         reduce using rule 32 (flow_control)
+    RETURN       reduce using rule 32 (flow_control)
+    FORALL       reduce using rule 32 (flow_control)
+    FOR          reduce using rule 32 (flow_control)
+    IS_SET       reduce using rule 32 (flow_control)
+    ADD_SET      reduce using rule 32 (flow_control)
+    REMOVE       reduce using rule 32 (flow_control)
+    EXISTS       reduce using rule 32 (flow_control)
+    IF           reduce using rule 32 (flow_control)
+    ELSE         reduce using rule 32 (flow_control)
+    ID           reduce using rule 32 (flow_control)

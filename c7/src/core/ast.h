@@ -3,8 +3,6 @@
 
 #include "main.h"
 
-int syntax_error;
-
 enum TAG {
     INTEGER_TYPE=0, 
     FLOAT_TYPE,

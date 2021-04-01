@@ -52,7 +52,7 @@ program : stmts
         ;
 
 stmts   : stmts stmt
-        | stmts error
+        | stmts error { yyerrok; }
         | stmt
         ;
 
@@ -127,6 +127,10 @@ block_stmt  : var_decl_stmt[U] { $$ = $U; }
                 $$ = create_bin_expr(create_str_expr($T), $E); 
                 free($T);
             }
+            | error { 
+                $$ = create_empty_expr();
+                yyerrok;
+            }
             ;
 
 flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_struct[E2] %prec THEN {
@@ -149,7 +153,6 @@ flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_str
                     $$ = create_qui_expr(create_str_expr($T), $E1, $E2, $E3, $E4); 
                     free($T);
                 }
-                | error { $$ = create_empty_expr(); }
                 ;
 
 opt_param   : SEMICOLON { $$ = create_empty_expr(); }
@@ -321,5 +324,5 @@ factor  : INTEGER[U] { $$ = create_int_expr($U); }
 void yyerror(const char *s) {
     printf("\nSyntaxError: %s in line %d, column %d.\n",
            s, parser_line, parser_column);
-    syntax_error = 1;
+    parser_error += 1;
 }

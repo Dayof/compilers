@@ -2338,6 +2338,7 @@ void handle_token(int token) {
 			if (lex_line - 1 == newline_counter) if (LEX_VERBOSE) printf("EOF\n");
 			break;
 		case ERROR_TOK:
+			lex_error += 1;
 			printf("\nLexError: token '%s' is not recognized in line %d, column %d.\n",
 			       yytext, lex_line, lex_column);
 		default:

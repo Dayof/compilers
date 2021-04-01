@@ -3,8 +3,6 @@
 
 #include "uthash.h"
 
-int lex_error;
-
 enum TYPES {
     ST_NONE=0,
     ST_INT,

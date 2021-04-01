@@ -13,6 +13,7 @@ void init_vars() {
     MAIN_VERBOSE = verbose;
     newline_counter = -1;
     symbol_table = NULL;
+    parser_error = lex_error = 0;
 }
 
 int main (int argc, char* argv[]) {
@@ -34,7 +35,7 @@ int main (int argc, char* argv[]) {
     printf("\n## Symbol Table ##\n");
     print_st();
 
-    if (!(syntax_error || lex_error)) {
+    if (!(parser_error || lex_error)) {
         printf("\n\n## Abstract Syntax Tree ##");
         print_asts(ast_root);
     }
