@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "sym_tab.h"
 
-
 void set_id_type(int key, int id_type) {
     word *s = find_word(key);
     s->id_type = id_type;
@@ -15,6 +14,7 @@ int add_word(int key, char* name) {
         HASH_ADD_INT(symbol_table, key, s);
     }
     strcpy(s->name, name);
+    s->id_type = ST_ID_UNDEFINED;
     return key;
 }
 
@@ -48,8 +48,10 @@ void print_st() {
     }
 
     for (word* cur_word = symbol_table; cur_word != NULL; cur_word = cur_word->hh.next) {
-        printf("KEY: %d, NAME: %s, ID TYPE: %s",
-                cur_word->key, cur_word->name, cur_word->id_type ? "VAR" : "FUNC");
+        printf("KEY: %d, NAME: %s, ", cur_word->key, cur_word->name);
+        if (cur_word->id_type == ST_ID_VAR) printf("ID TYPE: VAR");
+        else if (cur_word->id_type == ST_ID_FUNC) printf("ID TYPE: FUNC");
+        else if (cur_word->id_type == ST_ID_UNDEFINED) printf("ID TYPE: undefined");
         printf("\n");
     }
 }

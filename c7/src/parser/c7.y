@@ -298,7 +298,10 @@ func_cte_expr   : EMPTY[U] {
                     $$ = create_str_expr($U);
                     free($U);
                 }
-                | CHAR[U] { $$ = create_str_expr($U); }
+                | CHAR[U] {
+                    $$ = create_str_expr($U);
+                    free($U);
+                }
                 | func_expr[U] { $$ = $U; }
                 ;
 

@@ -3,15 +3,14 @@
 
 #include "uthash.h"
 
-
 enum ID_TYPES {
-    ST_ID_FUNC=0,
+    ST_ID_UNDEFINED=0,
+    ST_ID_FUNC,
     ST_ID_VAR
 };
 
 typedef struct word_pos {
-    int key;
-    int id_type;
+    int key, id_type;
     char name[50];
     UT_hash_handle hh; /* makes this structure hashable */
 } word;

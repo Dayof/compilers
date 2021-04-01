@@ -5,7 +5,6 @@
 #include "lexer.h"
 #include "parser.h"
 
-
 void init_vars() {
     int verbose = 0;
     LEX_VERBOSE = verbose;
