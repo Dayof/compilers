@@ -4,6 +4,7 @@
 #include "ast.h"
 #include "lexer.h"
 #include "parser.h"
+#include "semantic.h"
 
 void init_vars() {
     int verbose = 0;
@@ -13,6 +14,7 @@ void init_vars() {
     newline_counter = -1;
     symbol_table = NULL;
     parser_error = lex_error = 0;
+    scope = 0;
 }
 
 int main (int argc, char* argv[]) {

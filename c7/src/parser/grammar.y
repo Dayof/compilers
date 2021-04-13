@@ -1,6 +1,7 @@
 %{
     #include <stdlib.h>
     #include <stdio.h>
+    #include "sym_tab.h"
     #include "ast.h"
 
     int yylex();
@@ -21,14 +22,18 @@
     float float_value;
 }
 
-%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON ADD SUB MULT DIV CHAR COMMA ASSIGN
-%token <str_value>      READ WRITE WRITELN TYPE ID EMPTY STRING RETURN FORALL FOR IN IS_SET ADD_SET REMOVE EXISTS IF ELSE NOT_OP L_OP G_OP EQ_OP NE_OP LE_OP GE_OP OR_OP AND_OP
-%token <int_value>      INTEGER
+%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON
+%token <op>             ADD SUB MULT DIV COMMA ASSIGN NOT_OP L_OP G_OP
+%token <str_value>      READ WRITE WRITELN TYPE EMPTY STRING RETURN FORALL FOR
+%token <str_value>      IN IS_SET ADD_SET REMOVE EXISTS IF ELSE CHAR
+%token <str_value>      EQ_OP NE_OP LE_OP GE_OP OR_OP AND_OP
+%token <int_value>      INTEGER ID
 %token <float_value>    FLOAT
 
 %left                   L_OP G_OP EQ_OP NE_OP LE_OP GE_OP
 %left                   ADD SUB
 %left                   MULT DIV
+%left                   UMINUS
 
 %nonassoc THEN
 %nonassoc ELSE
@@ -62,19 +67,19 @@ simple_param_list   : simple_param_list COMMA ID
                     | /* empty */
                     ;
 
-flex_block_struct   : compound_block_stmt
-                    | block_stmt
-                    ;
-
 compound_block_stmt : BRACK_LEFT block_stmts BRACK_RIGHT
                     | BRACK_LEFT BRACK_RIGHT
                     ;
 
-block_stmts : block_stmts block_stmt
+block_stmts : block_stmts block_item
+            | block_item
+            ;
+
+block_item  : var_decl_stmt
             | block_stmt
             ;
     
-block_stmt  : var_decl_stmt
+block_stmt  : compound_block_stmt
             | func_call SEMICOLON
             | set_func_call SEMICOLON
             | flow_control
@@ -85,11 +90,11 @@ block_stmt  : var_decl_stmt
             | RETURN simple_expr SEMICOLON
             ;
 
-flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct %prec THEN
-                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT flex_block_struct ELSE flex_block_struct
-                | FORALL PARENT_LEFT set_expr PARENT_RIGHT flex_block_struct
-                | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT flex_block_struct
-                | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT flex_block_struct
+flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT block_stmt %prec THEN
+                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT block_stmt ELSE block_stmt
+                | FORALL PARENT_LEFT set_expr PARENT_RIGHT block_stmt
+                | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT block_stmt
+                | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT block_stmt
                 ;
 
 opt_param   : SEMICOLON
@@ -176,6 +181,7 @@ arith_expr  : arith_expr ADD term
 term    : term MULT factor
         | term DIV factor
         | factor
+        | SUB factor %prec UMINUS
         ;
 
 factor  : INTEGER

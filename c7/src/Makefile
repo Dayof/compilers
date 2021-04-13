@@ -2,15 +2,15 @@ FILES	= parser/parser.c lexer/lexer.c core/ast.c core/sym_tab.c core/main.c
 CFLAGS	= -g -Wall -pedantic -x c
 CC		= gcc
 
-c7:		$(FILES) core/ast.h core/sym_tab.h core/main.h
+c7:		$(FILES) core/semantic.h core/ast.h core/sym_tab.h core/main.h
 		$(CC) $(CFLAGS) $(FILES) -I core -I lexer -I parser -o c7 -lfl
 
 lexer/lexer.c: lexer/c7.lex
 	flex lexer/c7.lex
 
 parser/parser.c: parser/c7.y
-	# bison -d -v -Wcounterexamples parser/c7.y
-	bison -d -v parser/c7.y
+	bison -d -v -Wcounterexamples parser/c7.y
+	# bison -d -v parser/c7.y
 
 valgrind:
 	@echo "Test file: ${TEST_FILE}"

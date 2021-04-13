@@ -42,10 +42,11 @@
 %type  <expression>     func_stmt param_list compound_block_stmt var_decl_stmt
 %type  <expression>     block_stmts block_stmt simple_expr arith_expr term factor
 %type  <expression>     func_cte_expr func_expr func_call simple_param_list
-%type  <expression>     set_func_call set_expr flow_control flex_block_struct
+%type  <expression>     set_func_call set_expr flow_control
 %type  <expression>     or_cond_expr and_cond_expr unary_cond_expr eq_cond_expr
 %type  <expression>     equal_ops rel_cond_expr opt_param for_expression
 %type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt error
+%type  <expression>     block_item
 
 %%
 
@@ -99,21 +100,21 @@ simple_param_list   : simple_param_list[E] COMMA ID[N] {
                     | /* empty */ { $$ = create_empty_expr(); }
                     ;
 
-flex_block_struct   : compound_block_stmt[U] { $$ = $U; }
-                    | block_stmt[U] { $$ = $U; }
-                    ;
-
 compound_block_stmt : BRACK_LEFT block_stmts[U] BRACK_RIGHT { $$ = $U; }
                     | BRACK_LEFT BRACK_RIGHT  { $$ = create_empty_expr(); }
                     ;
 
-block_stmts : block_stmts[F] block_stmt[S] {
+block_stmts : block_stmts[F] block_item[S] {
                 $$ = create_bin_expr($F, $S); 
             }
-            | block_stmt[U] { $$ = $U; }
+            | block_item[U] { $$ = $U; }
             ;
     
-block_stmt  : var_decl_stmt[U] { $$ = $U; }
+block_item  : var_decl_stmt[U] { $$ = $U; }
+            | block_stmt[U] { $$ = $U; }
+            ;
+            
+block_stmt  : compound_block_stmt[U] { $$ = $U; }
             | func_call[U] SEMICOLON { $$ = $U; }
             | set_func_call[U] SEMICOLON { $$ = $U; }
             | flow_control[U] { $$ = $U; }
@@ -144,23 +145,23 @@ block_stmt  : var_decl_stmt[U] { $$ = $U; }
             }
             ;
 
-flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_struct[E2] %prec THEN {
+flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] %prec THEN {
                     $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
                     free($T);
                 }
-                | IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT flex_block_struct[E2] ELSE[E3] flex_block_struct[E4] {
+                | IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] ELSE[E3] block_stmt[E4] {
                     $$ = create_qui_expr(create_str_expr($T), $E1, $E2, create_str_expr($E3), $E4);
                     free($T); free($E3);
                 }
-                | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT flex_block_struct[E2] {
+                | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT block_stmt[E2] {
                     $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
                     free($T);
                 }
-                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] PARENT_RIGHT flex_block_struct[E3] {
+                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] PARENT_RIGHT block_stmt[E3] {
                     $$ = create_qua_expr(create_str_expr($T), $E1, $E2, $E3); 
                     free($T);
                 }
-                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] for_expression[E3] PARENT_RIGHT flex_block_struct[E4] {
+                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] for_expression[E3] PARENT_RIGHT block_stmt[E4] {
                     $$ = create_qui_expr(create_str_expr($T), $E1, $E2, $E3, $E4); 
                     free($T);
                 }
