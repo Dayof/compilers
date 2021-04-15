@@ -1,16 +1,6 @@
 #include <stdio.h>
 #include "sym_tab.h"
 
-void inc_scope(int key) {
-    word *s = find_word(key);
-    s->scope += 1;
-}
-
-void dec_scope(int key) {
-    word *s = find_word(key);
-    s->scope -= 1;
-}
-
 void set_id_type(int key, int id_type) {
     word *s = find_word(key);
     s->id_type = id_type;
@@ -80,30 +70,8 @@ stack_item* create_stack_item(int cur_scope, int item) {
     return new_stack_item;
 }
 
-stack_list* create_stack(int item) {
-    stack_item* new_stack_item = create_stack_item(0, item);
-    stack_list* new_stack_list = (stack_list*) malloc(sizeof(stack_list));
-    new_stack_list->item = new_stack_item;
-    new_stack_list->next = NULL;
-    return new_stack_list;
-}
-
-void push_to_stack_list(int scope, int item) {
-    // scope stack had already been initialized 
-    if (len_stack_list() == scope + 1) {
-        stack_list *cur_stack = stack_list_root;
-        for (int i = 0; i < scope; ++i) cur_stack = stack_list_root->next;
-        stack_item *new_stack_item = create_stack_item(scope, item);
-        STACK_PUSH(cur_stack->item, new_stack_item);
-    }
-    // scope stack is new 
-    else {
-        stack_list *new_stack = create_stack(item);
-        STACK_PUSH(stack_list_root, new_stack);
-    }  
-}
-
 int get_last_scope() {
+    if (stack_root == NULL) return -1;
     int scope;
     stack_item *last_item = (stack_item*) malloc(sizeof(stack_item));
     STACK_POP(stack_root, last_item);
@@ -116,7 +84,55 @@ void update_global_refs() {
     if (global_opt == INC_LVL) global_next_scope += 1;
     else if (global_opt == DEC_LVL) global_next_scope -= 1;
     else if (global_opt == SAME_LVL) global_next_scope = global_next_scope;
-    else if (global_opt == NEW_LVL) global_next_scope = global_total_scope + 1;
+    else if (global_opt == NEW_LVL) {
+        global_total_scope += 1;
+        global_next_scope = global_total_scope;
+    }
+    else if (global_opt == RM_LVL) {
+        global_total_scope -= 1;
+        global_next_scope = global_total_scope;
+    }
+}
+
+void pop_stack_scopes() {
+    if (stack_root != NULL) {
+        if (SEMANTIC_VERBOSE) {
+            printf("\n\n## Scope Stack ##\n");
+            print_stack();
+            printf("\n\n");
+        }
+
+        int last_scope, flag;
+        flag = 0;
+        last_scope = get_last_scope();
+
+        if (SEMANTIC_VERBOSE) printf("Pop all scope stack of lvl %d.\n", last_scope);
+
+        stack_item *last_item;
+
+        while (flag == 0) {
+            if (stack_root == NULL) break;
+            last_item = (stack_item*) malloc(sizeof(stack_item));
+            STACK_POP(stack_root, last_item);
+            if (last_item->scope_lvl == last_scope) {
+                if (SEMANTIC_VERBOSE)
+                    printf("Pop last_item %d of lvl %d.\n", last_item->item, last_item->scope_lvl);
+                continue;
+            } else {
+                STACK_PUSH(stack_root, last_item);
+                if (SEMANTIC_VERBOSE)
+                    printf("Push last_item %d of lvl %d.\n", last_item->item, last_item->scope_lvl);
+                flag = 1;
+                continue;
+            }
+        }
+
+        if (SEMANTIC_VERBOSE) {
+            printf("\n\n## Scope Stack ##\n");
+            print_stack();
+            printf("\n\n");
+        }
+    }
 }
 
 int push_to_stack(int item) {
@@ -125,14 +141,15 @@ int push_to_stack(int item) {
     if (stack_root == NULL) {
         global_next_scope = 0;
         scope = 0;
-        printf("Creating stack.\n");
+        if (SEMANTIC_VERBOSE) printf("Creating stack.\n");
     }
     else scope = global_next_scope;
 
-    printf("push_to_stack item %d: scope %d, global_scope %d, "
-           "global_next_scope %d, global_total_scope %d, global_opt %d\n",
-            item, scope, global_scope, global_next_scope,
-            global_total_scope, global_opt);
+    if (SEMANTIC_VERBOSE)
+        printf("push_to_stack item %d: scope %d, global_scope %d, "
+                "global_next_scope %d, global_total_scope %d, global_opt %d\n",
+                item, scope, global_scope, global_next_scope, global_total_scope,
+                global_opt);
 
     stack_item *new_stack_item = create_stack_item(scope, item);
     STACK_PUSH(stack_root, new_stack_item);
@@ -150,13 +167,6 @@ void print_stack () {
     for (stack_item* cur_item = stack_root; cur_item != NULL; cur_item = cur_item->next) {
         printf("ITEM: %d, SCOPE_LVL: %d\n", cur_item->item, cur_item->scope_lvl);
     }
-}
-
-int len_stack_list() {
-    stack_list *tmp;
-    int count;
-    STACK_COUNT(stack_list_root, tmp, count);
-    return count;
 }
 
 int len_stack() {

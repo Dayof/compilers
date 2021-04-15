@@ -15,7 +15,8 @@ enum SCOPE_OPT {
     SAME_LVL=0,
     INC_LVL,
     DEC_LVL,
-    NEW_LVL
+    NEW_LVL,
+    RM_LVL
 };
 
 typedef struct word_pos {
@@ -29,13 +30,7 @@ typedef struct item_detail {
     struct item_detail *next;
 } stack_item;
 
-typedef struct stack { 
-  stack_item *item;
-  struct stack *next;
-} stack_list;
-
 stack_item* stack_root;
-stack_list* stack_list_root;
 word* symbol_table;
 int global_opt, global_total_scope, global_scope, global_next_scope;
 
@@ -49,17 +44,13 @@ void delete_all_st();
 void set_id_type(int key, int id_type);
 void set_scope(int key, int scope);
 
-void inc_scope(int key);
-void dec_scope(int key);
-
 stack_item* create_stack_item(int cur_scope, int item);
-stack_list* create_stack(int item);
 
-void push_to_stack_list(int scope, int item);
 int push_to_stack(int item);
+void pop_stack_scopes();
+int get_last_scope();
 void update_global_refs();
 
-int len_stack_list();
 int len_stack();
 void print_stack ();
 

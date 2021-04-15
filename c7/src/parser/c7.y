@@ -64,17 +64,12 @@ stmt    : func_stmt[U] { add_ast($U); }
 
 func_stmt   : TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_FUNC);
-                global_opt = SAME_LVL;
-                update_global_refs();
                 global_scope = push_to_stack($N);
                 set_scope($N, global_scope);
             } PARENT_LEFT {
-                global_opt = INC_LVL;
+                global_opt = NEW_LVL;
                 update_global_refs();
-            } param_list[P] PARENT_RIGHT  {
-                global_opt = DEC_LVL;
-                update_global_refs();
-            } compound_block_stmt[E] {
+            } param_list[P] PARENT_RIGHT compound_block_stmt[E] {
                 $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
                 free($T);
             }
@@ -82,8 +77,6 @@ func_stmt   : TYPE[T] ID[N] {
 
 var_decl_stmt   : TYPE[T] ID[N] {
                     set_id_type($N, ST_ID_VAR);
-                    global_opt = SAME_LVL;
-                    update_global_refs();
                     global_scope = push_to_stack($N);
                     set_scope($N, global_scope);
                 } SEMICOLON {
@@ -100,13 +93,15 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
             | TYPE[T] ID[N] {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                 set_id_type($N, ST_ID_VAR);
-                global_opt = SAME_LVL;
-                update_global_refs();
                 global_scope = push_to_stack($N);
                 set_scope($N, global_scope);
                 free($T);
             }
-            | /* empty */ { $$ = create_empty_expr(); }
+            | /* empty */ {
+                $$ = create_empty_expr();
+                global_opt = RM_LVL;
+                update_global_refs();
+            }
             ;
 
 simple_param_list   : simple_param_list[E] COMMA ID[N] {
@@ -124,16 +119,12 @@ compound_block_stmt : BRACK_LEFT {
                         global_opt = NEW_LVL;
                         update_global_refs();
                     } block_stmts[U] BRACK_RIGHT {
-                        global_opt = DEC_LVL;
-                        update_global_refs();
                         $$ = $U;
-                    }
-                    | BRACK_LEFT {
-                        global_opt = NEW_LVL;
-                        update_global_refs();
-                    } BRACK_RIGHT  {
+                        pop_stack_scopes();
                         global_opt = DEC_LVL;
                         update_global_refs();
+                    }
+                    | BRACK_LEFT BRACK_RIGHT  {
                         $$ = create_empty_expr();
                     }
                     ;

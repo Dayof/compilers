@@ -1,18 +1,17 @@
-float a;                    // a: 0
-
-int main (int b) {          // main: 0, b: 1
-    int c;                  // c: 2
-    if (d) {                // d: 2
-        int e;              // e: 3
+int inner_b() {             // inner_b: 0
+    int e;                  // e: 1
+    {
+        {
+            {
+                int b;      // b: 4
+                b = 0;      // b: 4
+            }
+        }
+        int d;              // d: 2
     }
-    if (f) g = 1;           // f: 2, g: 2
-    int h;                  // h: 2
+    int f;                  // f: 1
+}                   
 
-    if (da) {               // da: 2
-        int ea;             // ea: 4
-    } else if (ab) {        // ab: 2
-        return var;         // var: 5
-    } else {
-        write("something");
-    }
+int main () {               // main: 0
+    int p;                  // p: 5
 }
