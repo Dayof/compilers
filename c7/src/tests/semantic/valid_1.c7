@@ -1,6 +1,18 @@
-int main () {
-    int a;
-    {{{
-        int b;
-    }}}
+float a;                    // a: 0
+
+int main (int b) {          // main: 0, b: 1
+    int c;                  // c: 2
+    if (d) {                // d: 2
+        int e;              // e: 3
+    }
+    if (f) g = 1;           // f: 2, g: 2
+    int h;                  // h: 2
+
+    if (da) {               // da: 2
+        int ea;             // ea: 4
+    } else if (ab) {        // ab: 2
+        return var;         // var: 5
+    } else {
+        write("something");
+    }
 }

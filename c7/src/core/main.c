@@ -4,7 +4,6 @@
 #include "ast.h"
 #include "lexer.h"
 #include "parser.h"
-#include "semantic.h"
 
 void init_vars() {
     int verbose = 0;
@@ -12,9 +11,16 @@ void init_vars() {
     PARSER_VERBOSE = verbose;
     MAIN_VERBOSE = verbose;
     newline_counter = -1;
-    symbol_table = NULL;
     parser_error = lex_error = 0;
-    scope = 0;
+
+    symbol_table = NULL;
+    stack_root = NULL;
+    stack_list_root = NULL;
+
+    global_scope = -1;
+    global_next_scope = -1;
+    global_opt = 0;
+    global_total_scope = 0;
 }
 
 int main (int argc, char* argv[]) {
@@ -38,7 +44,10 @@ int main (int argc, char* argv[]) {
 
     if (!(parser_error || lex_error)) {
         printf("\n\n## Abstract Syntax Tree ##");
-        print_asts(ast_root);
+        // print_asts(ast_root);
+
+        printf("\n\n## Scope Stack ##");
+        print_stack ();
     }
 
     // clean memory

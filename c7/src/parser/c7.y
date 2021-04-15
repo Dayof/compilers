@@ -42,11 +42,11 @@
 %type  <expression>     func_stmt param_list compound_block_stmt var_decl_stmt
 %type  <expression>     block_stmts block_stmt simple_expr arith_expr term factor
 %type  <expression>     func_cte_expr func_expr func_call simple_param_list
-%type  <expression>     set_func_call set_expr flow_control
+%type  <expression>     set_func_call set_expr flow_control block_item
 %type  <expression>     or_cond_expr and_cond_expr unary_cond_expr eq_cond_expr
 %type  <expression>     equal_ops rel_cond_expr opt_param for_expression
 %type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt error
-%type  <expression>     block_item
+%type  <expression>     flow_control_if
 
 %%
 
@@ -62,16 +62,32 @@ stmt    : func_stmt[U] { add_ast($U); }
         | var_decl_stmt[U] { add_ast($U); }
         ;
 
-func_stmt   : TYPE[T] ID[N] PARENT_LEFT param_list[P] PARENT_RIGHT compound_block_stmt[E] {
-                $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
+func_stmt   : TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_FUNC);
+                global_opt = SAME_LVL;
+                update_global_refs();
+                global_scope = push_to_stack($N);
+                set_scope($N, global_scope);
+            } PARENT_LEFT {
+                global_opt = INC_LVL;
+                update_global_refs();
+            } param_list[P] PARENT_RIGHT  {
+                global_opt = DEC_LVL;
+                update_global_refs();
+            } compound_block_stmt[E] {
+                $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
                 free($T);
             }
             ;
 
-var_decl_stmt   : TYPE[T] ID[N] SEMICOLON {
+var_decl_stmt   : TYPE[T] ID[N] {
+                    set_id_type($N, ST_ID_VAR);
+                    global_opt = SAME_LVL;
+                    update_global_refs();
+                    global_scope = push_to_stack($N);
+                    set_scope($N, global_scope);
+                } SEMICOLON {
                     $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
-                    set_id_type($N, ST_ID_VAR); 
                     free($T);
                 }
                 ; 
@@ -84,6 +100,10 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
             | TYPE[T] ID[N] {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                 set_id_type($N, ST_ID_VAR);
+                global_opt = SAME_LVL;
+                update_global_refs();
+                global_scope = push_to_stack($N);
+                set_scope($N, global_scope);
                 free($T);
             }
             | /* empty */ { $$ = create_empty_expr(); }
@@ -100,8 +120,22 @@ simple_param_list   : simple_param_list[E] COMMA ID[N] {
                     | /* empty */ { $$ = create_empty_expr(); }
                     ;
 
-compound_block_stmt : BRACK_LEFT block_stmts[U] BRACK_RIGHT { $$ = $U; }
-                    | BRACK_LEFT BRACK_RIGHT  { $$ = create_empty_expr(); }
+compound_block_stmt : BRACK_LEFT {
+                        global_opt = NEW_LVL;
+                        update_global_refs();
+                    } block_stmts[U] BRACK_RIGHT {
+                        global_opt = DEC_LVL;
+                        update_global_refs();
+                        $$ = $U;
+                    }
+                    | BRACK_LEFT {
+                        global_opt = NEW_LVL;
+                        update_global_refs();
+                    } BRACK_RIGHT  {
+                        global_opt = DEC_LVL;
+                        update_global_refs();
+                        $$ = create_empty_expr();
+                    }
                     ;
 
 block_stmts : block_stmts[F] block_item[S] {
@@ -134,6 +168,8 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
             | ID[N] ASSIGN[A] simple_expr[E] SEMICOLON {
                 $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
                 set_id_type($N, ST_ID_VAR); 
+                global_scope = push_to_stack($N);
+                set_scope($N, global_scope);
             }
             | RETURN[T] simple_expr[E] SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
@@ -145,13 +181,20 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
             }
             ;
 
-flow_control    : IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] %prec THEN {
-                    $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
+flow_control_if : IF[T] PARENT_LEFT {
+                    global_opt = SAME_LVL;
+                    update_global_refs();
+                    $$ = create_str_expr($T);
                     free($T);
                 }
-                | IF[T] PARENT_LEFT or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] ELSE[E3] block_stmt[E4] {
-                    $$ = create_qui_expr(create_str_expr($T), $E1, $E2, create_str_expr($E3), $E4);
-                    free($T); free($E3);
+                ;
+
+flow_control    : flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] %prec THEN {
+                    $$ = create_ter_expr($FC1, $E1, $E2); 
+                }
+                | flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] ELSE[E3] block_stmt[E4] {
+                    $$ = create_qui_expr($FC1, $E1, $E2, create_str_expr($E3), $E4);
+                    free($E3);
                 }
                 | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT block_stmt[E2] {
                     $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
@@ -186,7 +229,7 @@ decl_or_cond_expr   : or_cond_expr[U] { $$ = $U; }
                     }
                     | ID[N] ASSIGN[A] simple_expr[E] {
                         $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
-                        set_id_type($N, ST_ID_VAR); 
+                        set_id_type($N, ST_ID_VAR);
                     }
                     ;
 
@@ -337,6 +380,8 @@ factor  : INTEGER[U] { $$ = create_int_expr($U); }
         | ID[N] {
             $$ = create_var_expr($N);
             set_id_type($N, ST_ID_VAR);
+            global_scope = push_to_stack($N);
+            set_scope($N, global_scope);
         }
         | PARENT_LEFT arith_expr[U] PARENT_RIGHT { $$ = $U; }
         ;
