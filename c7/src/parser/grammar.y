@@ -152,7 +152,11 @@ rel_ops : L_OP
 set_expr    : simple_expr IN simple_expr
             ;   
 
-func_call   : ID PARENT_LEFT simple_param_list PARENT_RIGHT
+func_call_expr  : simple_param_list
+                | simple_expr
+                ;
+
+func_call   : ID PARENT_LEFT func_call_expr PARENT_RIGHT
             ;
 
 set_func_call   : IS_SET PARENT_LEFT ID PARENT_RIGHT

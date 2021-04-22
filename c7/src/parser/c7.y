@@ -45,7 +45,7 @@
 %type  <expression>     set_func_call set_expr flow_control block_item
 %type  <expression>     or_cond_expr and_cond_expr unary_cond_expr eq_cond_expr
 %type  <expression>     equal_ops rel_cond_expr opt_param for_expression
-%type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt error
+%type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt error 
 %type  <expression>     flow_control_if
 
 %%
@@ -97,10 +97,7 @@ simple_param_list   : simple_param_list[E] COMMA ID[N] {
                         $$ = create_bin_expr($E, create_var_expr($N));
                         set_id_type($N, ST_ID_VAR);
                     }
-                    | ID[N] { 
-                        $$ = create_var_expr($N);
-                        set_id_type($N, ST_ID_VAR);
-                    }
+                    | simple_expr[U] { $$ = $U; }
                     | /* empty */ { $$ = create_empty_expr(); }
                     ;
 

@@ -2146,8 +2146,8 @@ char handle_char(char yytext_char) {
 
 /*
 	Output example:
-	- Command: float sum_numbers = 1 + 1.0;
-	- Output: <type,'float'> <id, 'sum_numbers'> <delimiter, '='> <integer, '1'> <add, '+'> <float, '1.0'> <semicolon, ';'> 
+	- Command: sum_numbers = 1 + 1.0;
+	- Output: <id, 'sum_numbers'> <delimiter, '='> <integer, '1'> <add, '+'> <float, '1.0'> <semicolon, ';'> 
 */
 
 void handle_token(int token) {
@@ -2264,47 +2264,47 @@ void handle_token(int token) {
 			break;
 		case ADD_TOK:
 			if (LEX_VERBOSE) printf("<add, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case SUB_TOK:
 			if (LEX_VERBOSE) printf("<sub, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case MULT_TOK:
 			if (LEX_VERBOSE) printf("<mult, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case DIV_TOK:
 			if (LEX_VERBOSE) printf("<div, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case ASSIGN_TOK:
 			if (LEX_VERBOSE) printf("<assign, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case PARENT_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<parent_left, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case PARENT_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<parent_right, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case BRACK_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<brack_left, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case BRACK_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<brack_right, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case SEMICOLON_TOK:
 			if (LEX_VERBOSE) printf("<semicolon, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case COMMA_TOK:
 			if (LEX_VERBOSE) printf("<comma, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case OR_OP_TOK:
 			if (LEX_VERBOSE) printf("<or_op, '%s'> ", yytext);
@@ -2320,7 +2320,7 @@ void handle_token(int token) {
 			break;
 		case NOT_OP_TOK:
 			if (LEX_VERBOSE) printf("<not_op>, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case EQ_OP_TOK:
 			if (LEX_VERBOSE) printf("<eq_op>, '%s'> ", yytext);
@@ -2348,11 +2348,11 @@ void handle_token(int token) {
 			break;
 		case G_OP_TOK:
 			if (LEX_VERBOSE) printf("<g_op>, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case L_OP_TOK:
 			if (LEX_VERBOSE) printf("<l_op>, '%s'> ", yytext);
-			yylval.char_value = (char) *(yytext + 1);
+			yylval.char_value = (char) *(yytext);
 			break;
 		case COMMENT_TOK:
 			lex_line += 1;
