@@ -1,0 +1,25 @@
+int func(){
+    int x;
+    float z;
+    x = func_2(x);
+    if (x) { int x; }
+    else { 
+        int y;
+        y = func_3();
+    }
+    func_4(z);
+
+    if ("test" & f) {
+        else { { {
+                return a;
+            } } }
+    }
+
+    {
+        {
+            {
+                int c;
+            }
+        }
+    }
+}

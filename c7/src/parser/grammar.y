@@ -93,11 +93,11 @@ block_stmt  : compound_block_stmt
 flow_control_if : IF PARENT_LEFT
                 ;
 
-flow_control    : flow_control_if or_cond_expr PARENT_RIGHT block_stmt %prec THEN
-                | flow_control_if or_cond_expr PARENT_RIGHT block_stmt ELSE block_stmt
-                | FORALL PARENT_LEFT set_expr PARENT_RIGHT block_stmt
-                | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT block_stmt
-                | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT block_stmt
+flow_control    : flow_control_if or_cond_expr PARENT_RIGHT block_item %prec THEN
+                | flow_control_if or_cond_expr PARENT_RIGHT block_item ELSE block_item
+                | FORALL PARENT_LEFT set_expr PARENT_RIGHT block_item
+                | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT block_item
+                | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT block_item
                 ;
 
 opt_param   : SEMICOLON
@@ -139,7 +139,6 @@ rel_cond_expr   : rel_cond_expr rel_ops rel_cond_stmt
 
 rel_cond_stmt   : arith_expr
                 | EMPTY
-                | func_expr
                 ;
 
 rel_ops : L_OP
@@ -168,7 +167,6 @@ simple_expr : arith_expr
 func_cte_expr   : EMPTY
                 | STRING
                 | CHAR
-                | func_expr
                 ;
 
 func_expr       : func_call
@@ -191,6 +189,7 @@ factor  : INTEGER
         | FLOAT
         | ID
         | PARENT_LEFT arith_expr PARENT_RIGHT
+        | func_expr
         ;
 
 %%

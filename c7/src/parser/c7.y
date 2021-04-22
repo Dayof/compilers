@@ -155,22 +155,22 @@ flow_control_if : IF[T] PARENT_LEFT {
                 }
                 ;
 
-flow_control    : flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] %prec THEN {
+flow_control    : flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_item[E2] %prec THEN {
                     $$ = create_ter_expr($FC1, $E1, $E2); 
                 }
-                | flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_stmt[E2] ELSE[E3] block_stmt[E4] {
+                | flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_item[E2] ELSE[E3] block_item[E4] {
                     $$ = create_qui_expr($FC1, $E1, $E2, create_str_expr($E3), $E4);
                     free($E3);
                 }
-                | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT block_stmt[E2] {
+                | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT block_item[E2] {
                     $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
                     free($T);
                 }
-                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] PARENT_RIGHT block_stmt[E3] {
+                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] PARENT_RIGHT block_item[E3] {
                     $$ = create_qua_expr(create_str_expr($T), $E1, $E2, $E3); 
                     free($T);
                 }
-                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] for_expression[E3] PARENT_RIGHT block_stmt[E4] {
+                | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] for_expression[E3] PARENT_RIGHT block_item[E4] {
                     $$ = create_qui_expr(create_str_expr($T), $E1, $E2, $E3, $E4); 
                     free($T);
                 }
@@ -246,7 +246,6 @@ rel_cond_stmt   : arith_expr[U] { $$ = $U; }
                     $$ = create_str_expr($U);
                     free($U);
                 }
-                | func_expr[U] { $$ = $U; }
                 ;
 
 rel_ops : L_OP[U] { $$ = create_char_expr($U); }
@@ -311,7 +310,6 @@ func_cte_expr   : EMPTY[U] {
                 | CHAR[U] {
                     $$ = create_char_expr($U);
                 }
-                | func_expr[U] { $$ = $U; }
                 ;
 
 func_expr       : func_call[U] { $$ = $U; }
@@ -347,6 +345,7 @@ factor  : INTEGER[U] { $$ = create_int_expr($U); }
             set_id_type($N, ST_ID_VAR);
         }
         | PARENT_LEFT arith_expr[U] PARENT_RIGHT { $$ = $U; }
+        | func_expr[U] { $$ = $U; }
         ;
 
 %%
