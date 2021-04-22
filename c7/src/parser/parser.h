@@ -68,23 +68,23 @@ extern int yydebug;
     NOT_OP = 269,                  /* NOT_OP  */
     L_OP = 270,                    /* L_OP  */
     G_OP = 271,                    /* G_OP  */
-    READ = 272,                    /* READ  */
-    WRITE = 273,                   /* WRITE  */
-    WRITELN = 274,                 /* WRITELN  */
-    TYPE = 275,                    /* TYPE  */
-    EMPTY = 276,                   /* EMPTY  */
-    STRING = 277,                  /* STRING  */
-    RETURN = 278,                  /* RETURN  */
-    FORALL = 279,                  /* FORALL  */
-    FOR = 280,                     /* FOR  */
-    IN = 281,                      /* IN  */
-    IS_SET = 282,                  /* IS_SET  */
-    ADD_SET = 283,                 /* ADD_SET  */
-    REMOVE = 284,                  /* REMOVE  */
-    EXISTS = 285,                  /* EXISTS  */
-    IF = 286,                      /* IF  */
-    ELSE = 287,                    /* ELSE  */
-    CHAR = 288,                    /* CHAR  */
+    CHAR = 272,                    /* CHAR  */
+    READ = 273,                    /* READ  */
+    WRITE = 274,                   /* WRITE  */
+    WRITELN = 275,                 /* WRITELN  */
+    TYPE = 276,                    /* TYPE  */
+    EMPTY = 277,                   /* EMPTY  */
+    STRING = 278,                  /* STRING  */
+    RETURN = 279,                  /* RETURN  */
+    FORALL = 280,                  /* FORALL  */
+    FOR = 281,                     /* FOR  */
+    IN = 282,                      /* IN  */
+    IS_SET = 283,                  /* IS_SET  */
+    ADD_SET = 284,                 /* ADD_SET  */
+    REMOVE = 285,                  /* REMOVE  */
+    EXISTS = 286,                  /* EXISTS  */
+    IF = 287,                      /* IF  */
+    ELSE = 288,                    /* ELSE  */
     EQ_OP = 289,                   /* EQ_OP  */
     NE_OP = 290,                   /* NE_OP  */
     LE_OP = 291,                   /* LE_OP  */
@@ -106,7 +106,7 @@ union YYSTYPE
 {
 #line 18 "parser/c7.y"
 
-    char op;
+    char char_value;
     char* str_value;
     int int_value;
     float float_value;

@@ -90,8 +90,11 @@ block_stmt  : compound_block_stmt
             | RETURN simple_expr SEMICOLON
             ;
 
-flow_control    : IF PARENT_LEFT or_cond_expr PARENT_RIGHT block_stmt %prec THEN
-                | IF PARENT_LEFT or_cond_expr PARENT_RIGHT block_stmt ELSE block_stmt
+flow_control_if : IF PARENT_LEFT
+                ;
+
+flow_control    : flow_control_if or_cond_expr PARENT_RIGHT block_stmt %prec THEN
+                | flow_control_if or_cond_expr PARENT_RIGHT block_stmt ELSE block_stmt
                 | FORALL PARENT_LEFT set_expr PARENT_RIGHT block_stmt
                 | FOR PARENT_LEFT opt_param opt_param PARENT_RIGHT block_stmt
                 | FOR PARENT_LEFT opt_param opt_param for_expression PARENT_RIGHT block_stmt
@@ -195,5 +198,5 @@ factor  : INTEGER
 void yyerror(const char *s) {
     printf("\nSyntaxError: %s in line %d, column %d.\n",
            s, parser_line, parser_column);
-    syntax_error = 1;
+    syntax_error += 1;
 }

@@ -1,7 +1,16 @@
 int main() {
     write('a');
+    write('\a');
+    write('\b');
+    write('\f');
     write('\n');
-    write('string');
-    write('stringadadsadasddsda');
-    write("");
+    write('\r');
+    write('\t');
+    write('\v');
+    write('\\');
+    write('\'');
+    write('\"');
+    write('\?');
+    write('""');
+    write(''');
 }

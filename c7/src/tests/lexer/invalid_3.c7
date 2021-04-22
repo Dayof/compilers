@@ -1,7 +1,6 @@
 int main() {
     write('');
-    write('"');
     write('ok');
-    write("'");
-    write("");
+    write('stringadadsadasddsda');
+    write('\p');
 }

@@ -15,12 +15,6 @@ void init_vars() {
     parser_error = lex_error = 0;
 
     symbol_table = NULL;
-    stack_root = NULL;
-
-    global_scope = 0;
-    global_next_scope = 0;
-    global_opt = 0;
-    global_total_scope = 0;
 }
 
 int main (int argc, char* argv[]) {
@@ -45,11 +39,6 @@ int main (int argc, char* argv[]) {
     if (!(parser_error || lex_error)) {
         printf("\n\n## Abstract Syntax Tree ##");
         print_asts(ast_root);
-
-        if (SEMANTIC_VERBOSE) {
-            printf("\n\n## Scope Stack ##\n");
-            print_stack();
-        }
     }
 
     // clean memory

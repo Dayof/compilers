@@ -52,8 +52,7 @@
 		L_OP_TOK,
 		NEWLINE_TOK,
 		WHITESPACE_TOK,
-		ID_TOK,
-		EOF_TOK
+		ID_TOK
 	};
 %}
 
@@ -89,7 +88,7 @@ G_OP			(">")
 L_OP			("<")
 ID				({LETTER}|"_")({LETTER}|{DIGIT}|"_")*
 STRING			(\"([^(\"\')])*\")
-CHAR			(\'([^(\"\')])+\')
+CHAR			(\'(.|\\a|\\b|\\f|\\n|\\r|\\t|\\v|\\\\|\\\'|\\\"|\\\?)\')
 INTEGER			({NDIGIT}{DIGIT}*|"0")
 FLOAT			({DIGIT}+\.{DIGIT}+)
 TYPE			("int"|"float"|"elem"|"set")
@@ -168,15 +167,56 @@ COMMENT			("//".*)
 {NEWLINE}		{ handle_token(NEWLINE_TOK); };
 {WHITESPACE}   	{ lex_column += strlen(yytext); }													;
 {ID}			{ handle_token(ID_TOK); return ID; };
-<<EOF>>         { handle_token(EOF_TOK); yyterminate(); };
 .				{ handle_token(ERROR_TOK); };  /* any character but newline */
 
 %%
 
+char handle_char(char yytext_char) {
+	char ascii_char;
+	switch (yytext_char) {
+		case 'a':
+			ascii_char = 7;
+			break;
+		case 'b':
+			ascii_char = 8;
+			break;
+		case 'f':
+			ascii_char = 12;
+			break;
+		case 'n':
+			ascii_char = 10;
+			break;
+		case 'r':
+			ascii_char = 13;
+			break;
+		case 't':
+			ascii_char = 9;
+			break;
+		case 'v':
+			ascii_char = 11;
+			break;
+		case '\\':
+			ascii_char = 92;
+			break;
+		case '\'':
+			ascii_char = 39;
+			break;
+		case '\"':
+			ascii_char = 34;
+			break;
+		case '?':
+			ascii_char = 63;
+			break;
+		default:
+			break;  // ignore
+	}
+	return ascii_char;
+}
+
 /*
 	Output example:
-	- Command: float sum_numbers = 1 + 1.0;
-	- Output: <type,'float'> <id, 'sum_numbers'> <delimiter, '='> <integer, '1'> <add, '+'> <float, '1.0'> <semicolon, ';'> 
+	- Command: sum_numbers = 1 + 1.0;
+	- Output: <id, 'sum_numbers'> <delimiter, '='> <integer, '1'> <add, '+'> <float, '1.0'> <semicolon, ';'> 
 */
 
 void handle_token(int token) {
@@ -189,10 +229,9 @@ void handle_token(int token) {
 			strcpy(yylval.str_value, yytext);
 			break;
 		case CHAR_TOK:
-			if (LEX_VERBOSE) printf("<char, '%s'> ", yytext);
-			keylen = strlen(yytext) + 1;
-			yylval.str_value = (char*) malloc(keylen * sizeof(char*));
-			strcpy(yylval.str_value, yytext);
+			if (LEX_VERBOSE) printf("<char, %s> ", yytext);
+			if (strlen(yytext) == 3) yylval.char_value = (char) *(yytext + 1);
+			else yylval.char_value = handle_char((char) *(yytext + 2));
 			break;
 		case TYPE_TOK:
 			if (LEX_VERBOSE) printf("<type, '%s'> ", yytext);
@@ -294,47 +333,47 @@ void handle_token(int token) {
 			break;
 		case ADD_TOK:
 			if (LEX_VERBOSE) printf("<add, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case SUB_TOK:
 			if (LEX_VERBOSE) printf("<sub, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case MULT_TOK:
 			if (LEX_VERBOSE) printf("<mult, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case DIV_TOK:
 			if (LEX_VERBOSE) printf("<div, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case ASSIGN_TOK:
 			if (LEX_VERBOSE) printf("<assign, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case PARENT_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<parent_left, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case PARENT_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<parent_right, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case BRACK_LEFT_TOK:
 			if (LEX_VERBOSE) printf("<brack_left, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case BRACK_RIGHT_TOK:
 			if (LEX_VERBOSE) printf("<brack_right, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case SEMICOLON_TOK:
 			if (LEX_VERBOSE) printf("<semicolon, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case COMMA_TOK:
 			if (LEX_VERBOSE) printf("<comma, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case OR_OP_TOK:
 			if (LEX_VERBOSE) printf("<or_op, '%s'> ", yytext);
@@ -350,7 +389,7 @@ void handle_token(int token) {
 			break;
 		case NOT_OP_TOK:
 			if (LEX_VERBOSE) printf("<not_op>, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case EQ_OP_TOK:
 			if (LEX_VERBOSE) printf("<eq_op>, '%s'> ", yytext);
@@ -378,11 +417,11 @@ void handle_token(int token) {
 			break;
 		case G_OP_TOK:
 			if (LEX_VERBOSE) printf("<g_op>, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case L_OP_TOK:
 			if (LEX_VERBOSE) printf("<l_op>, '%s'> ", yytext);
-			yylval.op = yytext[0];
+			yylval.char_value = (char) *(yytext + 1);
 			break;
 		case COMMENT_TOK:
 			lex_line += 1;
@@ -407,13 +446,10 @@ void handle_token(int token) {
 			lex_column = 0;  // reset column index 
 			if (LEX_VERBOSE) printf("\nline %d. ", lex_line);
 			break;
-		case EOF_TOK:
-			if (lex_line - 1 == newline_counter) if (LEX_VERBOSE) printf("EOF\n");
-			break;
 		case ERROR_TOK:
 			lex_error += 1;
 			printf("\nLexError: token '%s' is not recognized in line %d, column %d.\n",
-			       yytext, lex_line, lex_column);
+				   yytext, lex_line, lex_column);
 		default:
 			break;  // ignore
 	}
