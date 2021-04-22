@@ -93,9 +93,8 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
             }
             ;
 
-simple_param_list   : simple_param_list[E] COMMA ID[N] {
-                        $$ = create_bin_expr($E, create_var_expr($N));
-                        set_id_type($N, ST_ID_VAR);
+simple_param_list   : simple_param_list[E] COMMA simple_expr[N] {
+                        $$ = create_bin_expr($E, $N);
                     }
                     | simple_expr[U] { $$ = $U; }
                     | /* empty */ { $$ = create_empty_expr(); }

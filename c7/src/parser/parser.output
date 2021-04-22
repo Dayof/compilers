@@ -23,7 +23,7 @@ Grammar
    12           | TYPE ID
    13           | %empty
 
-   14 simple_param_list: simple_param_list COMMA ID
+   14 simple_param_list: simple_param_list COMMA simple_expr
    15                  | simple_expr
    16                  | %empty
 
@@ -171,7 +171,7 @@ Terminals, with rules where they appear
     OR_OP <str_value> (293) 46
     AND_OP <str_value> (294) 48
     INTEGER <int_value> (295) 88
-    ID <int_value> (296) 8 10 11 12 14 27 30 44 45 67 68 90
+    ID <int_value> (296) 8 10 11 12 27 30 44 45 67 68 90
     FLOAT <float_value> (297) 89
     UMINUS (298)
     THEN (299)
@@ -270,7 +270,7 @@ Nonterminals, with rules where they appear
         on right: 25 79
     simple_expr <expression> (75)
         on left: 72 73
-        on right: 15 28 29 30 31 44 45 66
+        on right: 14 15 28 29 30 31 44 45 66
     func_cte_expr <expression> (76)
         on left: 74 75 76 77
         on right: 73 80
@@ -1875,7 +1875,7 @@ State 116
 
 State 117
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 153
@@ -2452,9 +2452,29 @@ State 153
 
 State 154
 
-   14 simple_param_list: simple_param_list COMMA • ID
+   14 simple_param_list: simple_param_list COMMA • simple_expr
 
-    ID  shift, and go to state 171
+    PARENT_LEFT  shift, and go to state 252
+    SUB          shift, and go to state 253
+    CHAR         shift, and go to state 254
+    EMPTY        shift, and go to state 255
+    STRING       shift, and go to state 256
+    IS_SET       shift, and go to state 257
+    ADD_SET      shift, and go to state 258
+    REMOVE       shift, and go to state 259
+    EXISTS       shift, and go to state 260
+    INTEGER      shift, and go to state 261
+    ID           shift, and go to state 262
+    FLOAT        shift, and go to state 263
+
+    func_call      go to state 264
+    set_func_call  go to state 265
+    simple_expr    go to state 171
+    func_cte_expr  go to state 266
+    func_expr      go to state 267
+    arith_expr     go to state 268
+    term           go to state 269
+    factor         go to state 270
 
 
 State 155
@@ -2736,7 +2756,7 @@ State 170
 
 State 171
 
-   14 simple_param_list: simple_param_list COMMA ID •
+   14 simple_param_list: simple_param_list COMMA simple_expr •
 
     PARENT_RIGHT  reduce using rule 14 (simple_param_list)
     COMMA         reduce using rule 14 (simple_param_list)
@@ -6401,7 +6421,7 @@ State 414
 
 State 415
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 521
@@ -7459,7 +7479,7 @@ State 473
 
 State 474
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 563
@@ -7554,7 +7574,7 @@ State 482
 
 State 483
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 568
@@ -7631,7 +7651,7 @@ State 491
 
 State 492
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 573
@@ -7942,7 +7962,7 @@ State 515
 
 State 516
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 582
@@ -8215,7 +8235,7 @@ State 536
 
 State 537
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 594
@@ -8371,7 +8391,7 @@ State 548
 
 State 549
 
-   14 simple_param_list: simple_param_list • COMMA ID
+   14 simple_param_list: simple_param_list • COMMA simple_expr
    67 func_call: ID PARENT_LEFT simple_param_list • PARENT_RIGHT
 
     PARENT_RIGHT  shift, and go to state 600

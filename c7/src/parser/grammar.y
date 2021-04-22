@@ -16,14 +16,14 @@
 %start program
 
 %union {
-    char op;
+    char char_value;
     char* str_value;
     int int_value;
     float float_value;
 }
 
-%token <op>             BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON
-%token <op>             ADD SUB MULT DIV COMMA ASSIGN NOT_OP L_OP G_OP
+%token <char_value>     BRACK_LEFT BRACK_RIGHT PARENT_LEFT PARENT_RIGHT SEMICOLON
+%token <char_value>     ADD SUB MULT DIV COMMA ASSIGN NOT_OP L_OP G_OP
 %token <str_value>      READ WRITE WRITELN TYPE EMPTY STRING RETURN FORALL FOR
 %token <str_value>      IN IS_SET ADD_SET REMOVE EXISTS IF ELSE CHAR
 %token <str_value>      EQ_OP NE_OP LE_OP GE_OP OR_OP AND_OP
@@ -62,8 +62,8 @@ param_list  : param_list COMMA TYPE ID
             | /* empty */
             ;
 
-simple_param_list   : simple_param_list COMMA ID
-                    | ID
+simple_param_list   : simple_param_list COMMA simple_expr
+                    | simple_expr
                     | /* empty */
                     ;
 
@@ -152,11 +152,7 @@ rel_ops : L_OP
 set_expr    : simple_expr IN simple_expr
             ;   
 
-func_call_expr  : simple_param_list
-                | simple_expr
-                ;
-
-func_call   : ID PARENT_LEFT func_call_expr PARENT_RIGHT
+func_call   : ID PARENT_LEFT simple_param_list PARENT_RIGHT
             ;
 
 set_func_call   : IS_SET PARENT_LEFT ID PARENT_RIGHT
