@@ -1,17 +1,20 @@
+void func_3(int a) {
+    return a;
+}
+
 int func(){
     int x;
     float z;
     x = func_2(x);
-    if (x) { int x; }
+    if (x) { int xx; }
     else { 
         int y;
         y = func_3();
     }
-    func_4(z);
 
-    if ("test" & f) {
+    if (test & f) {
         else { { {
-                return a;
+                return x;
             } } }
     }
 

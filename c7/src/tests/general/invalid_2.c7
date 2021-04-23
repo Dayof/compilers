@@ -1,0 +1,11 @@
+int main(){
+    int x = 2;
+    float z;
+    z = @2;
+    z = "string";
+    if (x) { int x; }
+    else { 
+        int y;
+        y = x();
+    }
+}
