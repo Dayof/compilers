@@ -198,69 +198,69 @@ void print_asts(ast_list* root) {
 
 void print_ast(ast_node* node, int lvl) {
     if (node == NULL) {
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("none\n");
+        for (int i=0; i < lvl; ++i) printf("-");
+        if (PARSER_VERBOSE) printf("none\n");
         return;
     }
 
     if (PARSER_VERBOSE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("LVL: %d\n", lvl);
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("TAG: %d\n", node->tag);
     }
 
     // terminal leaf
     if (node->tag == INTEGER_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("INT: %d\n", node->op.integer_expr);
         return;
     // terminal leaf
     } else if (node->tag == CHAR_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("CHAR: %c\n", node->op.char_expr);
         return;
     // terminal leaf
     } else if (node->tag == STR_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("STRING: %s\n", node->op.str_expr);
         return;
     // terminal leaf
     } else if (node->tag == FLOAT_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("FLOAT: %.2f\n", node->op.float_expr);
         return;
     // terminal leaf
     } else if (node->tag == VAR_TYPE) {
         word* var_word = find_word(node->op.variable_expr);
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("VAR: %s\n", var_word->name);
         return;
     // non terminal node
     } else if (node->tag == BINARY_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("BINARY TYPE -----\n");
+        for (int i=0; i < lvl; ++i) printf("-");
+        if (PARSER_VERBOSE) printf("BINARY TYPE -----\n");
         print_ast(node->op.binary_expr.left, lvl+1); 
         print_ast(node->op.binary_expr.right, lvl+1);
     // non terminal node
     } else if (node->tag == TERNARY_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("TERNARY TYPE -----\n");
+        for (int i=0; i < lvl; ++i) printf("-");
+        if (PARSER_VERBOSE) printf("TERNARY TYPE -----\n");
         print_ast(node->op.ternary_expr.left, lvl+1);
         print_ast(node->op.ternary_expr.mid, lvl+1);
         print_ast(node->op.ternary_expr.right, lvl+1);
     // non terminal node
     } else if (node->tag == QUARTENARY_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("QUARTENARY TYPE -----\n");
+        for (int i=0; i < lvl; ++i) printf("-");
+        if (PARSER_VERBOSE) printf("QUARTENARY TYPE -----\n");
         print_ast(node->op.quartenary_expr.type, lvl+1);
         print_ast(node->op.quartenary_expr.first_expr, lvl+1);
         print_ast(node->op.quartenary_expr.second_expr, lvl+1);
         print_ast(node->op.quartenary_expr.third_expr, lvl+1);
     // non terminal node
     } else if (node->tag == QUINARY_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
-        printf("QUINARY TYPE -----\n");
+        for (int i=0; i < lvl; ++i) printf("-");
+        if (PARSER_VERBOSE) printf("QUINARY TYPE -----\n");
         print_ast(node->op.quinary_expr.type, lvl+1);
         print_ast(node->op.quinary_expr.first_expr, lvl+1);
         print_ast(node->op.quinary_expr.second_expr, lvl+1);
@@ -268,18 +268,18 @@ void print_ast(ast_node* node, int lvl) {
         print_ast(node->op.quinary_expr.fourth_expr, lvl+1);
     // non terminal node
     } else if (node->tag == FUNC_TYPE) {
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("FUNCTION TYPE -----\n");
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("TYPE:\n");
         print_ast(node->op.quartenary_expr.type, lvl+1);
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("NAME:\n");
         print_ast(node->op.quartenary_expr.first_expr, lvl+1);
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("PARAMS:\n");
         print_ast(node->op.quartenary_expr.second_expr, lvl+1);
-        for (int i=0; i < lvl; ++i) printf("  ");
+        for (int i=0; i < lvl; ++i) printf("-");
         printf("STMT EXPR:\n");
         print_ast(node->op.quartenary_expr.third_expr, lvl+1);
     } else {
