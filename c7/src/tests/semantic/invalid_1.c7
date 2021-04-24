@@ -1,0 +1,14 @@
+int x;                      // x: 0
+float z;                    // z: 0
+
+int func(float x) {         // func: 0, x: raises error, NULL: 1
+    int b;                  // b: 2
+    b = 0;                  // b: 2
+}                   
+
+
+int func_2() {              // func_2: 0, NULL: 3
+    int p;                  // p: 4
+}
+
+// no main: raises error

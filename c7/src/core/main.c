@@ -13,7 +13,7 @@ void init_vars() {
     MAIN_VERBOSE = verbose;
     SEMANTIC_VERBOSE = 1;
     newline_counter = -1;
-    parser_error = lex_error = 0;
+    parser_error = lex_error = semantic_error = 0;
 
     global_symbol_table = NULL;
     scope_stack = NULL;
@@ -37,7 +37,7 @@ int main (int argc, char* argv[]) {
     printf("\nLexer and parser finished.\n\n");
 
     printf("\n## Symbol Table ##\n");
-    print_st();
+    print_aux_st();
 
     if (!(parser_error || lex_error)) {
         printf("\n\n## Abstract Syntax Tree ##");

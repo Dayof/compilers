@@ -8,7 +8,6 @@ int func(float w) {         // func: 0, w: 1
         {
             {
                 int b;      // b: 5
-                b = 0;      // b: 5
             }
         }
         int d;              // d: 3

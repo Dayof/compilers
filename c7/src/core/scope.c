@@ -1,8 +1,34 @@
 #include <stdio.h>
 #include "scope.h"
 
-void print_scope() {
+void print_stack_st() {
+    scope *aux_scope;
+    int count_stack;
+    STACK_COUNT(scope_stack, aux_scope, count_stack);
+    scope *current_scope = scope_stack;
+    for (int i=0; i <= count_stack - 1; ++i) {
+        print_st_with_ref_and_scope(current_scope->symbol_table, current_scope);
+        printf("\n");
+        current_scope = current_scope->next;
+    }
+}
 
+void print_st_with_ref_and_scope(word *symbol_table, scope *cur_scope) {
+    if (HASH_COUNT(symbol_table) == 0) {
+        printf("Empty symbol table.\n");
+        return;
+    }
+
+    for (word* cur_word = symbol_table; cur_word != NULL;
+         cur_word = cur_word->hh.next) {
+        printf("SCOPE: %-12s | NAME: %-12s | LINE: %-3d | COLUMN: %-3d | ",
+                cur_scope->scope_name, cur_word->name, cur_word->line,
+                cur_word->col);
+        if (cur_word->id_type == ST_ID_VAR) printf("ID TYPE: VAR");
+        else if (cur_word->id_type == ST_ID_FUNC) printf("ID TYPE: FUNC");
+        else if (cur_word->id_type == ST_ID_UNDEFINED) printf("ID TYPE: undefined");
+        printf("\n");
+    }
 }
 
 void start_root_scope() {
@@ -50,15 +76,50 @@ scope* pop_scope() {
 
 void insert_symbol(int key) {
     word *word_found = find_word(key);
-    scope* current_scope = STACK_TOP(scope_stack);
-    if (SEMANTIC_VERBOSE) printf("\nInsert symbol %s to scope %s, lvl %d\n",
-                                 word_found->name, current_scope->scope_name,
-                                 current_scope->lvl);
-    add_word_to_sym_tab(current_scope->symbol_table, word_found->key,
-                        word_found->name, word_found->line, word_found->col,
-                        word_found->id_type);
+    if (!lookup_symbol(word_found->name, key)) {
+        return;
+    } else {
+        scope* current_scope = STACK_TOP(scope_stack);
+        if (SEMANTIC_VERBOSE) printf("\nInsert symbol %s to scope %s, lvl %d\n",
+                                    word_found->name, current_scope->scope_name,
+                                    current_scope->lvl);
+        add_word_to_sym_tab(&current_scope->symbol_table, word_found->key,
+                            word_found->name, word_found->line, word_found->col,
+                            word_found->id_type);
+    }
 }
 
-void lookup_symbol(char *name) {
-    
+int lookup_symbol(char *name, int key) {
+    scope *aux_scope;
+    int count_stack;
+    STACK_COUNT(scope_stack, aux_scope, count_stack);
+    scope *current_scope = scope_stack;
+    for (int i=0; i <= count_stack - 1; ++i) {
+        if (SEMANTIC_VERBOSE) printf("\nLooking symbol %s in scope %s, lvl %d\n",
+                                    name, current_scope->scope_name,
+                                    current_scope->lvl);
+        word *word_found = find_word_in_sym_tab(current_scope->symbol_table, name);
+        if (word_found == NULL) {
+            if (SEMANTIC_VERBOSE) printf("\nSymbol %s was not found in scope %s, lvl %d\n",
+                                        name, current_scope->scope_name,
+                                        current_scope->lvl);
+            // name was not found in current symbol table
+            // lets try to find the symbol in the next symbol table in the stack
+            current_scope = current_scope->next; 
+        }
+        else {
+            raise_error(word_found, current_scope);
+            remove_symbol(key);
+            return 0; // name was found in the current symbol table/stack
+        }
+    }
+    return 1; // name was not found in any scope in the current stack
+}
+
+void raise_error(word *word_found, scope *cur_scope) {
+    printf("\nSemanticError: %s already declared in line %d, column %d. "
+           "This symbol belongs to scope '%s', lvl %d.\n", word_found->name,
+           word_found->line, word_found->col, cur_scope->scope_name,
+           cur_scope->lvl);
+    semantic_error += 1;
 }

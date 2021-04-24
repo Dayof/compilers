@@ -114,8 +114,11 @@ compound_block_stmt : BRACK_LEFT {
                         $$ = $U;
                         pop_scope();
                     }
-                    | BRACK_LEFT BRACK_RIGHT  {
+                    | BRACK_LEFT {
+                        push_scope_block();
+                    } BRACK_RIGHT  {
                         $$ = create_empty_expr();
+                        pop_scope();
                     }
                     ;
 

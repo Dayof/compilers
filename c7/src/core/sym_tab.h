@@ -19,16 +19,19 @@ typedef struct word_pos {
 word* global_symbol_table;
 
 int len_st();
-void print_st();
+void print_aux_st();
 
 int add_word(int key, char *name, int line, int col);
 word* find_word(int word_key);
 void delete_word(word* s);
 void delete_all_st();
 void set_id_type(int key, int id_type);
+void remove_symbol(int key);
 
 word* new_symbol_table();
-void add_word_to_sym_tab(word* symbol_table, int key, char* name,
+void add_word_to_sym_tab(word **symbol_table, int key, char* name,
                          int line, int col, int id_type);
+word* find_word_in_sym_tab(word* symbol_table, char *name);
+void print_st_with_ref(word *symbol_table);
 
 #endif // __SYM_TAB_H__
