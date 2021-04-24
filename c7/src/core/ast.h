@@ -1,6 +1,7 @@
 #ifndef __AST_H__
 #define __AST_H__
 
+#include "sym_tab.h"
 #include "main.h"
 
 enum TAG {

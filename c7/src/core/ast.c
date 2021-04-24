@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ast.h"
-#include "sym_tab.h"
 
 ast_node* create_empty_expr() {
     if (PARSER_VERBOSE) printf("\n\nCreating empty expression node\n");

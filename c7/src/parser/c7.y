@@ -1,8 +1,8 @@
 %{
     #include <stdlib.h>
     #include <stdio.h>
-    #include "sym_tab.h"
     #include "ast.h"
+    #include "scope.h"
 
     int yylex();
     void yyerror(const char *s);
@@ -64,7 +64,12 @@ stmt    : func_stmt[U] { add_ast($U); }
 
 func_stmt   : TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_FUNC);
-            } PARENT_LEFT param_list[P] PARENT_RIGHT compound_block_stmt[E] {
+                insert_symbol($N);
+            } PARENT_LEFT {
+                push_scope($N);
+            } param_list[P] PARENT_RIGHT {
+                pop_scope();
+            } compound_block_stmt[E] {
                 $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
                 free($T);
             }
@@ -72,6 +77,7 @@ func_stmt   : TYPE[T] ID[N] {
 
 var_decl_stmt   : TYPE[T] ID[N] {
                     set_id_type($N, ST_ID_VAR);
+                    insert_symbol($N);
                 } SEMICOLON {
                     $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                     free($T);
@@ -81,11 +87,13 @@ var_decl_stmt   : TYPE[T] ID[N] {
 param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
                 set_id_type($N, ST_ID_VAR);
+                insert_symbol($N);
                 free($T);
             }
             | TYPE[T] ID[N] {
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                 set_id_type($N, ST_ID_VAR);
+                insert_symbol($N);
                 free($T);
             }
             | /* empty */ {
@@ -100,8 +108,11 @@ simple_param_list   : simple_param_list[E] COMMA simple_expr[N] {
                     | /* empty */ { $$ = create_empty_expr(); }
                     ;
 
-compound_block_stmt : BRACK_LEFT block_stmts[U] BRACK_RIGHT {
+compound_block_stmt : BRACK_LEFT {
+                        push_scope_block();
+                    } block_stmts[U] BRACK_RIGHT {
                         $$ = $U;
+                        pop_scope();
                     }
                     | BRACK_LEFT BRACK_RIGHT  {
                         $$ = create_empty_expr();

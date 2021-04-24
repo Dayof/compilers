@@ -433,7 +433,7 @@ void handle_token(int token) {
 			break;
 		case ID_TOK:;
 			char *yytext_p = strdup(yytext);
-			int idx = add_word(len_st(), yytext_p);
+			int idx = add_word(len_st(), yytext_p, lex_line, lex_column);
 			free(yytext_p);
 			if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
 			yylval.int_value = idx;

@@ -1,17 +1,22 @@
-int inner_b() {             // inner_b: 0
-    int e;                  // e: 1
+int x;                      // x: 0
+float z;                    // z: 0
+
+
+int func(float w) {         // func: 0, w: 1
+    int e;                  // e: 2
     {
         {
             {
-                int b;      // b: 4
-                b = 0;      // b: 4
+                int b;      // b: 5
+                b = 0;      // b: 5
             }
         }
-        int d;              // d: 2
+        int d;              // d: 3
     }
-    int f;                  // f: 1
+    int f;                  // f: 2
 }                   
 
-int main () {               // main: 0
-    int p;                  // p: 5
+
+int main() {                // main: 0, NULL: 6
+    int p;                  // p: 7
 }
