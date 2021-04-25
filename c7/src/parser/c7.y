@@ -70,7 +70,8 @@ func_stmt   : TYPE[T] ID[N] {
             } param_list[P] PARENT_RIGHT {
                 pop_scope();
             } compound_block_stmt[E] {
-                if (func_insert_result) $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
+                if (func_insert_result)
+                    $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
                 else $$ = create_empty_expr();
                 free($T);
             }
@@ -78,25 +79,41 @@ func_stmt   : TYPE[T] ID[N] {
 
 var_decl_stmt   : TYPE[T] ID[N] {
                     set_id_type($N, ST_ID_VAR);
-                    insert_symbol($N);
+                    if (func_insert_result) 
+                        stmt_insert_result = insert_symbol($N);
+                    else remove_symbol($N);
                 } SEMICOLON {
-                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                    if (func_insert_result && stmt_insert_result)
+                        $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                    else $$ = create_empty_expr();
                     free($T);
                 }
                 ; 
 
 param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_VAR);
-                param_insert_result = insert_symbol($N);
-                if (param_insert_result) $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
-                else $$ = $L;
+                if (func_insert_result) {
+                    param_insert_result = insert_symbol($N);
+                    if (param_insert_result)
+                        $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
+                    else $$ = $L;
+                } else {
+                    remove_symbol($N);
+                    $$ = $L;
+                }
                 free($T);
             }
             | TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_VAR);
-                param_insert_result = insert_symbol($N);
-                if (param_insert_result) $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
-                else $$ = create_empty_expr();
+                if (func_insert_result) {
+                    param_insert_result = insert_symbol($N);
+                    if (param_insert_result)
+                        $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                    else $$ = create_empty_expr();
+                } else {
+                    remove_symbol($N);
+                    $$ = create_empty_expr();
+                }
                 free($T);
             }
             | /* empty */ {
@@ -153,9 +170,11 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
                 free($T);
             }
             | ID[N] ASSIGN[A] simple_expr[E] SEMICOLON {
-                $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
                 set_id_type($N, ST_ID_VAR); 
-                
+                stmt_insert_result = check_declared($N);
+                if (stmt_insert_result) 
+                    $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
+                else $$ = create_empty_expr();
             }
             | RETURN[T] simple_expr[E] SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 

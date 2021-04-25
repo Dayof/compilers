@@ -6,6 +6,16 @@ void set_id_type(int key, int id_type) {
     s->id_type = id_type;
 }
 
+void set_scope(word *symbol, int scope_lvl, char *scope_name) {
+    symbol->scope_lvl = scope_lvl;
+    strcpy(symbol->scope_name, scope_name);
+}
+
+void set_existance_tag(int key, int tag) {
+    word *global_sym_table = find_word(key);
+    global_sym_table->tag = tag;
+}
+
 word* new_symbol_table() {
     word *new_symt = NULL;
     return new_symt;
@@ -22,6 +32,9 @@ int add_word(int key, char* name, int line, int col) {
     s->id_type = ST_ID_UNDEFINED;
     s->line = line;
     s->col = col;
+    s->scope_lvl = -1;
+    s->tag = ET_OK;
+    strcpy(s->scope_name, "undefined");
     return key;
 }
 
@@ -35,9 +48,10 @@ void add_word_to_sym_tab(word **symbol_table, int key, char* name,
     current_element->id_type = id_type;
     HASH_ADD_STR(*symbol_table, name, current_element);
     if (SEMANTIC_VERBOSE) {
-        printf("\nSymbol %s added to symbol table\n", name);
-        printf("\n## Symbol Table ##\n");
+        printf("[SYM_TAB] Symbol %s added to symbol table\n", name);
+        printf("\n## Symbol Table ##\n\n");
         print_st_with_ref(*symbol_table);
+        printf("\n");
     }
 }
 
@@ -49,8 +63,9 @@ word* find_word(int word_key) {
 
 word* find_word_in_sym_tab(word* symbol_table, char *name) {
     if (SEMANTIC_VERBOSE) {
-        printf("\n## Symbol Table ##\n");
+        printf("\n## Symbol Table ##\n\n");
         print_st_with_ref(symbol_table);
+        printf("\n");
     }
     word *s;
     HASH_FIND_STR(symbol_table, name, s);
@@ -86,15 +101,20 @@ void print_aux_st() {
         return;
     }
 
+    char symbol_type[10];
+
+    printf("LVL | SCOPE        | NAME         | LINE | COL  | TYPE   |\n"
+           "----------------------------------------------------------\n");
     for (word* cur_word = global_symbol_table; cur_word != NULL;
          cur_word = cur_word->hh.next) {
-        printf("KEY: %-3d | NAME: %-12s | LINE: %-3d | COLUMN: %-3d | ",
-                cur_word->key, cur_word->name, cur_word->line,
-                cur_word->col);
-        if (cur_word->id_type == ST_ID_VAR) printf("ID TYPE: VAR");
-        else if (cur_word->id_type == ST_ID_FUNC) printf("ID TYPE: FUNC");
-        else if (cur_word->id_type == ST_ID_UNDEFINED) printf("ID TYPE: undefined");
-        printf("\n");
+        if (cur_word->tag == ET_SOFT_DELETE) continue;
+        printf("%-3d | %-12s | %-12s | %-4d | %-4d |",
+                cur_word->scope_lvl, cur_word->scope_name, cur_word->name,
+                cur_word->line, cur_word->col);
+        if (cur_word->id_type == ST_ID_VAR) strcpy(symbol_type, "VAR");
+        else if (cur_word->id_type == ST_ID_FUNC) strcpy(symbol_type, "FUNC");
+        else if (cur_word->id_type == ST_ID_UNDEFINED) strcpy(symbol_type, "UNDEF");
+        printf(" %-6s |\n", symbol_type);
     }
 }
 
@@ -104,14 +124,20 @@ void print_st_with_ref(word *symbol_table) {
         return;
     }
 
+    char symbol_type[10], exist_tag[5];
+
+    printf("KEY | TAG | NAME         | LINE | COL  | TYPE   |\n"
+           "-------------------------------------------------\n");
     for (word* cur_word = symbol_table; cur_word != NULL;
          cur_word = cur_word->hh.next) {
-        printf("KEY: %-3d | NAME: %-12s | LINE: %-3d | COLUMN: %-3d | ",
-                cur_word->key, cur_word->name, cur_word->line,
-                cur_word->col);
-        if (cur_word->id_type == ST_ID_VAR) printf("ID TYPE: VAR");
-        else if (cur_word->id_type == ST_ID_FUNC) printf("ID TYPE: FUNC");
-        else if (cur_word->id_type == ST_ID_UNDEFINED) printf("ID TYPE: undefined");
-        printf("\n");
+        printf("%-3d | ", cur_word->key); 
+        if (cur_word->tag == ET_OK) strcpy(exist_tag, "OK");
+        else if (cur_word->tag == ET_SOFT_DELETE) strcpy(exist_tag, "DEL");
+        printf("%-3s | %-12s | %-4d | %-4d |", exist_tag, cur_word->name,
+                cur_word->line, cur_word->col);
+        if (cur_word->id_type == ST_ID_VAR) strcpy(symbol_type, "VAR");
+        else if (cur_word->id_type == ST_ID_FUNC) strcpy(symbol_type, "FUNC");
+        else if (cur_word->id_type == ST_ID_UNDEFINED) strcpy(symbol_type, "UNDEF");
+        printf(" %-6s |\n", symbol_type);
     }
 }

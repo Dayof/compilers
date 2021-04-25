@@ -11,30 +11,36 @@ void init_vars() {
     LEX_VERBOSE = verbose;
     PARSER_VERBOSE = verbose;
     MAIN_VERBOSE = verbose;
-    SEMANTIC_VERBOSE = 1;
+    SEMANTIC_VERBOSE = verbose;
     newline_counter = -1;
     parser_error = lex_error = semantic_error = 0;
+    lex_line = lex_column = parser_line = parser_column = 1;
 
     global_symbol_table = NULL;
     scope_stack = NULL;
-    func_insert_result = param_insert_result = 1;
+    func_insert_result = param_insert_result = stmt_insert_result = 1;
 }
 
 int main (int argc, char* argv[]) {
 	printf("Welcome to C7 interpreter:\n");
+
+    // starts global variables and structures
     init_vars();
+    create_empy_ast();
+    start_root_scope();
 
     // init lexer and parser
     printf("Lexer/parser:\n");
-    lex_line = lex_column = parser_line = parser_column = 1;
-    create_empy_ast();
-    start_root_scope();
     yyin = fopen(argv[1], "r");
     if (MAIN_VERBOSE) printf("\nline %d. ", lex_line);
     do {
         yyparse();
     } while (!feof(yyin));
     fclose(yyin);
+
+    // check if there is a main
+    check_main();
+
     printf("\nLexer and parser finished.\n\n");
 
     printf("\n## Symbol Table ##\n");

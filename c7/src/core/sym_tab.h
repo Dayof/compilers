@@ -10,9 +10,14 @@ enum ID_TYPES {
     ST_ID_VAR
 };
 
+enum EXISTANCE_TAG {
+    ET_OK=0,
+    ET_SOFT_DELETE
+};
+
 typedef struct word_pos {
-    int key, id_type, line, col;
-    char name[50];
+    int key, id_type, line, col, scope_lvl, tag;
+    char name[50], scope_name[50];
     UT_hash_handle hh; /* makes this structure hashable */
 } word;
 
@@ -25,8 +30,11 @@ int add_word(int key, char *name, int line, int col);
 word* find_word(int word_key);
 void delete_word(word* s);
 void delete_all_st();
-void set_id_type(int key, int id_type);
 void remove_symbol(int key);
+
+void set_id_type(int key, int id_type);
+void set_scope(word *symbol, int scope_lvl, char *scope_name);
+void set_existance_tag(int key, int tag);
 
 word* new_symbol_table();
 void add_word_to_sym_tab(word **symbol_table, int key, char* name,
