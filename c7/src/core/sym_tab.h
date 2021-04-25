@@ -12,6 +12,7 @@ enum ID_TYPES {
 
 enum EXISTANCE_TAG {
     ET_OK=0,
+    ET_REF,
     ET_SOFT_DELETE
 };
 

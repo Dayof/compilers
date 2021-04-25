@@ -107,7 +107,7 @@ void print_aux_st() {
            "----------------------------------------------------------\n");
     for (word* cur_word = global_symbol_table; cur_word != NULL;
          cur_word = cur_word->hh.next) {
-        if (cur_word->tag == ET_SOFT_DELETE) continue;
+        if (cur_word->tag == ET_SOFT_DELETE || cur_word->tag == ET_REF) continue;
         printf("%-3d | %-12s | %-12s | %-4d | %-4d |",
                 cur_word->scope_lvl, cur_word->scope_name, cur_word->name,
                 cur_word->line, cur_word->col);
@@ -133,6 +133,7 @@ void print_st_with_ref(word *symbol_table) {
         printf("%-3d | ", cur_word->key); 
         if (cur_word->tag == ET_OK) strcpy(exist_tag, "OK");
         else if (cur_word->tag == ET_SOFT_DELETE) strcpy(exist_tag, "DEL");
+        else if (cur_word->tag == ET_REF) strcpy(exist_tag, "REF");
         printf("%-3s | %-12s | %-4d | %-4d |", exist_tag, cur_word->name,
                 cur_word->line, cur_word->col);
         if (cur_word->id_type == ST_ID_VAR) strcpy(symbol_type, "VAR");

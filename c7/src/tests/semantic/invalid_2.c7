@@ -1,10 +1,38 @@
-int main(float z) {         // main: 0, z: 1
-    if (da) {               // da: raises error
-        int ea;             // ea: 2
-        int ab;
-    } else if (ab) {        // ab: raises error
-        return var;         // var: raises error
-    } else {
+int main(float z) {                 // main: 0, z: 1
+    int z;
+    if (da) {                       // da: raises error
+        int ea;                     // ea: 2
+        if (z) write("something");  // z: ref to 0
+        int ab;                     // ab: 2
+    } else if (ab) {                // ab: raises error
+        return var;                 // var: raises error
+    }
+    
+    set p;                          // p: 2
+    if (main) add(1 in s);          // main: raises error, s: raises error
+
+    if (p) {
         write("something");
+        add(1 in p);                // p: ref to 2
+    } else {
+        float p;                    // p: raises error
+        elem pp;                    // pp: 6
+    }
+
+    if (p && l) {                   // p: ref to 2, l: raises error
+        set possibleSums;           // possibleSums: 7
+        possibleSums = EMPTY;       // possibleSums: ref to 7
+    }
+
+    if (p || p) {                   // p: ref to 2, p: ref to 2
+        int count;                  // count: 8
+        int count_2;                // count: 8
+        // count: ref to 8, count_2: ref to 8, ans: raises error, num: raises error
+        for(count=1, count_2=2; count <= num; count=count+1) 
+            return ans;
+        int i;                      // i: 8
+        // count: ref to 8, count_2: ref to 8, ans: raises error, num: raises error
+        for(i=1; count!=num; count=count+1)
+            return ans;
     }
 }

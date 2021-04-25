@@ -18,7 +18,8 @@ void init_vars() {
 
     global_symbol_table = NULL;
     scope_stack = NULL;
-    func_insert_result = param_insert_result = stmt_insert_result = 1;
+    kill_scope = 0;
+    insert_result = 1;
 }
 
 int main (int argc, char* argv[]) {

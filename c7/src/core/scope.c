@@ -90,6 +90,8 @@ int insert_symbol(int key) {
     word *word_found = find_word(key);
     lookup_detail *res_lookup = lookup_symbol(word_found->name, key);
     if (res_lookup->ctx_scope != NULL) {
+        // tag to remove duplicate symbol in the global symbol table later
+        set_existance_tag(key, ET_SOFT_DELETE);
         raise_error_declared(res_lookup->ctx_symbol, res_lookup->ctx_scope);
         return 0; // symbol already exists
     }
@@ -125,8 +127,6 @@ lookup_detail* lookup_symbol(char *name, int key) {
             current_scope = current_scope->next; 
         }
         else {
-            // tag to remove duplicate symbol in the global symbol table later
-            set_existance_tag(key, ET_SOFT_DELETE);
             res_lookup->ctx_scope = current_scope;
             res_lookup->ctx_symbol = word_found;
             return res_lookup; // name was found in the current symbol table/stack
@@ -171,6 +171,10 @@ int check_declared(int key) {
         // tag to remove symbol in the global symbol table later
         set_existance_tag(key, ET_SOFT_DELETE);
         return 0;
+    } else {
+        set_existance_tag(key, ET_REF);
+        set_scope(word_found, res_lookup->ctx_scope->lvl,
+                  res_lookup->ctx_scope->scope_name);
     }
     return 1;
 }

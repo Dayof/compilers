@@ -220,7 +220,7 @@ void print_ast(ast_node* node, int lvl) {
             printf("INT TYPE -----\n");
         }
         for (int i=0; i < lvl; ++i) printf("-");
-        printf("| %d\n", node->op.integer_expr);
+        printf("| E.lexval: %d\n", node->op.integer_expr);
         return;
     // terminal leaf
     } else if (node->tag == CHAR_TYPE) {
@@ -229,7 +229,7 @@ void print_ast(ast_node* node, int lvl) {
             printf("CHAR TYPE -----\n");
         }
         for (int i=0; i < lvl; ++i) printf("-");
-        printf("| %c\n", node->op.char_expr);
+        printf("| E.op: %c\n", node->op.char_expr);
         return;
     // terminal leaf
     } else if (node->tag == STR_TYPE) {
@@ -238,7 +238,7 @@ void print_ast(ast_node* node, int lvl) {
             printf("STR TYPE -----\n");
         }
         for (int i=0; i < lvl; ++i) printf("-");
-        printf("| %s\n", node->op.str_expr);
+        printf("| E.op: %s\n", node->op.str_expr);
         return;
     // terminal leaf
     } else if (node->tag == FLOAT_TYPE) {
@@ -247,7 +247,7 @@ void print_ast(ast_node* node, int lvl) {
             printf("FLOAT TYPE -----\n");
         }
         for (int i=0; i < lvl; ++i) printf("-");
-        printf("| %.2f\n", node->op.float_expr);
+        printf("| E.lexval: %.2f\n", node->op.float_expr);
         return;
     // terminal leaf
     } else if (node->tag == VAR_TYPE) {
@@ -257,7 +257,9 @@ void print_ast(ast_node* node, int lvl) {
         }
         word* var_word = find_word(node->op.variable_expr);
         for (int i=0; i < lvl; ++i) printf("-");
-        printf("| %s\n", var_word->name);
+        printf("| E.lexval: %s", var_word->name);
+        if (var_word->tag == ET_SOFT_DELETE) printf(", deleted"); 
+        printf("\n"); 
         return;
     // non terminal node
     } else if (node->tag == BINARY_TYPE) {

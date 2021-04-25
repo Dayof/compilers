@@ -17,8 +17,7 @@ typedef struct lookup_detail {
 } lookup_detail;
 
 scope* scope_stack;
-int top_lvl, func_insert_result, param_insert_result,
-    stmt_insert_result;
+int top_lvl, insert_result, kill_scope;
 
 void start_root_scope();
 void push_scope(int key);
