@@ -1,27 +1,10 @@
-int x;                          // x: 0
-float z;                        // z: 0
-int z;                          // z: raises error
-
-int func(float z) {             // func: 0, x: raises error, NULL: 1
-    c = 1;                      // c: raises error
-    int b;                      // b: 2
-    b = 0;                      // b: 2
-}       
-
-int func() {                    // func: raises error, NULL: 3
-    int g;                      // b: 4
-}                   
-
-int func_2() {                  // func_2: 0, NULL: 5
-    int p;                      // p: 6
+int main(float z) {         // main: 0, z: 1
+    if (da) {               // da: raises error
+        int ea;             // ea: 2
+        int ab;
+    } else if (ab) {        // ab: raises error
+        return var;         // var: raises error
+    } else {
+        write("something");
+    }
 }
-
-// func_3: 0, t: 7, x: raises error, q: 7
-int func_3(float t, float x, float q) {
-}
-
-// func_3: raises error, t: not added to AST 
-int func_3(float t) {
-}
-
-// no main: raises error

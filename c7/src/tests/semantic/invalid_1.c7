@@ -5,7 +5,7 @@ int z;                          // z: raises error
 int func(float z) {             // func: 0, x: raises error, NULL: 1
     c = 1;                      // c: raises error
     int b;                      // b: 2
-    b = 0;                      // b: 2
+    b = 0;                      // b: ref to 2
 }       
 
 int func() {                    // func: raises error, NULL: 3

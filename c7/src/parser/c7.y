@@ -79,9 +79,9 @@ func_stmt   : TYPE[T] ID[N] {
 
 var_decl_stmt   : TYPE[T] ID[N] {
                     set_id_type($N, ST_ID_VAR);
-                    if (func_insert_result) 
+                    if (func_insert_result && stmt_insert_result) 
                         stmt_insert_result = insert_symbol($N);
-                    else remove_symbol($N);
+                    else set_existance_tag($N, ET_SOFT_DELETE);
                 } SEMICOLON {
                     if (func_insert_result && stmt_insert_result)
                         $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
@@ -98,7 +98,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                         $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
                     else $$ = $L;
                 } else {
-                    remove_symbol($N);
+                    set_existance_tag($N, ET_SOFT_DELETE);
                     $$ = $L;
                 }
                 free($T);
@@ -111,7 +111,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                         $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                     else $$ = create_empty_expr();
                 } else {
-                    remove_symbol($N);
+                    set_existance_tag($N, ET_SOFT_DELETE);
                     $$ = create_empty_expr();
                 }
                 free($T);
@@ -193,10 +193,13 @@ flow_control_if : IF[T] PARENT_LEFT {
                 ;
 
 flow_control    : flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_item[E2] %prec THEN {
-                    $$ = create_ter_expr($FC1, $E1, $E2); 
+                    if (stmt_insert_result) $$ = create_ter_expr($FC1, $E1, $E2); 
+                    else $$ = create_empty_expr();
                 }
                 | flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_item[E2] ELSE[E3] block_item[E4] {
-                    $$ = create_qui_expr($FC1, $E1, $E2, create_str_expr($E3), $E4);
+                    if (stmt_insert_result)
+                        $$ = create_qui_expr($FC1, $E1, $E2, create_str_expr($E3), $E4);
+                    else $$ = create_empty_expr();
                     free($E3);
                 }
                 | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT block_item[E2] {
@@ -378,8 +381,14 @@ term    : term[L] MULT[M] factor[R] {
 factor  : INTEGER[U] { $$ = create_int_expr($U); }
         | FLOAT[U] { $$ = create_float_expr($U); }
         | ID[N] {
-            $$ = create_var_expr($N);
             set_id_type($N, ST_ID_VAR);
+            stmt_insert_result = check_declared($N);
+            if (stmt_insert_result) 
+                $$ = create_var_expr($N);
+            else {
+                set_existance_tag($N, ET_SOFT_DELETE);
+                $$ = create_empty_expr();
+            }
         }
         | PARENT_LEFT arith_expr[U] PARENT_RIGHT { $$ = $U; }
         | func_expr[U] { $$ = $U; }
