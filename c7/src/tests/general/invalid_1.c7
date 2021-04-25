@@ -1,4 +1,6 @@
-void func_3(int a) {
+int verylongvarnameasdasdkasdsdkaskdsakasdasdkasdsdkas_;
+
+float func_3(int a) {
     return a;
 }
 
@@ -13,9 +15,9 @@ int func(){
     }
 
     if (test & f) {
-        else { { {
-                return x;
-            } } }
+        { { {
+            return x;
+        } } }
     }
 
     {

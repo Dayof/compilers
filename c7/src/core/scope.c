@@ -92,7 +92,7 @@ int insert_symbol(int key) {
     if (res_lookup->ctx_scope != NULL) {
         // tag to remove duplicate symbol in the global symbol table later
         set_existance_tag(key, ET_SOFT_DELETE);
-        raise_error_declared(res_lookup->ctx_symbol, res_lookup->ctx_scope);
+        raise_error_declared(word_found, res_lookup->ctx_symbol, res_lookup->ctx_scope);
         return 0; // symbol already exists
     }
     
@@ -179,20 +179,56 @@ int check_declared(int key) {
     return 1;
 }
 
+int check_function(int key) {
+    word *word_found = find_word(key);
+    lookup_detail *res_lookup = lookup_symbol(word_found->name, key);
+    // this symbol does not exists, neither as a var nor as a function
+    if (res_lookup->ctx_scope == NULL) { 
+        raise_error_not_declared(word_found);
+        // tag to remove symbol in the global symbol table later
+        set_existance_tag(key, ET_SOFT_DELETE);
+        return 0;
+    } else {
+        // this symbol does exists, check if it a var or a function
+        if (res_lookup->ctx_symbol->tag == ST_ID_VAR) {
+            raise_error_not_func(word_found, res_lookup->ctx_symbol,
+                                 res_lookup->ctx_scope);
+            set_existance_tag(key, ET_SOFT_DELETE);
+            return 0;
+        } else {
+            set_existance_tag(key, ET_REF);
+            set_scope(word_found, res_lookup->ctx_scope->lvl,
+                      res_lookup->ctx_scope->scope_name);
+        }
+    }
+    return 1;
+}
+
 void raise_error_main() {
     printf("\nSemanticError: 'main' function was not found in the source code.\n");
     semantic_error += 1;
 }
 
-void raise_error_not_declared(word *word_found) {
-    printf("\nSemanticError: '%s' was not declared.\n", word_found->name);
+void raise_error_not_func(word *word_found, word *word_decl, scope *cur_scope) {
+    printf("\nSemanticError:%d:%d: '%s' was used as a function but '%s' was " 
+           "declared as a varible in line %d, column %d.\n This symbol belongs "
+           "to the scope '%s', lvl %d.\n", word_found->line, word_found->col,
+           word_found->name, word_found->name, word_decl->line,
+           word_decl->col, cur_scope->scope_name, cur_scope->lvl);
     semantic_error += 1;
 }
 
-void raise_error_declared(word *word_found, scope *cur_scope) {
-    printf("\nSemanticError: '%s' was already declared in line %d, column %d.\n"
-           "This symbol belongs to scope '%s', lvl %d.\n", word_found->name,
-           word_found->line, word_found->col, cur_scope->scope_name,
+void raise_error_not_declared(word *word_found) {
+    printf("\nSemanticError:%d:%d: '%s' was not declared.\n", word_found->line,
+           word_found->col, word_found->name);
+    semantic_error += 1;
+}
+
+void raise_error_declared(word *word_found, word *word_decl, scope *cur_scope) {
+    printf("\nSemanticError:%d:%d: '%s' was already declared in line %d, "
+           "column %d.\nThis symbol belongs to the scope '%s', lvl %d.\n",
+           word_found->line, word_found->col, word_found->name,
+           word_decl->line, word_decl->col, cur_scope->scope_name,
            cur_scope->lvl);
     semantic_error += 1;
 }

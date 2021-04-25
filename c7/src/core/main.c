@@ -52,6 +52,14 @@ int main (int argc, char* argv[]) {
         print_asts(ast_root);
     }
 
+    if (parser_error || semantic_error || lex_error) {
+        printf("\nErrors:\n");
+        printf("Parser: %d errors.\n", parser_error);
+        printf("Lexer: %d errors.\n", lex_error);
+        printf("Semantic: %d errors.\n", semantic_error);
+        printf("TOTAL: %d errors.\n", parser_error + lex_error + semantic_error);
+    } else printf("\nNo errors found.\n");
+
     // clean memory
     delete_all_st();
     if (MAIN_VERBOSE) printf("symbol table cleaned\n");

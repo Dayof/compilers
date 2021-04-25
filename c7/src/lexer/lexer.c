@@ -1111,7 +1111,7 @@ YY_RULE_SETUP
 case 43:
 YY_RULE_SETUP
 #line 170 "lexer/c7.lex"
-{ handle_token(ID_TOK); return ID; };
+{ if (handle_token(ID_TOK)) return ID; };
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
@@ -2150,8 +2150,9 @@ char handle_char(char yytext_char) {
 	- Output: <id, 'sum_numbers'> <delimiter, '='> <integer, '1'> <add, '+'> <float, '1.0'> <semicolon, ';'> 
 */
 
-void handle_token(int token) {
-	int keylen;
+int handle_token(int token) {
+	int keylen, handle_token_res;
+	handle_token_res = 1;
 	switch (token) {
 		case STRING_TOK:
 			if (LEX_VERBOSE) printf("<string, '%s'> ", yytext);
@@ -2364,10 +2365,18 @@ void handle_token(int token) {
 			break;
 		case ID_TOK:;
 			char *yytext_p = strdup(yytext);
-			int idx = add_word(len_st(), yytext_p, lex_line, lex_column);
+			int size_id = strlen(yytext_p);
+			if (size_id > 50) {
+				printf("\nLexError:%d:%d: IDs bigger than 50 characters are not "
+					   "allowed.\nThe ID '%s' has length of %d.\n", lex_line,
+					   lex_column, yytext_p, size_id);
+				handle_token_res = 0;
+			} else {
+				int idx = add_word(len_st(), yytext_p, lex_line, lex_column);
+				if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
+				yylval.int_value = idx;
+			}
 			free(yytext_p);
-			if (LEX_VERBOSE) printf("<id, '%s', %d> ", yytext, idx);
-			yylval.int_value = idx;
 			break;
 		case NEWLINE_TOK:
 			newline_counter += 1;
@@ -2379,11 +2388,12 @@ void handle_token(int token) {
 			break;
 		case ERROR_TOK:
 			lex_error += 1;
-			printf("\nLexError: token '%s' is not recognized in line %d, column %d.\n",
-				   yytext, lex_line, lex_column);
+			printf("\nLexError:%d:%d: token '%s' is not recognized.\n",
+				   lex_line, lex_column, yytext);
 		default:
 			break;  // ignore
 	}
 	lex_column += strlen(yytext);
 	parser_column = lex_column;
+	return handle_token_res;
 }

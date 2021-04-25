@@ -5,11 +5,11 @@ Grammar
     1 program: stmts
 
     2 stmts: stmts stmt
-    3      | stmts error
-    4      | stmt
+    3      | stmt
 
-    5 stmt: func_stmt
-    6     | var_decl_stmt
+    4 stmt: func_stmt
+    5     | var_decl_stmt
+    6     | error
 
     7 $@1: %empty
 
@@ -140,7 +140,7 @@ Grammar
 Terminals, with rules where they appear
 
     $end (0) 0
-    error <expression> (256) 3 36
+    error <expression> (256) 6 36
     BRACK_LEFT <char_value> (258) 20 22
     BRACK_RIGHT <char_value> (259) 20 22
     PARENT_LEFT <char_value> (260) 10 31 32 33 37 40 41 42 70 71 72 73 74 82 93
@@ -193,14 +193,14 @@ Nonterminals, with rules where they appear
         on left: 1
         on right: 0
     stmts (47)
-        on left: 2 3 4
-        on right: 1 2 3
+        on left: 2 3
+        on right: 1 2
     stmt (48)
-        on left: 5 6
-        on right: 2 4
+        on left: 4 5 6
+        on right: 2 3
     func_stmt <expression> (49)
         on left: 10
-        on right: 5
+        on right: 4
     $@1 (50)
         on left: 7
         on right: 10
@@ -212,7 +212,7 @@ Nonterminals, with rules where they appear
         on right: 10
     var_decl_stmt <expression> (53)
         on left: 12
-        on right: 6 25
+        on right: 5 25
     $@4 (54)
         on left: 11
         on right: 12
@@ -312,74 +312,83 @@ State 0
 
     0 $accept: • program $end
 
-    TYPE  shift, and go to state 1
+    error  shift, and go to state 1
+    TYPE   shift, and go to state 2
 
-    program        go to state 2
-    stmts          go to state 3
-    stmt           go to state 4
-    func_stmt      go to state 5
-    var_decl_stmt  go to state 6
+    program        go to state 3
+    stmts          go to state 4
+    stmt           go to state 5
+    func_stmt      go to state 6
+    var_decl_stmt  go to state 7
 
 
 State 1
 
-   10 func_stmt: TYPE • ID $@1 PARENT_LEFT $@2 param_list PARENT_RIGHT $@3 compound_block_stmt
-   12 var_decl_stmt: TYPE • ID $@4 SEMICOLON
-
-    ID  shift, and go to state 7
-
-
-State 2
-
-    0 $accept: program • $end
-
-    $end  shift, and go to state 8
-
-
-State 3
-
-    1 program: stmts •
-    2 stmts: stmts • stmt
-    3      | stmts • error
-
-    error  shift, and go to state 9
-    TYPE   shift, and go to state 1
-
-    $end  reduce using rule 1 (program)
-
-    stmt           go to state 10
-    func_stmt      go to state 5
-    var_decl_stmt  go to state 6
-
-
-State 4
-
-    4 stmts: stmt •
-
-    $end   reduce using rule 4 (stmts)
-    error  reduce using rule 4 (stmts)
-    TYPE   reduce using rule 4 (stmts)
-
-
-State 5
-
-    5 stmt: func_stmt •
-
-    $end   reduce using rule 5 (stmt)
-    error  reduce using rule 5 (stmt)
-    TYPE   reduce using rule 5 (stmt)
-
-
-State 6
-
-    6 stmt: var_decl_stmt •
+    6 stmt: error •
 
     $end   reduce using rule 6 (stmt)
     error  reduce using rule 6 (stmt)
     TYPE   reduce using rule 6 (stmt)
 
 
+State 2
+
+   10 func_stmt: TYPE • ID $@1 PARENT_LEFT $@2 param_list PARENT_RIGHT $@3 compound_block_stmt
+   12 var_decl_stmt: TYPE • ID $@4 SEMICOLON
+
+    ID  shift, and go to state 8
+
+
+State 3
+
+    0 $accept: program • $end
+
+    $end  shift, and go to state 9
+
+
+State 4
+
+    1 program: stmts •
+    2 stmts: stmts • stmt
+
+    error  shift, and go to state 1
+    TYPE   shift, and go to state 2
+
+    $end  reduce using rule 1 (program)
+
+    stmt           go to state 10
+    func_stmt      go to state 6
+    var_decl_stmt  go to state 7
+
+
+State 5
+
+    3 stmts: stmt •
+
+    $end   reduce using rule 3 (stmts)
+    error  reduce using rule 3 (stmts)
+    TYPE   reduce using rule 3 (stmts)
+
+
+State 6
+
+    4 stmt: func_stmt •
+
+    $end   reduce using rule 4 (stmt)
+    error  reduce using rule 4 (stmt)
+    TYPE   reduce using rule 4 (stmt)
+
+
 State 7
+
+    5 stmt: var_decl_stmt •
+
+    $end   reduce using rule 5 (stmt)
+    error  reduce using rule 5 (stmt)
+    TYPE   reduce using rule 5 (stmt)
+
+
+State 8
 
    10 func_stmt: TYPE ID • $@1 PARENT_LEFT $@2 param_list PARENT_RIGHT $@3 compound_block_stmt
    12 var_decl_stmt: TYPE ID • $@4 SEMICOLON
@@ -391,20 +400,11 @@ State 7
     $@4  go to state 12
 
 
-State 8
+State 9
 
     0 $accept: program $end •
 
     $default  accept
-
-
-State 9
-
-    3 stmts: stmts error •
-
-    $end   reduce using rule 3 (stmts)
-    error  reduce using rule 3 (stmts)
-    TYPE   reduce using rule 3 (stmts)
 
 
 State 10

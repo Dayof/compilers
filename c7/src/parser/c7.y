@@ -50,16 +50,24 @@
 
 %%
 
-program : stmts
+program : stmts { if(PARSER_VERBOSE) printf("[BISON] program -> stmts\n"); }   
         ;
 
-stmts   : stmts stmt
-        | stmts error { yyerrok; }
-        | stmt
+stmts   : stmts stmt { 
+            if(PARSER_VERBOSE) printf("[BISON] stmts -> stmts stmt\n");
+        }   
+        | stmt { if(PARSER_VERBOSE) printf("[BISON] stmts -> stmt\n"); } 
         ;
 
 stmt    : func_stmt[U] { add_ast($U); }
-        | var_decl_stmt[U] { add_ast($U); }
+        | var_decl_stmt[U] {
+            if(PARSER_VERBOSE) printf("[BISON] stmt -> var_decl_stmt\n");
+            add_ast($U);
+        }
+        | error { 
+            if(PARSER_VERBOSE) printf("[BISON] stmt -> error\n");
+            yyerrok;
+        }
         ;
 
 func_stmt   : TYPE[T] ID[N] {
@@ -69,18 +77,20 @@ func_stmt   : TYPE[T] ID[N] {
             } PARENT_LEFT {
                 push_scope($N);
             } param_list[P] PARENT_RIGHT {
-                pop_scope();
             } compound_block_stmt[E] {
+                pop_scope();
                 $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
                 free($T);
             }
             ;
 
 var_decl_stmt   : TYPE[T] ID[N] {
+                    if(PARSER_VERBOSE) printf("[BISON] var_decl_stmt -> type id\n");
                     set_id_type($N, ST_ID_VAR);
                     insert_result = insert_symbol($N);
                     if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
                 } SEMICOLON {
+                    if(PARSER_VERBOSE) printf("[BISON] var_decl_stmt -> semicolon\n");
                     $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                     free($T);
                 }
@@ -293,8 +303,8 @@ set_expr    : simple_expr[E1] IN[M] simple_expr[E2] {
             ;   
 
 func_call   : ID[N] PARENT_LEFT simple_param_list[E] PARENT_RIGHT {
-                $$ = create_bin_expr(create_var_expr($N), $E); 
-                set_id_type($N, ST_ID_FUNC);
+                check_function($N);
+                $$ = create_bin_expr(create_var_expr($N), $E);
             }
             ;
 
@@ -374,7 +384,6 @@ factor  : INTEGER[U] { $$ = create_int_expr($U); }
 %%
 
 void yyerror(const char *s) {
-    printf("\nSyntaxError: %s in line %d, column %d.\n",
-           s, parser_line, parser_column);
+    printf("\nSyntaxError:%d:%d: %s.\n", parser_line, parser_column, s);
     parser_error += 1;
 }
