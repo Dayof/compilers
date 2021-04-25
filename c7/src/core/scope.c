@@ -56,14 +56,25 @@ void push_scope_block() {
 
 void push_scope(int key) {
     word *word_found = find_word(key);
-    scope *new_scope = (scope*) malloc(sizeof(scope));
-    new_scope->lvl = top_lvl + 1;
-    top_lvl = new_scope->lvl;
-    if (SEMANTIC_VERBOSE) printf("\nPush scope %s, lvl %d\n",
-                                 word_found->name, new_scope->lvl);
-    strcpy(new_scope->scope_name, word_found->name);
-    new_scope->symbol_table = new_symbol_table(); // starts empty symbol table
-    STACK_PUSH(scope_stack, new_scope);  
+    if (word_found != NULL) {
+        scope *new_scope = (scope*) malloc(sizeof(scope));
+        new_scope->lvl = top_lvl + 1;
+        top_lvl = new_scope->lvl;
+        if (SEMANTIC_VERBOSE) printf("\nPush scope %s, lvl %d\n",
+                                    word_found->name, new_scope->lvl);
+        strcpy(new_scope->scope_name, word_found->name);
+        new_scope->symbol_table = new_symbol_table(); // starts empty symbol table
+        STACK_PUSH(scope_stack, new_scope);  
+    } else {
+        scope *new_scope = (scope*) malloc(sizeof(scope));
+        new_scope->lvl = top_lvl + 1;
+        top_lvl = new_scope->lvl;
+        if (SEMANTIC_VERBOSE) printf("\nPush scope lvl %d, key %d does not exist anymore\n",
+                                    new_scope->lvl, key);
+        strcpy(new_scope->scope_name, "null");
+        new_scope->symbol_table = new_symbol_table(); // starts empty symbol table
+        STACK_PUSH(scope_stack, new_scope);  
+    }
 }
 
 scope* pop_scope() {
@@ -74,19 +85,18 @@ scope* pop_scope() {
     return aux_scope;
 }
 
-void insert_symbol(int key) {
+int insert_symbol(int key) {
     word *word_found = find_word(key);
-    if (!lookup_symbol(word_found->name, key)) {
-        return;
-    } else {
-        scope* current_scope = STACK_TOP(scope_stack);
-        if (SEMANTIC_VERBOSE) printf("\nInsert symbol %s to scope %s, lvl %d\n",
-                                    word_found->name, current_scope->scope_name,
-                                    current_scope->lvl);
-        add_word_to_sym_tab(&current_scope->symbol_table, word_found->key,
-                            word_found->name, word_found->line, word_found->col,
-                            word_found->id_type);
-    }
+    if (!lookup_symbol(word_found->name, key)) return 0; // symbol already exists
+    
+    scope* current_scope = STACK_TOP(scope_stack);
+    if (SEMANTIC_VERBOSE) printf("\nInsert symbol %s to scope %s, lvl %d\n",
+                                word_found->name, current_scope->scope_name,
+                                current_scope->lvl);
+    add_word_to_sym_tab(&current_scope->symbol_table, word_found->key,
+                        word_found->name, word_found->line, word_found->col,
+                        word_found->id_type);
+    return 1;
 }
 
 int lookup_symbol(char *name, int key) {

@@ -64,13 +64,14 @@ stmt    : func_stmt[U] { add_ast($U); }
 
 func_stmt   : TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_FUNC);
-                insert_symbol($N);
+                func_insert_result = insert_symbol($N);
             } PARENT_LEFT {
                 push_scope($N);
             } param_list[P] PARENT_RIGHT {
                 pop_scope();
             } compound_block_stmt[E] {
-                $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
+                if (func_insert_result) $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
+                else $$ = create_empty_expr();
                 free($T);
             }
             ;
@@ -85,15 +86,17 @@ var_decl_stmt   : TYPE[T] ID[N] {
                 ; 
 
 param_list  : param_list[L] COMMA TYPE[T] ID[N] {
-                $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
                 set_id_type($N, ST_ID_VAR);
-                insert_symbol($N);
+                param_insert_result = insert_symbol($N);
+                if (param_insert_result) $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
+                else $$ = $L;
                 free($T);
             }
             | TYPE[T] ID[N] {
-                $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                 set_id_type($N, ST_ID_VAR);
-                insert_symbol($N);
+                param_insert_result = insert_symbol($N);
+                if (param_insert_result) $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                else $$ = create_empty_expr();
                 free($T);
             }
             | /* empty */ {
@@ -152,6 +155,7 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
             | ID[N] ASSIGN[A] simple_expr[E] SEMICOLON {
                 $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
                 set_id_type($N, ST_ID_VAR); 
+                
             }
             | RETURN[T] simple_expr[E] SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 

@@ -12,13 +12,13 @@ typedef struct scope {
 } scope;
 
 scope* scope_stack;
-int top_lvl;
+int top_lvl, func_insert_result, param_insert_result;
 
 void start_root_scope();
 void push_scope(int key);
 void push_scope_block();
 scope* pop_scope();
-void insert_symbol(int key);
+int insert_symbol(int key);
 int lookup_symbol(char *name, int key);
 void raise_error(word *word_found, scope *cur_scope);
 void print_stack_st();
