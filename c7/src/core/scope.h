@@ -24,7 +24,7 @@ void push_scope(int key);
 void push_scope_block();
 scope* pop_scope();
 int insert_symbol(int key);
-lookup_detail* lookup_symbol(char *name, int key);
+lookup_detail* lookup_symbol(char *name);
 
 void raise_error_func_arity(word *word_found, word *word_decl);
 void raise_error_not_func(word *word_found, word *word_decl, scope *cur_scope);

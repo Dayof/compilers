@@ -88,7 +88,7 @@ scope* pop_scope() {
 
 int insert_symbol(int key) {
     word *word_found = find_word(key);
-    lookup_detail *res_lookup = lookup_symbol(word_found->name, key);
+    lookup_detail *res_lookup = lookup_symbol(word_found->name);
     if (res_lookup->ctx_scope != NULL) {
         // tag to remove duplicate symbol in the global symbol table later
         set_existance_tag(key, ET_SOFT_DELETE);
@@ -107,7 +107,7 @@ int insert_symbol(int key) {
     return 1;
 }
 
-lookup_detail* lookup_symbol(char *name, int key) {
+lookup_detail* lookup_symbol(char *name) {
     scope *aux_scope;
     int count_stack;
     STACK_COUNT(scope_stack, aux_scope, count_stack);
@@ -164,7 +164,7 @@ int check_main() {
 
 int check_declared(int key) {
     word *word_found = find_word(key);
-    lookup_detail *res_lookup = lookup_symbol(word_found->name, key);
+    lookup_detail *res_lookup = lookup_symbol(word_found->name);
     // symbol does not exist
     if (res_lookup->ctx_scope == NULL) {
         raise_error_not_declared(word_found);
@@ -193,7 +193,7 @@ int check_arity(word *word_found, word *word_decl) {
 
 int check_function(int key) {
     word *word_found = find_word(key);
-    lookup_detail *res_lookup = lookup_symbol(word_found->name, key);
+    lookup_detail *res_lookup = lookup_symbol(word_found->name);
     // this symbol does not exist, neither as a variable nor as a function
     if (res_lookup->ctx_scope == NULL) { 
         if (SEMANTIC_VERBOSE)
@@ -203,19 +203,23 @@ int check_function(int key) {
         set_existance_tag(key, ET_SOFT_DELETE);
         return 0;
     } else {
-        if (SEMANTIC_VERBOSE)
-            printf("[SCOPE] Function %s was found.\n", word_found->name);
+        if (SEMANTIC_VERBOSE) {
+            printf("[SCOPE] Symbol '%s' was found.\n", word_found->name);
+            printf("\n## Symbol Table ##\n\n");
+            print_st_with_ref(res_lookup->ctx_symbol);
+            printf("\n");
+        }
         // this symbol does exists, check if it a var or a function
-        if (res_lookup->ctx_symbol->tag == ST_ID_VAR ||
-            res_lookup->ctx_symbol->tag == ST_ID_UNDEFINED) {
+        if (res_lookup->ctx_symbol->id_type == ST_ID_VAR ||
+            res_lookup->ctx_symbol->id_type == ST_ID_UNDEFINED) {
             if (SEMANTIC_VERBOSE)
-                printf("[SCOPE] '%s' is actually as variable or it is undefined.\n",
+                printf("[SCOPE] '%s' is actually a variable or it is undefined.\n",
                        word_found->name);
             raise_error_not_func(word_found, res_lookup->ctx_symbol,
                                  res_lookup->ctx_scope);
             set_existance_tag(key, ET_SOFT_DELETE);
             return 0;
-        } else if (res_lookup->ctx_symbol->tag == ST_ID_FUNC) {
+        } else if (res_lookup->ctx_symbol->id_type == ST_ID_FUNC) {
             if (SEMANTIC_VERBOSE)
                 printf("[SCOPE] '%s' is a function.\n", word_found->name);
             if (check_arity(word_found, res_lookup->ctx_symbol)) {
