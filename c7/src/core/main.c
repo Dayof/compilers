@@ -18,7 +18,7 @@ void init_vars() {
 
     global_symbol_table = NULL;
     scope_stack = NULL;
-    kill_scope = 0;
+    arity_counter = 0;
     insert_result = 1;
 }
 

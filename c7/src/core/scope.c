@@ -165,7 +165,7 @@ int check_main() {
 int check_declared(int key) {
     word *word_found = find_word(key);
     lookup_detail *res_lookup = lookup_symbol(word_found->name, key);
-    // symbol do not exist
+    // symbol does not exist
     if (res_lookup->ctx_scope == NULL) {
         raise_error_not_declared(word_found);
         // tag to remove symbol in the global symbol table later
@@ -179,26 +179,52 @@ int check_declared(int key) {
     return 1;
 }
 
+int check_arity(word *word_found, word *word_decl) {
+    word *global_decl = find_word(word_decl->key);
+    if (SEMANTIC_VERBOSE)
+        printf("[SCOPE] Function call arity %d, declaration arity %d.\n",
+               word_found->arity, global_decl->arity);
+    if (word_found->arity != global_decl->arity) {
+        raise_error_func_arity(word_found, global_decl);
+        return 0;
+    }
+    return 1;
+}
+
 int check_function(int key) {
     word *word_found = find_word(key);
     lookup_detail *res_lookup = lookup_symbol(word_found->name, key);
-    // this symbol does not exists, neither as a var nor as a function
+    // this symbol does not exist, neither as a variable nor as a function
     if (res_lookup->ctx_scope == NULL) { 
+        if (SEMANTIC_VERBOSE)
+            printf("[SCOPE] Function %s was not found.\n", word_found->name);
         raise_error_not_declared(word_found);
         // tag to remove symbol in the global symbol table later
         set_existance_tag(key, ET_SOFT_DELETE);
         return 0;
     } else {
+        if (SEMANTIC_VERBOSE)
+            printf("[SCOPE] Function %s was found.\n", word_found->name);
         // this symbol does exists, check if it a var or a function
-        if (res_lookup->ctx_symbol->tag == ST_ID_VAR) {
+        if (res_lookup->ctx_symbol->tag == ST_ID_VAR ||
+            res_lookup->ctx_symbol->tag == ST_ID_UNDEFINED) {
+            if (SEMANTIC_VERBOSE)
+                printf("[SCOPE] '%s' is actually as variable or it is undefined.\n",
+                       word_found->name);
             raise_error_not_func(word_found, res_lookup->ctx_symbol,
                                  res_lookup->ctx_scope);
             set_existance_tag(key, ET_SOFT_DELETE);
             return 0;
-        } else {
-            set_existance_tag(key, ET_REF);
-            set_scope(word_found, res_lookup->ctx_scope->lvl,
-                      res_lookup->ctx_scope->scope_name);
+        } else if (res_lookup->ctx_symbol->tag == ST_ID_FUNC) {
+            if (SEMANTIC_VERBOSE)
+                printf("[SCOPE] '%s' is a function.\n", word_found->name);
+            if (check_arity(word_found, res_lookup->ctx_symbol)) {
+                set_existance_tag(key, ET_REF);
+                set_scope(word_found, res_lookup->ctx_scope->lvl,
+                        res_lookup->ctx_scope->scope_name);
+            } else
+                // if arity is different, tag symbol to delete later
+                set_existance_tag(key, ET_SOFT_DELETE);
         }
     }
     return 1;
@@ -209,12 +235,20 @@ void raise_error_main() {
     semantic_error += 1;
 }
 
+void raise_error_func_arity(word *word_found, word *word_decl) {
+    printf("\nSemanticError:%d:%d: '%s' does not match the function declaration.\n" 
+           "The function call contains %d parameters and '%s' was declared with "
+           "%d parameters.\n", word_found->line, word_found->col,
+           word_found->name, word_found->arity, word_found->name,
+           word_decl->arity);
+    semantic_error += 1;
+}
+
 void raise_error_not_func(word *word_found, word *word_decl, scope *cur_scope) {
     printf("\nSemanticError:%d:%d: '%s' was used as a function but '%s' was " 
-           "declared as a varible in line %d, column %d.\n This symbol belongs "
-           "to the scope '%s', lvl %d.\n", word_found->line, word_found->col,
-           word_found->name, word_found->name, word_decl->line,
-           word_decl->col, cur_scope->scope_name, cur_scope->lvl);
+           "declared as a variable in line %d, column %d.\n", word_found->line,
+           word_found->col, word_found->name, word_found->name, word_decl->line,
+           word_decl->col);
     semantic_error += 1;
 }
 

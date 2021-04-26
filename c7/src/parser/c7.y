@@ -77,6 +77,8 @@ func_stmt   : TYPE[T] ID[N] {
             } PARENT_LEFT {
                 push_scope($N);
             } param_list[P] PARENT_RIGHT {
+                set_arity($N, arity_counter);
+                arity_counter = 0;
             } compound_block_stmt[E] {
                 pop_scope();
                 $$ = create_func_expr(create_str_expr($T), create_var_expr($N), $P, $E);
@@ -100,6 +102,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_VAR);
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
+                arity_counter += 1;
                 $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
                 free($T);
             }
@@ -107,6 +110,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_VAR);
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
+                arity_counter += 1;
                 $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
                 free($T);
             }
@@ -116,9 +120,13 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
             ;
 
 simple_param_list   : simple_param_list[E] COMMA simple_expr[N] {
+                        arity_counter += 1;
                         $$ = create_bin_expr($E, $N);
                     }
-                    | simple_expr[U] { $$ = $U; }
+                    | simple_expr[U] {
+                        arity_counter += 1;
+                        $$ = $U;
+                    }
                     | /* empty */ { $$ = create_empty_expr(); }
                     ;
 
@@ -303,8 +311,12 @@ set_expr    : simple_expr[E1] IN[M] simple_expr[E2] {
             ;   
 
 func_call   : ID[N] PARENT_LEFT simple_param_list[E] PARENT_RIGHT {
+                if(PARSER_VERBOSE)
+                    printf("[BISON] Function call arity %d.\n", arity_counter);
+                set_arity($N, arity_counter);
                 check_function($N);
                 $$ = create_bin_expr(create_var_expr($N), $E);
+                arity_counter = 0;
             }
             ;
 

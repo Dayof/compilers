@@ -4,7 +4,7 @@ float func_3(int a) {
     return a;
 }
 
-int func(){
+int func() {
     int x;
     float z;
     x = func_2(x);

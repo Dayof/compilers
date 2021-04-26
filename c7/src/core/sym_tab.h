@@ -17,7 +17,7 @@ enum EXISTANCE_TAG {
 };
 
 typedef struct word_pos {
-    int key, id_type, line, col, scope_lvl, tag;
+    int key, id_type, line, col, scope_lvl, tag, arity;
     char name[50], scope_name[50];
     UT_hash_handle hh; /* makes this structure hashable */
 } word;
@@ -36,6 +36,7 @@ void remove_symbol(int key);
 void set_id_type(int key, int id_type);
 void set_scope(word *symbol, int scope_lvl, char *scope_name);
 void set_existance_tag(int key, int tag);
+void set_arity(int key, int arity);
 
 word* new_symbol_table();
 void add_word_to_sym_tab(word **symbol_table, int key, char* name,
