@@ -13,8 +13,8 @@ parser/parser.c: parser/c7.y
 	# bison -d -v -Wcounterexamples parser/c7.y
 	bison -d -v parser/c7.y
 
-memory:	$(FILES) core/ast.h core/sym_tab.h core/scope.h core/main.h
-		$(CC) $(CFLAGS_MEM) $(FILES) -I core -I lexer -I parser -o c7 -lfl
+check_memory:	$(FILES) core/ast.h core/sym_tab.h core/scope.h core/main.h
+				$(CC) $(CFLAGS_MEM) $(FILES) -I core -I lexer -I parser -o c7 -lfl
 
 valgrind:
 	@echo "Test file: ${TEST_FILE}"

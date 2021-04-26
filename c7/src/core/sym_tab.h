@@ -4,7 +4,15 @@
 #include "uthash.h"
 #include "ast.h"
 
-enum ID_TYPES {
+enum DATA_TYPE {
+    DT_UNDEFINED=0,
+    DT_INT,
+    DT_FLOAT,
+    DT_SET,
+    DT_ELEM
+};
+
+enum ID_TYPE {
     ST_ID_UNDEFINED=0,
     ST_ID_FUNC,
     ST_ID_VAR
@@ -17,7 +25,7 @@ enum EXISTANCE_TAG {
 };
 
 typedef struct word_pos {
-    int key, id_type, line, col, scope_lvl, tag, arity;
+    int key, id_type, line, col, scope_lvl, tag, arity, data_type;
     char name[50], scope_name[50];
     UT_hash_handle hh; /* makes this structure hashable */
 } word;

@@ -43,6 +43,7 @@ int add_word(int key, char* name, int line, int col) {
     s->scope_lvl = -1;
     s->tag = ET_OK;
     s->arity = -1;
+    s->data_type = DT_UNDEFINED;
     strcpy(s->scope_name, "undefined");
     return key;
 }
@@ -55,6 +56,10 @@ void add_word_to_sym_tab(word **symbol_table, int key, char* name,
     current_element->line = line;
     current_element->col = col;
     current_element->id_type = id_type;
+    current_element->scope_lvl = -1;
+    current_element->tag = ET_OK;
+    current_element->arity = -1;
+    current_element->data_type = DT_UNDEFINED;
     HASH_ADD_STR(*symbol_table, name, current_element);
     if (SEMANTIC_VERBOSE) {
         printf("[SYM_TAB] Symbol %s added to symbol table\n", name);
@@ -95,7 +100,8 @@ void remove_symbol(int key) {
 void delete_all_st() {
     word* cur_word, *tmp;
     HASH_ITER(hh, global_symbol_table, cur_word, tmp) {
-        printf("[SCOPE] Deleting symbol table %s.\n", cur_word->name);
+        if (SEMANTIC_VERBOSE) 
+            printf("[SCOPE] Deleting symbol table %s.\n", cur_word->name);
         HASH_DEL(global_symbol_table, cur_word);
         free(cur_word);
     }
@@ -106,7 +112,8 @@ void delete_st_with_ref(word *symbol_table) {
     if (HASH_COUNT(symbol_table) != 0) {
         word* cur_word, *tmp;
         HASH_ITER(hh, symbol_table, cur_word, tmp) {
-            printf("[SCOPE] Deleting symbol table %s.\n", cur_word->name);
+            if (SEMANTIC_VERBOSE)
+                printf("[SCOPE] Deleting symbol table %s.\n", cur_word->name);
             HASH_DEL(symbol_table, cur_word);
             free(cur_word);
         }
@@ -124,8 +131,8 @@ void print_aux_st() {
         return;
     }
 
-    printf("LVL | SCOPE        | NAME         | LINE | COL  | TYPE   | ARITY |\n"
-           "------------------------------------------------------------------\n");
+    printf("LVL | SCOPE        | NAME         | LINE | COL  | TYPE  | ID    | ARITY |\n"
+           "-------------------------------------------------------------------------\n");
     for (word* cur_word = global_symbol_table; cur_word != NULL;
          cur_word = cur_word->hh.next) {
         if (cur_word->tag == ET_SOFT_DELETE ||
@@ -134,12 +141,24 @@ void print_aux_st() {
         printf("%-3d | %-12s | %-12s | %-4d | %-4d |",
                 cur_word->scope_lvl, cur_word->scope_name, cur_word->name,
                 cur_word->line, cur_word->col);
+
+        if (cur_word->data_type == DT_INT)
+            printf(" %-4s |", "INT");
+        else if (cur_word->data_type == DT_FLOAT)
+            printf(" %-4s |", "FLOAT");
+        else if (cur_word->data_type == DT_SET)
+            printf(" %-4s |", "SET");
+        else if (cur_word->data_type == DT_ELEM)
+            printf(" %-4s |", "ELEM");
+        else if (cur_word->data_type == DT_UNDEFINED)
+            printf(" %-4s |", "UNDEF");
+
         if (cur_word->id_type == ST_ID_VAR)
-            printf(" %-6s | %-5s |\n", "VAR", "x");
+            printf(" %-5s | %-5s |\n", "VAR", "x");
         else if (cur_word->id_type == ST_ID_FUNC)
-            printf(" %-6s | %-5d |\n", "FUNC", cur_word->arity);
+            printf(" %-5s | %-5d |\n", "FUNC", cur_word->arity);
         else if (cur_word->id_type == ST_ID_UNDEFINED)
-            printf(" %-6s | %-5s |\n", "UNDEF", "x");
+            printf(" %-5s | %-5s |\n", "UNDEF", "x");
     }
 }
 
@@ -151,8 +170,8 @@ void print_st_with_ref(word *symbol_table) {
 
     char exist_tag[5] = "";
 
-    printf("KEY | TAG | NAME         | LINE | COL  | TYPE   | ARITY |\n"
-           "---------------------------------------------------------\n");
+    printf("KEY | TAG | NAME         | LINE | COL  | ID   | ARITY |\n"
+           "-------------------------------------------------------\n");
     for (word* cur_word = symbol_table; cur_word != NULL;
          cur_word = cur_word->hh.next) {
         printf("%-3d | ", cur_word->key); 

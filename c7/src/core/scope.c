@@ -264,8 +264,6 @@ void delete_scope(scope *cur_scope) {
 void delete_lookup() {
     if (SEMANTIC_VERBOSE) printf("[SCOPE] Deleting lookup.\n");
     free(global_lookup_detail);
-    // delete_st_with_ref(global_lookup_detail->ctx_symbol);
-    // delete_scope(global_lookup_detail->ctx_scope);
 }
 
 void raise_error_main() {

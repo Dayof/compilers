@@ -1,4 +1,4 @@
-# C7 - Lexer
+# c7: C for set's operations
 
 ## Requirements
 
