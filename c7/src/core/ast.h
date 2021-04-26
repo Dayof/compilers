@@ -14,7 +14,8 @@ enum TAG {
     TERNARY_TYPE,
     QUARTENARY_TYPE,
     QUINARY_TYPE,
-    FUNC_TYPE
+    FUNC_TYPE,
+    CAST_TYPE
 };
 
 typedef struct exp {

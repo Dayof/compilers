@@ -257,7 +257,8 @@ void print_ast(ast_node* node, int lvl) {
         }
         word* var_word = find_word(node->op.variable_expr);
         for (int i=0; i < lvl; ++i) printf("-");
-        printf("| E.lexval: %s", var_word->name);
+        printf("| E.lexval: %s, E.type: %s",
+               var_word->name, datatype2str(var_word->data_type));
         if (var_word->tag == ET_SOFT_DELETE) printf(", deleted"); 
         printf("\n"); 
         return;

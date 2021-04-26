@@ -53,4 +53,6 @@ void add_word_to_sym_tab(word **symbol_table, int key, char* name,
 word* find_word_in_sym_tab(word* symbol_table, char *name);
 void print_st_with_ref(word *symbol_table);
 
+char* datatype2str(int data_type);
+
 #endif // __SYM_TAB_H__

@@ -125,6 +125,20 @@ int len_st() {
     return HASH_COUNT(global_symbol_table);
 }
 
+char* datatype2str(int data_type) {
+    if (data_type == DT_INT)
+        return "INT";
+    else if (data_type == DT_FLOAT)
+        return "FLOAT";
+    else if (data_type == DT_SET)
+        return "SET";
+    else if (data_type == DT_ELEM)
+        return "ELEM";
+    else if (data_type == DT_UNDEFINED)
+        return "UNDEF";
+    return "UNDEF";
+}
+
 void print_aux_st() {
     if (HASH_COUNT(global_symbol_table) == 0) {
         printf("Empty symbol table.\n");
@@ -142,16 +156,7 @@ void print_aux_st() {
                 cur_word->scope_lvl, cur_word->scope_name, cur_word->name,
                 cur_word->line, cur_word->col);
 
-        if (cur_word->data_type == DT_INT)
-            printf(" %-4s |", "INT");
-        else if (cur_word->data_type == DT_FLOAT)
-            printf(" %-4s |", "FLOAT");
-        else if (cur_word->data_type == DT_SET)
-            printf(" %-4s |", "SET");
-        else if (cur_word->data_type == DT_ELEM)
-            printf(" %-4s |", "ELEM");
-        else if (cur_word->data_type == DT_UNDEFINED)
-            printf(" %-4s |", "UNDEF");
+        printf(" %-4s |", datatype2str(cur_word->data_type));
 
         if (cur_word->id_type == ST_ID_VAR)
             printf(" %-5s | %-5s |\n", "VAR", "x");
