@@ -95,9 +95,23 @@ void remove_symbol(int key) {
 void delete_all_st() {
     word* cur_word, *tmp;
     HASH_ITER(hh, global_symbol_table, cur_word, tmp) {
+        printf("[SCOPE] Deleting symbol table %s.\n", cur_word->name);
         HASH_DEL(global_symbol_table, cur_word);
         free(cur_word);
     }
+}
+
+void delete_st_with_ref(word *symbol_table) {
+    if (SEMANTIC_VERBOSE) printf("[SCOPE] Deleting symbol table.\n");
+    if (HASH_COUNT(symbol_table) != 0) {
+        word* cur_word, *tmp;
+        HASH_ITER(hh, symbol_table, cur_word, tmp) {
+            printf("[SCOPE] Deleting symbol table %s.\n", cur_word->name);
+            HASH_DEL(symbol_table, cur_word);
+            free(cur_word);
+        }
+    } else
+        if (SEMANTIC_VERBOSE) printf("[SCOPE] Symbol table already empty.\n");
 }
 
 int len_st() {
@@ -135,7 +149,7 @@ void print_st_with_ref(word *symbol_table) {
         return;
     }
 
-    char exist_tag[5];
+    char exist_tag[5] = "";
 
     printf("KEY | TAG | NAME         | LINE | COL  | TYPE   | ARITY |\n"
            "---------------------------------------------------------\n");

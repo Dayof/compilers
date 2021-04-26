@@ -16,15 +16,20 @@ typedef struct lookup_detail {
     scope *ctx_scope;
 } lookup_detail;
 
-scope* scope_stack;
+lookup_detail *global_lookup_detail;
+scope *scope_stack;
 int top_lvl, insert_result, arity_counter;
 
 void start_root_scope();
+void start_root_lookup();
 void push_scope(int key);
 void push_scope_block();
-scope* pop_scope();
+void pop_scope();
 int insert_symbol(int key);
 lookup_detail* lookup_symbol(char *name);
+void delete_all_stack();
+void delete_scope(scope *cur_scope);
+void delete_lookup();
 
 void raise_error_func_arity(word *word_found, word *word_decl);
 void raise_error_not_func(word *word_found, word *word_decl, scope *cur_scope);

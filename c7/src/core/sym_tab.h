@@ -31,6 +31,7 @@ int add_word(int key, char *name, int line, int col);
 word* find_word(int word_key);
 void delete_word(word* s);
 void delete_all_st();
+void delete_st_with_ref(word *symbol_table);
 void remove_symbol(int key);
 
 void set_id_type(int key, int id_type);

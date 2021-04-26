@@ -29,6 +29,7 @@ int main (int argc, char* argv[]) {
     init_vars();
     create_empy_ast();
     start_root_scope();
+    start_root_lookup();
 
     // init lexer and parser
     printf("Lexer/parser:\n");
@@ -62,7 +63,11 @@ int main (int argc, char* argv[]) {
 
     // clean memory
     delete_all_st();
-    if (MAIN_VERBOSE) printf("symbol table cleaned\n");
+    if (MAIN_VERBOSE) printf("global symbol table cleaned\n");
+    delete_all_stack();
+    if (MAIN_VERBOSE) printf("scope stack cleaned\n");
+    delete_lookup();
+    if (MAIN_VERBOSE) printf("global lookup cleaned\n");
     delete_all_ast();
     if (MAIN_VERBOSE) printf("asts cleaned\n");
     yylex_destroy();
