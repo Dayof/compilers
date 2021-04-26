@@ -72,6 +72,8 @@ stmt    : func_stmt[U] { add_ast($U); }
 
 func_stmt   : TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_FUNC);
+                set_data_type($N, type2dt($T));
+                global_func_data_type = type2dt($T);
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
             } PARENT_LEFT {
@@ -89,6 +91,7 @@ func_stmt   : TYPE[T] ID[N] {
 var_decl_stmt   : TYPE[T] ID[N] {
                     if(PARSER_VERBOSE) printf("[BISON] var_decl_stmt -> type id\n");
                     set_id_type($N, ST_ID_VAR);
+                    set_data_type($N, type2dt($T));
                     insert_result = insert_symbol($N);
                     if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
                 } SEMICOLON {
@@ -100,6 +103,7 @@ var_decl_stmt   : TYPE[T] ID[N] {
 
 param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_VAR);
+                set_data_type($N, type2dt($T));
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
                 arity_counter += 1;
@@ -108,6 +112,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
             }
             | TYPE[T] ID[N] {
                 set_id_type($N, ST_ID_VAR);
+                set_data_type($N, type2dt($T));
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
                 arity_counter += 1;
@@ -145,9 +150,13 @@ compound_block_stmt : BRACK_LEFT {
                     ;
 
 block_stmts : block_stmts[F] block_item[S] {
-                $$ = create_bin_expr($F, $S); 
+                $$ = create_bin_expr($F, $S);
+                global_var_data_type = DT_UNDEFINED;
             }
-            | block_item[U] { $$ = $U; }
+            | block_item[U] {
+                $$ = $U;
+                global_var_data_type = DT_UNDEFINED;
+            }
             ;
     
 block_item  : var_decl_stmt[U] { $$ = $U; }
@@ -172,12 +181,16 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
                 $$ = create_bin_expr(create_str_expr($T), $E); 
                 free($T);
             }
-            | ID[N] ASSIGN[A] simple_expr[E] SEMICOLON {
+            | ID[N] ASSIGN[A] {
                 set_id_type($N, ST_ID_VAR); 
                 check_declared($N);
+                global_var_data_type = get_var_type($N);
+            } simple_expr[E] SEMICOLON {
                 $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
             }
-            | RETURN[T] simple_expr[E] SEMICOLON {
+            | RETURN[T] {
+                global_var_data_type = global_func_data_type;
+            } simple_expr[E] SEMICOLON {
                 $$ = create_bin_expr(create_str_expr($T), $E); 
                 free($T);
             }
@@ -188,6 +201,7 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
             ;
 
 flow_control_if : IF[T] PARENT_LEFT {
+                    global_var_data_type = DT_FLOAT_IF;
                     $$ = create_str_expr($T);
                     free($T);
                 }
@@ -382,12 +396,29 @@ term    : term[L] MULT[M] factor[R] {
         }
         ;
 
-factor  : INTEGER[U] { $$ = create_int_expr($U); }
-        | FLOAT[U] { $$ = create_float_expr($U); }
+factor  : INTEGER[U] {
+            if (global_var_data_type == DT_FLOAT || global_var_data_type == DT_FLOAT_IF)
+                $$ = create_type_cast_expr("int2float", create_int_expr($U));
+            else $$ = create_int_expr($U);
+        }
+        | FLOAT[U] {
+            if (global_var_data_type == DT_INT)
+                $$ = create_type_cast_expr("float2int", create_float_expr($U));
+            else $$ = create_float_expr($U);
+        }
         | ID[N] {
             set_id_type($N, ST_ID_VAR);
             check_declared($N);
-            $$ = create_var_expr($N);
+            if (global_var_data_type == DT_INT || global_var_data_type == DT_FLOAT) {
+                if (get_var_type($N) == DT_SET) {
+                    raise_wrong_cast(DT_SET, parser_line, parser_column);
+                    $$ = create_type_cast_expr("wrong_cast", create_var_expr($N));
+                } else if (get_var_type($N) == DT_INT && global_var_data_type == DT_FLOAT)
+                    $$ = create_type_cast_expr("float2int", create_var_expr($N));
+                else if (get_var_type($N) == DT_FLOAT && global_var_data_type == DT_INT)
+                    $$ = create_type_cast_expr("int2float", create_var_expr($N));
+                else $$ = create_var_expr($N);
+            } else $$ = create_var_expr($N);
         }
         | PARENT_LEFT arith_expr[U] PARENT_RIGHT { $$ = $U; }
         | func_expr[U] { $$ = $U; }

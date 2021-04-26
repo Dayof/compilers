@@ -1,5 +1,5 @@
 int subsum(set s, float target, int cur_sum, int ans) {
-    return s + target + cur_sum + ans;
+    return target + cur_sum + ans;
 }
 
 int test_for () {

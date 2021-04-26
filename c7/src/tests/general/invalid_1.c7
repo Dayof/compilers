@@ -14,6 +14,7 @@ int func() {
         y = func_3();
     }
 
+    set set_var;
     if (test & f) {
         { { {
             return x;
@@ -24,7 +25,9 @@ int func() {
         {
             {
                 int c;
+                return 1;
             }
         }
     }
+    return set_var;
 }

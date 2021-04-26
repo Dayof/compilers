@@ -104,11 +104,24 @@ ast_node* create_str_expr(char* value) {
 ast_node* create_var_expr(int st_ref) {
     word *sym_found = find_word(st_ref);
     if (PARSER_VERBOSE)
-        printf("[AST] Creating variable '%s' expression node\n",
-                sym_found->name);
+        printf("[AST] Creating variable '%s', key %d, type %s expression node\n",
+                sym_found->name, sym_found->key, datatype2str(sym_found->data_type));
     ast_node *expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = VAR_TYPE;
     expr->op.variable_expr = st_ref;
+    return expr;
+}
+
+ast_node* create_type_cast_expr(char *cast_name, ast_node* expression) {
+    if (PARSER_VERBOSE)
+        printf("[AST] Creating type cast expression node: '%s'\n", cast_name);
+    ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
+    expr->tag = CAST_TYPE;
+    int keylen;
+    keylen = strlen(cast_name) + 1;
+    expr->op.cast_expr.str_expr = (char*) malloc(keylen * sizeof(char*));
+    strcpy(expr->op.cast_expr.str_expr, cast_name);
+    expr->op.cast_expr.next = expression;
     return expr;
 }
 
@@ -147,6 +160,9 @@ void deallocate_node(ast_node* elem) {
 
     if (elem->tag == STR_TYPE) {
         free(elem->op.str_expr);
+    } else if (elem->tag == CAST_TYPE) {
+        free(elem->op.cast_expr.str_expr);
+        deallocate_node(elem->op.cast_expr.next);
     } else if (elem->tag == BINARY_TYPE) {
         deallocate_node(elem->op.binary_expr.left);
         deallocate_node(elem->op.binary_expr.right);
@@ -221,6 +237,16 @@ void print_ast(ast_node* node, int lvl) {
         }
         for (int i=0; i < lvl; ++i) printf("-");
         printf("| E.lexval: %d\n", node->op.integer_expr);
+        return;
+    // terminal leaf
+    } else if (node->tag == CAST_TYPE) {
+        if (PARSER_VERBOSE) {
+            for (int i=0; i < lvl; ++i) printf("-");
+            printf("CAST TYPE -----\n");
+        }
+        for (int i=0; i < lvl; ++i) printf("-");
+        printf("| E.lexval: %s\n", node->op.cast_expr.str_expr);
+        print_ast(node->op.cast_expr.next, lvl+1); 
         return;
     // terminal leaf
     } else if (node->tag == CHAR_TYPE) {

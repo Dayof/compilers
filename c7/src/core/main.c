@@ -20,6 +20,7 @@ void init_vars() {
     scope_stack = NULL;
     arity_counter = 0;
     insert_result = 1;
+    global_var_data_type = 0;
 }
 
 int main (int argc, char* argv[]) {

@@ -18,7 +18,8 @@ typedef struct lookup_detail {
 
 lookup_detail *global_lookup_detail;
 scope *scope_stack;
-int top_lvl, insert_result, arity_counter;
+int top_lvl, insert_result, arity_counter,
+    global_var_data_type, global_func_data_type;
 
 void start_root_scope();
 void start_root_lookup();
@@ -35,6 +36,7 @@ void raise_error_func_arity(word *word_found, word *word_decl);
 void raise_error_not_func(word *word_found, word *word_decl, scope *cur_scope);
 void raise_error_declared(word *word_found, word *word_decl, scope *cur_scope);
 void raise_error_not_declared(word *word_found);
+void raise_wrong_cast(int data_type, int parser_line, int parser_column);
 void raise_error_main();
 
 void print_stack_st();
@@ -44,5 +46,7 @@ int check_main();
 int check_declared(int key);
 int check_function(int key);
 int check_arity(word *word_found, word *word_decl);
+
+int get_var_type(int key);
 
 #endif // __SCOPE_H__

@@ -8,6 +8,7 @@ enum DATA_TYPE {
     DT_UNDEFINED=0,
     DT_INT,
     DT_FLOAT,
+    DT_FLOAT_IF,
     DT_SET,
     DT_ELEM
 };
@@ -46,6 +47,7 @@ void set_id_type(int key, int id_type);
 void set_scope(word *symbol, int scope_lvl, char *scope_name);
 void set_existance_tag(int key, int tag);
 void set_arity(int key, int arity);
+void set_data_type(int key, int data_type);
 
 word* new_symbol_table();
 void add_word_to_sym_tab(word **symbol_table, int key, char* name,
@@ -54,5 +56,6 @@ word* find_word_in_sym_tab(word* symbol_table, char *name);
 void print_st_with_ref(word *symbol_table);
 
 char* datatype2str(int data_type);
+int type2dt(char *type);
 
 #endif // __SYM_TAB_H__

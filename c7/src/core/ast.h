@@ -27,6 +27,10 @@ typedef struct exp {
         char char_expr;
         char* str_expr;
         struct { 
+            char* str_expr;
+            struct exp* next;
+        } cast_expr;
+        struct { 
             struct exp* left;
             struct exp* right;
         } binary_expr;
@@ -81,5 +85,6 @@ ast_node* create_qua_expr(ast_node* type, ast_node* first_expr,
 ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
                           ast_node* second_expr, ast_node* third_expr,
                           ast_node* fourth_expr);
+ast_node* create_type_cast_expr(char *cast_name, ast_node* expression);
 
 #endif // __AST_H__

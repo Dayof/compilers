@@ -180,10 +180,21 @@ int check_declared(int key) {
         return 0;
     } else {
         set_existance_tag(key, ET_REF);
+        word *global_symbol = find_word(global_lookup_detail->ctx_symbol->key);
+        if (SEMANTIC_VERBOSE)
+            printf("[SCOPE] Setting ihn data type %s from key: %d, name: %s. "
+                   "ID %d, name %s.\n", datatype2str(global_symbol->data_type),
+                   global_symbol->key, global_symbol->name, key, word_found->name);
+        set_data_type(key, global_symbol->data_type);
         set_scope(word_found, global_lookup_detail->ctx_scope->lvl,
                   global_lookup_detail->ctx_scope->scope_name);
     }
     return 1;
+}
+
+int get_var_type(int key) {
+    word *word_found = find_word(key);
+    return word_found->data_type;
 }
 
 int check_arity(word *word_found, word *word_decl) {
@@ -231,6 +242,12 @@ int check_function(int key) {
                 printf("[SCOPE] '%s' is a function.\n", word_found->name);
             if (check_arity(word_found, global_lookup_detail->ctx_symbol)) {
                 set_existance_tag(key, ET_REF);
+                word *global_symbol = find_word(global_lookup_detail->ctx_symbol->key);
+                if (SEMANTIC_VERBOSE)
+                    printf("[SCOPE] Setting ihn data type %s from key: %d, name: %s. "
+                        "ID %d, name %s.\n", datatype2str(global_symbol->data_type),
+                        global_symbol->key, global_symbol->name, key, word_found->name);
+                set_data_type(key, global_symbol->data_type);
                 set_scope(word_found, global_lookup_detail->ctx_scope->lvl,
                         global_lookup_detail->ctx_scope->scope_name);
             } else
@@ -264,6 +281,12 @@ void delete_scope(scope *cur_scope) {
 void delete_lookup() {
     if (SEMANTIC_VERBOSE) printf("[SCOPE] Deleting lookup.\n");
     free(global_lookup_detail);
+}
+
+void raise_wrong_cast(int data_type, int parser_line, int parser_column) {
+    printf("\nSemanticError:%d:%d: Expression with wrong implicit type cast, type %s.\n",
+          parser_line, parser_column, datatype2str(data_type));
+    semantic_error += 1;
 }
 
 void raise_error_main() {
