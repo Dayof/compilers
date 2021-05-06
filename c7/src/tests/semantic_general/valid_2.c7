@@ -1,0 +1,51 @@
+int subsum(set s, float target, int cur_sum, int ans) {
+    return target + cur_sum + ans;
+}
+
+int test_for () {
+    int i;
+    int ans;
+    int cur_sum;
+    float target;
+    set s;
+    elem el;
+    for (i=1; i < 11; i=i+1) {
+        float a;
+        if(subsum(s, target, cur_sum, ans)) return ans;
+        add(el in s);
+    }
+    
+    int ans_2;
+    int num;
+    int count;
+    for(count = 1; count <= num; count = count + 1) return ans;
+    for (num=10; num<20; ) return ans;
+    for (;num<20;) return ans_2;
+
+    for (;num<20;num=num+1) float b;
+
+    for (i=0; i<2; i = i + 1) {
+        int j;
+        for (j=0; j<4; j = j + 1) {
+            return 0;
+        }   
+    }
+}
+
+int inner_b() {             // inner_b: 0
+    int e;                  // e: 1
+    {
+        {
+            {
+                int b;      // b: 4
+                b = 0;      // b: 4
+            }
+        }
+        int d;              // d: 2
+    }
+    int f;                  // f: 1
+}                   
+
+int main () {               // main: 0
+    int p;                  // p: 5
+}

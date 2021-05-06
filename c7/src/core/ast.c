@@ -102,6 +102,19 @@ ast_node* create_bin_expr(ast_node* left, ast_node* right, int node_type) {
             if (TAC_VERBOSE)
                 printf("[AST] Creating writeln register instruction: %s\n", expr->code_instruc);
         }
+    }else if (node_type == WRITE_TYPE) {
+        if (right->tag == VAR_TYPE) {
+            expr->code_instruc = (char*) malloc((6 + 1 + 50) * sizeof(char*));
+            word *sym_found = find_word(right->op.variable_expr);
+            sprintf(expr->code_instruc, "print %s\n", sym_found->name);
+            if (TAC_VERBOSE)
+                printf("[AST] Creating write variable instruction: %s\n", expr->code_instruc);
+        } else if (right->tag == ADD_TYPE) {
+            expr->code_instruc = (char*) malloc((7 + 1 + 4) * sizeof(char*));
+            sprintf(expr->code_instruc, "print $%d\n", right->code_register);
+            if (TAC_VERBOSE)
+                printf("[AST] Creating write register instruction: %s\n", expr->code_instruc);
+        }
     }
     return expr;
 }
@@ -117,11 +130,11 @@ ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right, int no
     expr->op.ternary_expr.right = right;
 
     if (node_type == ASSIGN_TYPE) {
-        expr->code_instruc = (char*) malloc((7 + 1 + 4 + 50) * sizeof(char*));
+        expr->code_instruc = (char*) malloc((8 + 1 + 4 + 50) * sizeof(char*));
         word *sym_found = find_word(left->op.variable_expr);
         sprintf(expr->code_instruc, "mov %s, $%d\n", sym_found->name, right->code_register);
         if (TAC_VERBOSE) printf("[AST] Creating assign instruction: %s\n", expr->code_instruc);
-    }else if (node_type == ADD_TYPE) {
+    } else if (node_type == ADD_TYPE) {
         expr->code_instruc = (char*) malloc((11 + 1 + 12) * sizeof(char*));
         sprintf(expr->code_instruc, "add $%d, $%d, $%d\n", global_register,
                 left->code_register, right->code_register);
@@ -153,6 +166,12 @@ ast_node* create_float_expr(float value) {
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = FLOAT_TYPE;
     expr->op.float_expr = value;
+
+    expr->code_instruc = (char*) malloc((7 + 1 + 8) * sizeof(char*));
+    sprintf(expr->code_instruc, "mov $%d, %f\n", global_register, value);
+    if (TAC_VERBOSE) printf("[AST] Creating float instruction: %s\n", expr->code_instruc);
+    expr->code_register = global_register;
+    global_register += 1;
     return expr;
 }
 
@@ -186,6 +205,18 @@ ast_node* create_var_expr(int st_ref) {
     ast_node *expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = VAR_TYPE;
     expr->op.variable_expr = st_ref;
+    expr->code_instruc = NULL;
+
+    // variable already declared and is used somewhere in the code
+    if (sym_found->tag == ET_REF) {
+        expr->code_instruc = (char*) malloc((7 + 1 + 4 + 50) * sizeof(char*));
+        set_register(st_ref, global_register);
+        sprintf(expr->code_instruc, "mov $%d, %s\n", global_register, sym_found->name);
+        expr->code_register = global_register;
+        if (TAC_VERBOSE)
+            printf("[AST] Creating ref variable instruction: %s\n", expr->code_instruc);
+        global_register += 1;
+    }
     return expr;
 }
 
@@ -240,10 +271,14 @@ void deallocate_node(ast_node* elem) {
         free(elem->op.str_expr);
     } else if (elem->tag == INTEGER_TYPE) {
         free(elem->code_instruc);
+    } else if (elem->tag == FLOAT_TYPE) {
+        free(elem->code_instruc);
     } else if (elem->tag == CAST_TYPE) {
         free(elem->op.cast_expr.str_expr);
         deallocate_node(elem->op.cast_expr.next);
-    } else if (elem->tag == WRITELN_TYPE) {
+    } else if (elem->tag == VAR_TYPE) {
+        if (elem->code_instruc != NULL) free(elem->code_instruc);
+    } else if (elem->tag == WRITELN_TYPE || elem->tag == WRITE_TYPE) {
         free(elem->code_instruc);
         deallocate_node(elem->op.binary_expr.left);
         deallocate_node(elem->op.binary_expr.right);
@@ -378,7 +413,8 @@ void print_ast(ast_node* node, int lvl) {
         printf("\n"); 
         return;
     // non terminal node
-    } else if (node->tag == BINARY_TYPE || node->tag == WRITELN_TYPE) {
+    } else if (node->tag == BINARY_TYPE || node->tag == WRITELN_TYPE ||
+               node->tag == WRITE_TYPE) {
         if (PARSER_VERBOSE) {
             for (int i=0; i < lvl; ++i) printf("-");
             printf("BINARY TYPE -----\n");

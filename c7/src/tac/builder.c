@@ -23,12 +23,13 @@ void write_table(FILE *fp_tac) {
 void write_node_instruction(FILE *fp_tac, ast_node* elem) {
     if (elem == NULL) return;
 
-    if (elem->tag == STR_TYPE) {
-    } else if (elem->tag == INTEGER_TYPE) {
+    if (elem->tag == INTEGER_TYPE || elem->tag == FLOAT_TYPE) {
         fprintf(fp_tac, "\t%s", elem->code_instruc);
     } else if (elem->tag == CAST_TYPE) {
         write_node_instruction(fp_tac, elem->op.cast_expr.next);
-    } else if (elem->tag == WRITELN_TYPE) {
+    } else if (elem->tag == VAR_TYPE) {
+        if (elem->code_instruc != NULL) fprintf(fp_tac, "\t%s", elem->code_instruc);
+    } else if (elem->tag == WRITELN_TYPE || elem->tag == WRITE_TYPE) {
         write_node_instruction(fp_tac, elem->op.binary_expr.left);
         write_node_instruction(fp_tac, elem->op.binary_expr.right);
         fprintf(fp_tac, "\t%s", elem->code_instruc);

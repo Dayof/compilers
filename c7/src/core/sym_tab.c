@@ -1,20 +1,30 @@
 #include <stdio.h>
 #include "sym_tab.h"
 
+
+void set_register(int key, int tac_register) {
+    word *s = find_word(key);
+    s->tac_register = tac_register;
+}
+
+
 void set_id_type(int key, int id_type) {
     word *s = find_word(key);
     s->id_type = id_type;
 }
+
 
 void set_scope(word *symbol, int scope_lvl, char *scope_name) {
     symbol->scope_lvl = scope_lvl;
     strcpy(symbol->scope_name, scope_name);
 }
 
+
 void set_existance_tag(int key, int tag) {
     word *global_sym_table = find_word(key);
     global_sym_table->tag = tag;
 }
+
 
 void set_data_type(int key, int data_type) {
     word *global_sym_table = find_word(key);
@@ -52,6 +62,7 @@ int add_word(int key, char* name, int line, int col) {
     s->tag = ET_OK;
     s->arity = -1;
     s->data_type = DT_UNDEFINED;
+    s->tac_register = -1;
     strcpy(s->scope_name, "undefined");
     return key;
 }
@@ -67,6 +78,7 @@ void add_word_to_sym_tab(word **symbol_table, int key, char* name,
     current_element->scope_lvl = -1;
     current_element->tag = ET_OK;
     current_element->arity = -1;
+    current_element->tac_register = -1;
     current_element->data_type = DT_UNDEFINED;
     HASH_ADD_STR(*symbol_table, name, current_element);
     if (SEMANTIC_VERBOSE) {
@@ -180,6 +192,8 @@ void print_aux_st() {
 
         if (cur_word->id_type == ST_ID_VAR)
             printf(" %-5s | %-5s |\n", "VAR", "x");
+        else if (cur_word->id_type == ST_ID_PARAM)
+            printf(" %-5s | %-5s |\n", "PARAM", "x");
         else if (cur_word->id_type == ST_ID_FUNC)
             printf(" %-5s | %-5d |\n", "FUNC", cur_word->arity);
         else if (cur_word->id_type == ST_ID_UNDEFINED)
@@ -211,6 +225,8 @@ void print_st_with_ref(word *symbol_table) {
 
         if (cur_word->id_type == ST_ID_VAR)
             printf(" %-6s | %-5s |\n", "VAR", "x");
+        else if (cur_word->id_type == ST_ID_PARAM)
+            printf(" %-6s | %-5s |\n", "PARAM", "x");
         else if (cur_word->id_type == ST_ID_FUNC)
             printf(" %-6s | %-5d |\n", "FUNC", cur_word->arity);
         else if (cur_word->id_type == ST_ID_UNDEFINED)

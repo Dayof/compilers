@@ -10,6 +10,7 @@ enum TAG {
     CHAR_TYPE,
     STR_TYPE,
     VAR_TYPE,
+    WRITE_TYPE,
     WRITELN_TYPE,
     BINARY_TYPE,
     ADD_TYPE,

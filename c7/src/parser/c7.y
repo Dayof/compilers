@@ -102,7 +102,7 @@ var_decl_stmt   : TYPE[T] ID[N] {
                 ; 
 
 param_list  : param_list[L] COMMA TYPE[T] ID[N] {
-                set_id_type($N, ST_ID_VAR);
+                set_id_type($N, ST_ID_PARAM);
                 set_data_type($N, type2dt($T));
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
@@ -111,7 +111,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 free($T);
             }
             | TYPE[T] ID[N] {
-                set_id_type($N, ST_ID_VAR);
+                set_id_type($N, ST_ID_PARAM);
                 set_data_type($N, type2dt($T));
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
@@ -174,7 +174,7 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
                 free($T);
             }
             | WRITE[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {
-                $$ = create_bin_expr(create_str_expr($T), $E, BINARY_TYPE); 
+                $$ = create_bin_expr(create_str_expr($T), $E, WRITE_TYPE); 
                 free($T);
             }
             | WRITELN[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {

@@ -2861,7 +2861,7 @@ yyreduce:
   case 14: /* param_list: param_list COMMA TYPE ID  */
 #line 104 "parser/c7.y"
                                                 {
-                set_id_type((yyvsp[0].int_value), ST_ID_VAR);
+                set_id_type((yyvsp[0].int_value), ST_ID_PARAM);
                 set_data_type((yyvsp[0].int_value), type2dt((yyvsp[-1].str_value)));
                 insert_result = insert_symbol((yyvsp[0].int_value));
                 if (!insert_result) set_existance_tag((yyvsp[0].int_value), ET_SOFT_DELETE);
@@ -2875,7 +2875,7 @@ yyreduce:
   case 15: /* param_list: TYPE ID  */
 #line 113 "parser/c7.y"
                             {
-                set_id_type((yyvsp[0].int_value), ST_ID_VAR);
+                set_id_type((yyvsp[0].int_value), ST_ID_PARAM);
                 set_data_type((yyvsp[0].int_value), type2dt((yyvsp[-1].str_value)));
                 insert_result = insert_symbol((yyvsp[0].int_value));
                 if (!insert_result) set_existance_tag((yyvsp[0].int_value), ET_SOFT_DELETE);
@@ -3020,7 +3020,7 @@ yyreduce:
   case 33: /* block_stmt: WRITE PARENT_LEFT simple_expr PARENT_RIGHT SEMICOLON  */
 #line 176 "parser/c7.y"
                                                                          {
-                (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-4].str_value)), (yyvsp[-2].expression), BINARY_TYPE); 
+                (yyval.expression) = create_bin_expr(create_str_expr((yyvsp[-4].str_value)), (yyvsp[-2].expression), WRITE_TYPE); 
                 free((yyvsp[-4].str_value));
             }
 #line 3027 "parser/parser.c"
