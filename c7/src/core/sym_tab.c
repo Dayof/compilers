@@ -135,16 +135,16 @@ int len_st() {
 
 char* datatype2str(int data_type) {
     if (data_type == DT_INT)
-        return "INT";
+        return "int";
     else if (data_type == DT_FLOAT)
-        return "FLOAT";
+        return "float";
     else if (data_type == DT_SET)
-        return "SET";
+        return "set";
     else if (data_type == DT_ELEM)
-        return "ELEM";
+        return "elem";
     else if (data_type == DT_UNDEFINED)
-        return "UNDEF";
-    return "UNDEF";
+        return "undef";
+    return "undef";
 }
 
 int type2dt(char *type) {

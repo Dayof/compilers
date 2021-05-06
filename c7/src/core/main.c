@@ -5,6 +5,8 @@
 #include "ast.h"
 #include "lexer.h"
 #include "parser.h"
+#include "builder.h"
+
 
 void init_vars() {
     int verbose = 0;
@@ -12,6 +14,7 @@ void init_vars() {
     PARSER_VERBOSE = verbose;
     MAIN_VERBOSE = verbose;
     SEMANTIC_VERBOSE = verbose;
+    TAC_VERBOSE = 1;
     newline_counter = -1;
     parser_error = lex_error = semantic_error = 0;
     lex_line = lex_column = parser_line = parser_column = 1;
@@ -21,6 +24,7 @@ void init_vars() {
     arity_counter = 0;
     insert_result = 1;
     global_var_data_type = 0;
+    global_register = 0;
 }
 
 int main (int argc, char* argv[]) {
@@ -44,6 +48,9 @@ int main (int argc, char* argv[]) {
     // check if there is a main
     check_main();
 
+    // create global tac file
+    
+
     printf("\nLexer and parser finished.\n\n");
 
     printf("\n## Symbol Table ##\n");
@@ -60,7 +67,13 @@ int main (int argc, char* argv[]) {
         printf("Lexer: %d errors.\n", lex_error);
         printf("Semantic: %d errors.\n", semantic_error);
         printf("TOTAL: %d errors.\n", parser_error + lex_error + semantic_error);
-    } else printf("\nNo errors found.\n");
+    } else {
+        printf("\nNo errors found.\n");
+        FILE *fp_tac = create_tac();
+        write_table(fp_tac);
+        write_code(fp_tac);
+        close_tac(fp_tac);
+    }
 
     // clean memory
     delete_all_st();

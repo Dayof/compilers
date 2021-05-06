@@ -1,0 +1,6 @@
+int main () {
+    int x;
+    x = 1;
+    writeln(x);
+    writeln(1 + 1);
+}

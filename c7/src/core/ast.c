@@ -3,11 +3,42 @@
 #include <stdio.h>
 #include "ast.h"
 
+
+char* nodetype2str(int node_type) {
+    if (node_type == INTEGER_TYPE)
+        return "int";
+    else if (node_type == ASSIGN_TYPE)
+        return "assign";
+    else if (node_type == FLOAT_TYPE)
+        return "float";
+    else if (node_type == CHAR_TYPE)
+        return "char";
+    else if (node_type == STR_TYPE)
+        return "str";
+    else if (node_type == VAR_TYPE)
+        return "var";
+    else if (node_type == BINARY_TYPE)
+        return "binary";
+    else if (node_type == TERNARY_TYPE)
+        return "ternary";
+    else if (node_type == QUARTENARY_TYPE)
+        return "quartenary";
+    else if (node_type == QUINARY_TYPE)
+        return "quinary";
+    else if (node_type == FUNC_TYPE)
+        return "func";
+    else if (node_type == CAST_TYPE)
+        return "cast";
+    return "undef";
+}
+
+
 ast_node* create_empty_expr() {
     if (PARSER_VERBOSE) printf("\n\n[AST] Creating empty expression node\n");
     ast_node* expr = NULL;
     return expr;
 }
+
 
 ast_node* create_qua_expr(ast_node* type, ast_node* first_expr,
                           ast_node* second_expr, ast_node* third_expr) {
@@ -20,6 +51,7 @@ ast_node* create_qua_expr(ast_node* type, ast_node* first_expr,
     expr->op.quinary_expr.third_expr = third_expr;
     return expr;
 }
+
 
 ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
                           ast_node* second_expr, ast_node* third_expr,
@@ -35,6 +67,7 @@ ast_node* create_qui_expr(ast_node* type, ast_node* first_expr,
     return expr;
 }
 
+
 ast_node* create_func_expr(ast_node* type, ast_node* first_expr,
                            ast_node* second_expr, ast_node* third_expr) {
     if (PARSER_VERBOSE) printf("[AST] Creating function expression node\n");
@@ -47,32 +80,73 @@ ast_node* create_func_expr(ast_node* type, ast_node* first_expr,
     return expr;
 }
 
-ast_node* create_bin_expr(ast_node* left, ast_node* right) {
-    if (PARSER_VERBOSE) printf("[AST] Creating ternary expression node\n");
+
+ast_node* create_bin_expr(ast_node* left, ast_node* right, int node_type) {
+    if (PARSER_VERBOSE)
+        printf("[AST] Creating binary expression node, type %s\n", nodetype2str(node_type));
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
-    expr->tag = BINARY_TYPE;
+    expr->tag = node_type;
     expr->op.binary_expr.left = left;
     expr->op.binary_expr.right = right;
+
+    if (node_type == WRITELN_TYPE) {
+        if (right->tag == VAR_TYPE) {
+            expr->code_instruc = (char*) malloc((8 + 1 + 50) * sizeof(char*));
+            word *sym_found = find_word(right->op.variable_expr);
+            sprintf(expr->code_instruc, "println %s\n", sym_found->name);
+            if (TAC_VERBOSE)
+                printf("[AST] Creating writeln variable instruction: %s\n", expr->code_instruc);
+        } else if (right->tag == ADD_TYPE) {
+            expr->code_instruc = (char*) malloc((9 + 1 + 4) * sizeof(char*));
+            sprintf(expr->code_instruc, "println $%d\n", right->code_register);
+            if (TAC_VERBOSE)
+                printf("[AST] Creating writeln register instruction: %s\n", expr->code_instruc);
+        }
+    }
     return expr;
 }
 
-ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right) {
-    if (PARSER_VERBOSE) printf("[AST] Creating ternary expression node\n");
+
+ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right, int node_type) {
+    if (PARSER_VERBOSE)
+        printf("[AST] Creating ternary expression node, type %s\n", nodetype2str(node_type));
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
-    expr->tag = TERNARY_TYPE;
+    expr->tag = node_type;
     expr->op.ternary_expr.left = left;
     expr->op.ternary_expr.mid = mid;
     expr->op.ternary_expr.right = right;
+
+    if (node_type == ASSIGN_TYPE) {
+        expr->code_instruc = (char*) malloc((7 + 1 + 4 + 50) * sizeof(char*));
+        word *sym_found = find_word(left->op.variable_expr);
+        sprintf(expr->code_instruc, "mov %s, $%d\n", sym_found->name, right->code_register);
+        if (TAC_VERBOSE) printf("[AST] Creating assign instruction: %s\n", expr->code_instruc);
+    }else if (node_type == ADD_TYPE) {
+        expr->code_instruc = (char*) malloc((11 + 1 + 12) * sizeof(char*));
+        sprintf(expr->code_instruc, "add $%d, $%d, $%d\n", global_register,
+                left->code_register, right->code_register);
+        if (TAC_VERBOSE) printf("[AST] Creating add instruction: %s\n", expr->code_instruc);
+        expr->code_register = global_register;
+        global_register += 1;
+    }
     return expr;
 }
+
 
 ast_node* create_int_expr(int value) {
     if (PARSER_VERBOSE) printf("[AST] Creating integer expression node: %d\n", value);
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
     expr->tag = INTEGER_TYPE;
     expr->op.integer_expr = value;
+
+    expr->code_instruc = (char*) malloc((7 + 1 + 8) * sizeof(char*));
+    sprintf(expr->code_instruc, "mov $%d, %d\n", global_register, value);
+    if (TAC_VERBOSE) printf("[AST] Creating integer instruction: %s\n", expr->code_instruc);
+    expr->code_register = global_register;
+    global_register += 1;
     return expr;
 }
+
 
 ast_node* create_float_expr(float value) {
     if (PARSER_VERBOSE) printf("[AST] Creating float expression node: %f\n", value);
@@ -82,6 +156,7 @@ ast_node* create_float_expr(float value) {
     return expr;
 }
 
+
 ast_node* create_char_expr(char value) {
     if (PARSER_VERBOSE) printf("[AST] Creating char expression node: .%c.\n", value);
     ast_node* expr = (ast_node*) malloc(sizeof(ast_node));
@@ -89,6 +164,7 @@ ast_node* create_char_expr(char value) {
     expr->op.char_expr = value;
     return expr;
 }
+
 
 ast_node* create_str_expr(char* value) {
     if (PARSER_VERBOSE) printf("[AST] Creating string expression node: .%s.\n", value);
@@ -101,6 +177,7 @@ ast_node* create_str_expr(char* value) {
     return expr;
 }
 
+
 ast_node* create_var_expr(int st_ref) {
     word *sym_found = find_word(st_ref);
     if (PARSER_VERBOSE)
@@ -111,6 +188,7 @@ ast_node* create_var_expr(int st_ref) {
     expr->op.variable_expr = st_ref;
     return expr;
 }
+
 
 ast_node* create_type_cast_expr(char *cast_name, ast_node* expression) {
     if (PARSER_VERBOSE)
@@ -160,12 +238,23 @@ void deallocate_node(ast_node* elem) {
 
     if (elem->tag == STR_TYPE) {
         free(elem->op.str_expr);
+    } else if (elem->tag == INTEGER_TYPE) {
+        free(elem->code_instruc);
     } else if (elem->tag == CAST_TYPE) {
         free(elem->op.cast_expr.str_expr);
         deallocate_node(elem->op.cast_expr.next);
+    } else if (elem->tag == WRITELN_TYPE) {
+        free(elem->code_instruc);
+        deallocate_node(elem->op.binary_expr.left);
+        deallocate_node(elem->op.binary_expr.right);
     } else if (elem->tag == BINARY_TYPE) {
         deallocate_node(elem->op.binary_expr.left);
         deallocate_node(elem->op.binary_expr.right);
+    } else if (elem->tag == ASSIGN_TYPE || elem->tag == ADD_TYPE) {
+        free(elem->code_instruc);
+        deallocate_node(elem->op.ternary_expr.left);
+        deallocate_node(elem->op.ternary_expr.mid);
+        deallocate_node(elem->op.ternary_expr.right);
     } else if (elem->tag == TERNARY_TYPE) {
         deallocate_node(elem->op.ternary_expr.left);
         deallocate_node(elem->op.ternary_expr.mid);
@@ -289,7 +378,7 @@ void print_ast(ast_node* node, int lvl) {
         printf("\n"); 
         return;
     // non terminal node
-    } else if (node->tag == BINARY_TYPE) {
+    } else if (node->tag == BINARY_TYPE || node->tag == WRITELN_TYPE) {
         if (PARSER_VERBOSE) {
             for (int i=0; i < lvl; ++i) printf("-");
             printf("BINARY TYPE -----\n");
@@ -298,7 +387,8 @@ void print_ast(ast_node* node, int lvl) {
         print_ast(node->op.binary_expr.right, lvl+1);
         printf("\n");
     // non terminal node
-    } else if (node->tag == TERNARY_TYPE) {
+    } else if (node->tag == TERNARY_TYPE || node->tag == ASSIGN_TYPE ||
+               node->tag == ADD_TYPE) {
         if (PARSER_VERBOSE) {
             for (int i=0; i < lvl; ++i) printf("-");
             printf("TERNARY TYPE -----\n");

@@ -10,7 +10,10 @@ enum TAG {
     CHAR_TYPE,
     STR_TYPE,
     VAR_TYPE,
+    WRITELN_TYPE,
     BINARY_TYPE,
+    ADD_TYPE,
+    ASSIGN_TYPE,
     TERNARY_TYPE,
     QUARTENARY_TYPE,
     QUINARY_TYPE,
@@ -20,6 +23,8 @@ enum TAG {
 
 typedef struct exp {
     int tag;
+    char* code_instruc;
+    int code_register;
     union { 
         int integer_expr;
         int variable_expr;
@@ -61,8 +66,10 @@ typedef struct exps {
 } ast_list;
 
 ast_list* ast_root;
+int global_register;
 
 int len_st();
+char* nodetype2str(int node_type);
 void print_asts(ast_list* root);
 void print_ast(ast_node* node, int lvl);
 
@@ -76,8 +83,8 @@ ast_node* create_float_expr(float value);
 ast_node* create_var_expr(int st_ref);
 ast_node* create_char_expr(char value);
 ast_node* create_str_expr(char* value);
-ast_node* create_bin_expr(ast_node* left, ast_node* right);
-ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right);
+ast_node* create_bin_expr(ast_node* left, ast_node* right, int node_type);
+ast_node* create_ter_expr(ast_node* left, ast_node* mid, ast_node* right, int node_type);
 ast_node* create_func_expr(ast_node* type, ast_node* first_expr,
                            ast_node* second_expr, ast_node* third_expr);
 ast_node* create_qua_expr(ast_node* type, ast_node* first_expr,

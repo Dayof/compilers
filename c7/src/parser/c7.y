@@ -96,7 +96,7 @@ var_decl_stmt   : TYPE[T] ID[N] {
                     if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
                 } SEMICOLON {
                     if(PARSER_VERBOSE) printf("[BISON] var_decl_stmt -> semicolon\n");
-                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N), BINARY_TYPE);
                     free($T);
                 }
                 ; 
@@ -107,7 +107,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
                 arity_counter += 1;
-                $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N));
+                $$ = create_ter_expr($L, create_str_expr($T), create_var_expr($N), TERNARY_TYPE);
                 free($T);
             }
             | TYPE[T] ID[N] {
@@ -116,7 +116,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
                 insert_result = insert_symbol($N);
                 if (!insert_result) set_existance_tag($N, ET_SOFT_DELETE);
                 arity_counter += 1;
-                $$ = create_bin_expr(create_str_expr($T), create_var_expr($N));
+                $$ = create_bin_expr(create_str_expr($T), create_var_expr($N), BINARY_TYPE);
                 free($T);
             }
             | /* empty */ {
@@ -126,7 +126,7 @@ param_list  : param_list[L] COMMA TYPE[T] ID[N] {
 
 simple_param_list   : simple_param_list[E] COMMA simple_expr[N] {
                         arity_counter += 1;
-                        $$ = create_bin_expr($E, $N);
+                        $$ = create_bin_expr($E, $N, BINARY_TYPE);
                     }
                     | simple_expr[U] {
                         arity_counter += 1;
@@ -150,7 +150,7 @@ compound_block_stmt : BRACK_LEFT {
                     ;
 
 block_stmts : block_stmts[F] block_item[S] {
-                $$ = create_bin_expr($F, $S);
+                $$ = create_bin_expr($F, $S, BINARY_TYPE);
                 global_var_data_type = DT_UNDEFINED;
             }
             | block_item[U] {
@@ -168,17 +168,17 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
             | set_func_call[U] SEMICOLON { $$ = $U; }
             | flow_control[U] { $$ = $U; }
             | READ[T] PARENT_LEFT ID[N] PARENT_RIGHT SEMICOLON {
-                $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
+                $$ = create_bin_expr(create_str_expr($T), create_var_expr($N), BINARY_TYPE); 
                 set_id_type($N, ST_ID_VAR);
                 check_declared($N);
                 free($T);
             }
             | WRITE[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {
-                $$ = create_bin_expr(create_str_expr($T), $E); 
+                $$ = create_bin_expr(create_str_expr($T), $E, BINARY_TYPE); 
                 free($T);
             }
             | WRITELN[T] PARENT_LEFT simple_expr[E] PARENT_RIGHT SEMICOLON {
-                $$ = create_bin_expr(create_str_expr($T), $E); 
+                $$ = create_bin_expr(create_str_expr($T), $E, WRITELN_TYPE); 
                 free($T);
             }
             | ID[N] ASSIGN[A] {
@@ -186,12 +186,13 @@ block_stmt  : compound_block_stmt[U] { $$ = $U; }
                 check_declared($N);
                 global_var_data_type = get_var_type($N);
             } simple_expr[E] SEMICOLON {
-                $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
+                $$ = create_ter_expr(create_var_expr($N), create_char_expr($A),
+                                     $E, ASSIGN_TYPE);
             }
             | RETURN[T] {
                 global_var_data_type = global_func_data_type;
             } simple_expr[E] SEMICOLON {
-                $$ = create_bin_expr(create_str_expr($T), $E); 
+                $$ = create_bin_expr(create_str_expr($T), $E, BINARY_TYPE); 
                 free($T);
             }
             | error { 
@@ -208,14 +209,14 @@ flow_control_if : IF[T] PARENT_LEFT {
                 ;
 
 flow_control    : flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_item[E2] %prec THEN {
-                    $$ = create_ter_expr($FC1, $E1, $E2); 
+                    $$ = create_ter_expr($FC1, $E1, $E2, TERNARY_TYPE); 
                 }
                 | flow_control_if[FC1] or_cond_expr[E1] PARENT_RIGHT block_item[E2] ELSE[E3] block_item[E4] {
                     $$ = create_qui_expr($FC1, $E1, $E2, create_str_expr($E3), $E4);
                     free($E3);
                 }
                 | FORALL[T] PARENT_LEFT set_expr[E1] PARENT_RIGHT block_item[E2] {
-                    $$ = create_ter_expr(create_str_expr($T), $E1, $E2); 
+                    $$ = create_ter_expr(create_str_expr($T), $E1, $E2, TERNARY_TYPE); 
                     free($T);
                 }
                 | FOR[T] PARENT_LEFT opt_param[E1] opt_param[E2] PARENT_RIGHT block_item[E3] {
@@ -234,7 +235,7 @@ opt_param   : SEMICOLON { $$ = create_empty_expr(); }
 
 for_expression  : decl_or_cond_expr[U] { $$ = $U; }
                 | for_expression[E1] COMMA decl_or_cond_expr[E2] {
-                    $$ = create_bin_expr($E1, $E2); 
+                    $$ = create_bin_expr($E1, $E2, BINARY_TYPE); 
                 }
                 ; 
 
@@ -247,34 +248,34 @@ decl_or_cond_expr   : or_cond_expr[U] { $$ = $U; }
                         free($T);
                     }
                     | ID[N] ASSIGN[A] simple_expr[E] {
-                        $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E);
+                        $$ = create_ter_expr(create_var_expr($N), create_char_expr($A), $E, TERNARY_TYPE);
                         set_id_type($N, ST_ID_VAR);
                         check_declared($N);
                     }
                     ;
 
 or_cond_expr    : or_cond_expr[E1] OR_OP[OP] and_cond_expr[E2] {
-                    $$ = create_ter_expr($E1, create_str_expr($OP), $E2); 
+                    $$ = create_ter_expr($E1, create_str_expr($OP), $E2, TERNARY_TYPE); 
                     free($OP);
                 }
                 | and_cond_expr[U] { $$ = $U; }
                 ;
 
 and_cond_expr   : and_cond_expr[E1] AND_OP[OP] unary_cond_expr[E2] {
-                    $$ = create_ter_expr($E1, create_str_expr($OP), $E2); 
+                    $$ = create_ter_expr($E1, create_str_expr($OP), $E2, TERNARY_TYPE); 
                     free($OP);
                 }
                 | unary_cond_expr[U] { $$ = $U; }
                 ;
 
 unary_cond_expr : NOT_OP[O] unary_cond_expr[E] {
-                    $$ = create_bin_expr(create_char_expr($O), $E); 
+                    $$ = create_bin_expr(create_char_expr($O), $E, BINARY_TYPE); 
                 }
                 | eq_cond_expr[U] { $$ = $U; }
                 ;
 
 eq_cond_expr    : eq_cond_expr[E1] equal_ops[M] rel_cond_expr[E2] {
-                    $$ = create_ter_expr($E1, $M, $E2);
+                    $$ = create_ter_expr($E1, $M, $E2, TERNARY_TYPE);
                 }
                 | rel_cond_expr[U] { $$ = $U; }
                 ;
@@ -290,7 +291,7 @@ equal_ops   : EQ_OP[U] {
             ;
 
 rel_cond_expr   : rel_cond_expr[E1] rel_ops[OP] rel_cond_stmt[E2] {
-                    $$ = create_ter_expr($E1, $OP, $E2);
+                    $$ = create_ter_expr($E1, $OP, $E2, TERNARY_TYPE);
                 }
                 | rel_cond_stmt[U] { $$ = $U; }
                 ;
@@ -319,7 +320,7 @@ rel_ops : L_OP[U] { $$ = create_char_expr($U); }
         ;           
     
 set_expr    : simple_expr[E1] IN[M] simple_expr[E2] {
-                $$ = create_ter_expr($E1, create_str_expr($M), $E2); 
+                $$ = create_ter_expr($E1, create_str_expr($M), $E2, TERNARY_TYPE); 
                 free($M);
             }
             ;   
@@ -329,26 +330,26 @@ func_call   : ID[N] PARENT_LEFT simple_param_list[E] PARENT_RIGHT {
                     printf("[BISON] Function call arity %d.\n", arity_counter);
                 set_arity($N, arity_counter);
                 check_function($N);
-                $$ = create_bin_expr(create_var_expr($N), $E);
+                $$ = create_bin_expr(create_var_expr($N), $E, BINARY_TYPE);
                 arity_counter = 0;
             }
             ;
 
 set_func_call   : IS_SET[T] PARENT_LEFT ID[N] PARENT_RIGHT {
-                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N)); 
+                    $$ = create_bin_expr(create_str_expr($T), create_var_expr($N), BINARY_TYPE); 
                     set_id_type($N, ST_ID_VAR);
                     free($T);
                 }
                 | ADD_SET[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
-                    $$ = create_bin_expr(create_str_expr($T), $E); 
+                    $$ = create_bin_expr(create_str_expr($T), $E, BINARY_TYPE); 
                     free($T);
                 }
                 | REMOVE[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
-                    $$ = create_bin_expr(create_str_expr($T), $E); 
+                    $$ = create_bin_expr(create_str_expr($T), $E, BINARY_TYPE); 
                     free($T);
                 }
                 | EXISTS[T] PARENT_LEFT set_expr[E] PARENT_RIGHT {
-                    $$ = create_bin_expr(create_str_expr($T), $E);
+                    $$ = create_bin_expr(create_str_expr($T), $E, BINARY_TYPE);
                     free($T); 
                 }
                 ;
@@ -376,23 +377,23 @@ func_expr       : func_call[U] { $$ = $U; }
                 ;
 
 arith_expr  : arith_expr[L] ADD[M] term[R] {
-                $$ = create_ter_expr($L, create_char_expr($M), $R);
+                $$ = create_ter_expr($L, create_char_expr($M), $R, ADD_TYPE);
             }
             | arith_expr[L] SUB[M] term[R] {
-                $$ = create_ter_expr($L, create_char_expr($M), $R);
+                $$ = create_ter_expr($L, create_char_expr($M), $R, TERNARY_TYPE);
             }
             | term[U] { $$ = $U; }
             ;
 
 term    : term[L] MULT[M] factor[R] {
-            $$ = create_ter_expr($L, create_char_expr($M), $R);
+            $$ = create_ter_expr($L, create_char_expr($M), $R, TERNARY_TYPE);
         }
         | term[L] DIV[M] factor[R] {
-            $$ = create_ter_expr($L, create_char_expr($M), $R);
+            $$ = create_ter_expr($L, create_char_expr($M), $R, TERNARY_TYPE);
         }
         | factor[U] { $$ = $U; }
         | SUB[T] factor[U] %prec UMINUS { 
-            $$ = create_bin_expr(create_char_expr($T), $U); 
+            $$ = create_bin_expr(create_char_expr($T), $U, BINARY_TYPE); 
         }
         ;
 
