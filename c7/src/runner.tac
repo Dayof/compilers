@@ -1,18 +1,27 @@
 .table
-	int x
-	int a
-	int b
+	float y
+	float p
+	float a
 .code
 main:
-	mov $4, x
-	mov $0, a
-	mov $1, b
-	add $2, $0, $1
-	mov $3, 3
-	mov x, $-1094795586
-	mov $9, x
-	mov $5, a
-	mov $6, b
-	add $7, $5, $6
-	mov $8, 3
-	mov x, $-1094795586
+	mov $1, y
+	mov $0, 100.000000
+	mov y, $0
+	mov $2, y
+	print y
+	mov $6, p
+	mov $3, y
+	mov $4, 200.000000
+	add $5, $3, $4
+	mov p, $5
+	mov $7, p
+	println p
+	mov $9, a
+	mov $8, 1.000000
+	mov a, $8
+	mov $10, a
+	mov $11, y
+	add $12, $10, $11
+	mov $13, p
+	add $14, $12, $13
+	println $14
