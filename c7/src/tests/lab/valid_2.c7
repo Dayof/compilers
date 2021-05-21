@@ -1,0 +1,17 @@
+float other_func() {
+    int j;
+    read(j);
+    return 1/2+5.3-1/4*6.25+j;
+}
+
+int main () {
+    int x;
+    read(x);
+
+    int result;
+    result = other_func();
+    if (result) write(result);
+
+    if (x) return x;
+    else return 1; 
+}

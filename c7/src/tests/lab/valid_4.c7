@@ -1,0 +1,20 @@
+set main(set s, int target, int cur_sum, set ans) {
+    if(target == cur_sum) return ans;
+    else if (s == EMPTY) return EMPTY;
+    else {
+       int el;
+       remove((exists (el in s)) in s);
+       cur_sum = cur_sum + el;
+       add(el in ans);
+       add(el in s);
+       remove (el in s);
+       return EMPTY;
+    }
+
+    is_set(s);
+    elem el;
+    set ss;
+    ss = EMPTY;
+    exists(cur_sum in s);
+    remove((exists(el in s)) in s);
+}

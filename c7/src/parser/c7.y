@@ -46,7 +46,7 @@
 %type  <expression>     or_cond_expr and_cond_expr unary_cond_expr eq_cond_expr
 %type  <expression>     equal_ops rel_cond_expr opt_param for_expression
 %type  <expression>     decl_or_cond_expr rel_ops rel_cond_stmt error 
-%type  <expression>     flow_control_if
+%type  <expression>     flow_control_if mid_factor
 
 %%
 
@@ -385,17 +385,20 @@ arith_expr  : arith_expr[L] ADD[M] term[R] {
             | term[U] { $$ = $U; }
             ;
 
-term    : term[L] MULT[M] factor[R] {
+term    : term[L] MULT[M] mid_factor[R] {
             $$ = create_ter_expr($L, create_char_expr($M), $R, TERNARY_TYPE);
         }
-        | term[L] DIV[M] factor[R] {
+        | term[L] DIV[M] mid_factor[R] {
             $$ = create_ter_expr($L, create_char_expr($M), $R, TERNARY_TYPE);
         }
-        | factor[U] { $$ = $U; }
-        | SUB[T] factor[U] %prec UMINUS { 
-            $$ = create_bin_expr(create_char_expr($T), $U, BINARY_TYPE); 
-        }
+        | mid_factor[U] { $$ = $U; }
         ;
+
+mid_factor  : SUB[T] factor[U] %prec UMINUS { 
+                $$ = create_bin_expr(create_char_expr($T), $U, BINARY_TYPE); 
+            }
+            | factor[U] { $$ = $U; }
+            ;
 
 factor  : INTEGER[U] {
             if (global_var_data_type == DT_FLOAT || global_var_data_type == DT_FLOAT_IF)

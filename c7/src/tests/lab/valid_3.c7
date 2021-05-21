@@ -1,0 +1,19 @@
+float other_func(int j) {
+    return 1/2+5.3+j;
+}
+
+int func(float j) {
+    return j;
+}
+
+int main () {
+    int x;
+    int j;
+    read(j);
+
+    for (x=1; x<10 && j || func(j); x=x+1) {
+        float result;
+        result = other_func(x);
+        writeln(result);
+    }
+}

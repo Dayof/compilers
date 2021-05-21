@@ -179,11 +179,14 @@ arith_expr  : arith_expr ADD term
             | term
             ;
 
-term    : term MULT factor
-        | term DIV factor
-        | factor
-        | SUB factor %prec UMINUS
+term    : term MULT mid_factor
+        | term DIV mid_factor
+        | mid_factor
         ;
+
+mid_factor  : SUB factor %prec UMINUS
+            | factor
+            ;
 
 factor  : INTEGER
         | FLOAT

@@ -14,7 +14,7 @@ void init_vars() {
     PARSER_VERBOSE = verbose;
     MAIN_VERBOSE = verbose;
     SEMANTIC_VERBOSE = verbose;
-    TAC_VERBOSE = 1;
+    TAC_VERBOSE = verbose;
     newline_counter = -1;
     parser_error = lex_error = semantic_error = 0;
     lex_line = lex_column = parser_line = parser_column = 1;
