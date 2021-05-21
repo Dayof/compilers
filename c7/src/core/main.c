@@ -48,9 +48,6 @@ int main (int argc, char* argv[]) {
     // check if there is a main
     check_main();
 
-    // create global tac file
-    
-
     printf("\nLexer and parser finished.\n\n");
 
     printf("\n## Symbol Table ##\n");
