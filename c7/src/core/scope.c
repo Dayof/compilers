@@ -2,6 +2,12 @@
 #include "scope.h"
 
 
+lookup_detail *global_lookup_detail;
+scope *scope_stack;
+int top_lvl, insert_result, arity_counter,
+    global_var_data_type, global_func_data_type;
+
+
 void print_stack_st() {
     scope *aux_scope;
     int count_stack;

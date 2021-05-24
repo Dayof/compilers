@@ -5,6 +5,7 @@
 #include "sym_tab.h"
 
 FILE *create_tac();
+
 void close_tac(FILE *fp_tac);
 
 void write_table(FILE *fp_tac);

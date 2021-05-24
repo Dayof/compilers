@@ -66,8 +66,8 @@ typedef struct exps {
   struct exps* next;
 } ast_list;
 
-ast_list* ast_root;
-int global_register;
+extern ast_list* ast_root;
+extern int global_register;
 
 int len_st();
 char* nodetype2str(int node_type);

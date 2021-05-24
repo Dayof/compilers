@@ -2,6 +2,9 @@
 #include "sym_tab.h"
 
 
+word* global_symbol_table;
+
+
 void set_register(int key, int tac_register) {
     word *s = find_word(key);
     s->tac_register = tac_register;

@@ -32,7 +32,7 @@ typedef struct word_pos {
     UT_hash_handle hh; /* makes this structure hashable */
 } word;
 
-word* global_symbol_table;
+extern word* global_symbol_table;
 
 int len_st();
 void print_aux_st();

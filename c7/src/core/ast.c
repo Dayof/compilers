@@ -4,6 +4,9 @@
 #include "ast.h"
 
 
+ast_list* ast_root;
+int global_register;
+
 char* nodetype2str(int node_type) {
     if (node_type == INTEGER_TYPE)
         return "int";

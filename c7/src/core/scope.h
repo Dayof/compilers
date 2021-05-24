@@ -16,10 +16,10 @@ typedef struct lookup_detail {
     scope *ctx_scope;
 } lookup_detail;
 
-lookup_detail *global_lookup_detail;
-scope *scope_stack;
-int top_lvl, insert_result, arity_counter,
-    global_var_data_type, global_func_data_type;
+extern lookup_detail *global_lookup_detail;
+extern scope *scope_stack;
+extern int top_lvl, insert_result, arity_counter,
+            global_var_data_type, global_func_data_type;
 
 void start_root_scope();
 void start_root_lookup();
